@@ -1,0 +1,86 @@
+Given a string str, print all possible permutations of its characters using recursion and backtracking.
+Example Input : str = "ABC"
+Example Output:
+ABC
+ACB
+BAC
+BCA
+CAB
+CBA
+
+public class Permutations {
+    public static void generatePermutations(String str, StringBuilder permutation, boolean[] used) {
+        if (permutation.length() == str.length()) { // Base case: All characters used
+            System.out.println(permutation.toString());
+            return;
+        }
+
+        for (int i = 0; i < str.length(); i++) {
+            if (used[i]) continue; // Skip already used characters
+
+            used[i] = true; // Mark as used
+            permutation.append(str.charAt(i)); // Add character
+
+            generatePermutations(str, permutation, used); // Recursive call
+
+            permutation.deleteCharAt(permutation.length() - 1); // Backtrack
+            used[i] = false; // Unmark for next iterations
+        }
+    }
+
+    public static void main(String[] args) {
+        String str = "ABC";
+        generatePermutations(str, new StringBuilder(), new boolean[str.length()]);
+    }
+}
+
+generatePermutations("", used = [false, false, false])
+│
+├── Add 'A' → generatePermutations("A", used = [true, false, false])
+│   ├── Add 'B' → generatePermutations("AB", used = [true, true, false])
+│   │   ├── Add 'C' → generatePermutations("ABC") → Print "ABC"
+│   │   ├── Backtrack: Remove 'C', return to "AB"
+│   ├── Backtrack: Remove 'B', return to "A"
+│   ├── Add 'C' → generatePermutations("AC", used = [true, false, true])
+│   │   ├── Add 'B' → generatePermutations("ACB") → Print "ACB"
+│   │   ├── Backtrack: Remove 'B', return to "AC"
+│   ├── Backtrack: Remove 'C', return to "A"
+│   ├── Backtrack: Remove 'A', return to ""
+│
+├── Add 'B' → generatePermutations("B", used = [false, true, false])
+│   ├── Add 'A' → generatePermutations("BA", used = [true, true, false])
+│   │   ├── Add 'C' → generatePermutations("BAC") → Print "BAC"
+│   │   ├── Backtrack: Remove 'C', return to "BA"
+│   ├── Backtrack: Remove 'A', return to "B"
+│   ├── Add 'C' → generatePermutations("BC", used = [false, true, true])
+│   │   ├── Add 'A' → generatePermutations("BCA") → Print "BCA"
+│   │   ├── Backtrack: Remove 'A', return to "BC"
+│   ├── Backtrack: Remove 'C', return to "B"
+│   ├── Backtrack: Remove 'B', return to ""
+│
+├── Add 'C' → generatePermutations("C", used = [false, false, true])
+│   ├── Add 'A' → generatePermutations("CA", used = [true, false, true])
+│   │   ├── Add 'B' → generatePermutations("CAB") → Print "CAB"
+│   │   ├── Backtrack: Remove 'B', return to "CA"
+│   ├── Backtrack: Remove 'A', return to "C"
+│   ├── Add 'B' → generatePermutations("CB", used = [false, true, true])
+│   │   ├── Add 'A' → generatePermutations("CBA") → Print "CBA"
+│   │   ├── Backtrack: Remove 'A', return to "CB"
+│   ├── Backtrack: Remove 'B', return to "C"
+│   ├── Backtrack: Remove 'C', return to ""
+
+
+Time Complexity
+The generatePermutations function explores all possible orders of "ABC" using recursion and backtracking. Since every character can be placed in any position, this results in n! (factorial) permutations.
+- Number of recursive calls: Each position has n choices initially, then (n - 1), then (n - 2), etc.
+- Total permutations: n! (For "ABC", there are 3! = 6 permutations: "ABC", "ACB", "BAC", "BCA", "CAB", "CBA").
+- Recursive depth: O(n) since we recurse until the permutation is fully formed.
+🔹 Overall Time Complexity → O(n!)
+
+Space Complexity
+The space usage is primarily due to:
+- Recursive function calls: At any point, the function stores calls in a stack (maximum depth O(n)).
+- Storage for output: Since we store n! permutations, this takes O(n!) space.
+- Boolean array (used): It requires O(n) space to track character usage.
+- StringBuilder (permutation): Takes O(n) space per recursion.
+🔹 Overall Space Complexity → O(n!) (due to storing permutations) + O(n) (stack & arrays)

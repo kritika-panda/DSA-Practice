@@ -1,0 +1,63 @@
+Input: mat[][] = [[1, 0, 0, 0], [1, 1, 0, 1], [1, 1, 0, 0], [0, 1, 1, 1]]
+Output: ["DDRDRR", "DRDDRR"]
+Explanation: The rat can reach the destination at (3, 3) from (0, 0) by two paths - DRDDRR and DDRDRR, when printed in sorted order we get DDRDRR DRDDRR.
+
+class Solution {
+    // Function to find all possible paths
+    public ArrayList<String> ratInMaze(int[][] maze) {
+        int m=maze[0].length;
+        int n=maze.length;
+        ArrayList<String> res=new ArrayList<String>();
+        String str="";
+      boolean[][] visited = new boolean[n][m]; // Track visited cells
+        search("", res, 0, 0, n, m, maze, visited);
+        Collections.sort(res);
+        return res;
+    }
+    public void search(String path, ArrayList<String> res, int row, int col, int n, int m, int[][] maze, boolean[][] visited) {
+        // Base Case: If destination is reached
+        if (row == n - 1 && col == m - 1) {
+            res.add(path);
+            return;
+        }
+
+        // Boundary and obstacle check
+        if (row < 0 || col < 0 || row >= n || col >= m || maze[row][col] == 0 || visited[row][col]) {
+            return;
+        }
+
+        // Mark cell as visited
+        visited[row][col] = true;
+
+        // Move Right
+        search(path + "R", res, row, col + 1, n, m, maze, visited);
+        // Move Down
+        search(path + "D", res, row + 1, col, n, m, maze, visited);
+        // Move Left
+        search(path + "L", res, row, col - 1, n, m, maze, visited);
+        // Move Up
+        search(path + "U", res, row - 1, col, n, m, maze, visited);
+
+        // Backtrack: Unmark cell
+        visited[row][col] = false;
+    }
+}
+
+Time Complexity: O(4^(m*n)), because on every cell we need to try 4 different directions.
+
+Space Complexity:  O(m*n), Maximum Depth of the recursion tree(auxiliary space).
+Space Complexity Breakdown
+- Recursion Depth (O(N*N))
+- In the worst case, every cell of the N × N grid could be part of a path.
+- Since recursion maintains a call stack, the maximum depth could be O(N*N).
+- Visited Matrix (O(N*N))
+- A boolean matrix (visited[][]) is used to track visited cells.
+- This requires O(N*N) space.
+- Result List (O(K), where K is the number of valid paths)
+- The number of valid paths can vary based on maze structure.
+- In the worst case, storing all paths might take O(K) space.
+Final Space Complexity
+- Total space complexity = O(N*N + K)
+- If K is relatively small, the dominant factor is O(N*N).
+- If K is large (many paths exist), it may become O(K).
+

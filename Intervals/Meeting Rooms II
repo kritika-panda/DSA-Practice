@@ -1,0 +1,78 @@
+Problem Statement:
+Given two arrays start[] and end[] such that start[i] is the starting time of ith meeting and end[i] is the ending time of ith meeting.
+Return the minimum number of rooms required to attend all meetings.
+
+Examples:
+Input: start[] = [1, 10, 7], end[] = [4, 15, 10]
+Output: 1
+Explanation: Since all the meetings are held at different times, it is possible to attend all the meetings in a single room.
+
+Input: start[] = [2, 9, 6], end[] = [4, 12, 10]
+Output: 2
+Explanation: 1st and 2nd meetings at one room but for 3rd meeting one another room required.
+
+
+class Solution {    
+    public int minMeetingRooms(int[] start, int[] end) {
+         int n = start.length;
+        Arrays.sort(start); // Sort start times
+        Arrays.sort(end);   // Sort end times
+
+        int rooms = 0, maxRooms = 0;
+        int i = 0, j = 0;
+
+        while (i < n) {
+            if (start[i] < end[j]) {
+                rooms++; // New meeting starts, need a room
+                i++;
+            } else {
+                rooms--; // Meeting ends, free a room
+                j++;
+            }
+            maxRooms = Math.max(maxRooms, rooms);
+        }
+
+        return maxRooms;
+    }
+}
+
+TC: O(n log n)
+SC: O(1)
+
+
+class Solution {  
+public int minMeetingRooms(int[] start, int[] end) {
+        int n = start.length;
+
+        // no. of rooms at any point of time
+        int room = 0;
+        int res = 0;
+
+        // Find the maximum end time
+        int maxEnd = end[0];
+        for (int i = 1; i < n; i++) 
+            maxEnd = Math.max(maxEnd, end[i]);
+
+        // Create an array to store the count of rooms at
+        // each point of time
+        int[] meetCnt = new int[maxEnd + 2];
+
+        // Increment the count at the start time and
+        // decrement at the end time
+        for (int i = 0; i < n; i++) {
+            meetCnt[start[i]]++;
+            meetCnt[end[i]]--;
+        }
+
+        // Iterate over the array and keep track of the
+        // maximum room at any point of time
+        for (int i = 0; i <= maxEnd + 1; i++) {
+            room += meetCnt[i];
+            res = Math.max(res, room);
+        }
+
+        return res;
+    }
+}
+Time Complexity: O(maxEnd + n), maxEnd represents the maximum value of end array.
+Auxiliary Space: O(maxEnd)

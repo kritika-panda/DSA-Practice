@@ -28,6 +28,10 @@ static void generateBinaryStrings(int n, String curr) {
     // Add '1' and recurse
     generateBinaryStrings(n, curr + '1');
 }
+public static void main(String[] args) {
+    int n = 3; // adjust as needed
+    generateBinaryStrings(n, "");
+}
 
 OR 
 

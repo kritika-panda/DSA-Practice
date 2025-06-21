@@ -35,6 +35,17 @@ static void swap(char[] arr, int i, int j) {
     arr[i] = arr[j];
     arr[j] = temp;
 }
+public static void main(String[] args) {
+        String input = "abc";
+        List<String> result = new ArrayList<>();
+        generatePermutations(input.toCharArray(), 0, result);
+
+        System.out.println("All permutations of '" + input + "' are:");
+        for (String s : result) {
+            System.out.println(s);
+        }
+    }
+}
 
 OR 
 

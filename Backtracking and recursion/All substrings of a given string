@@ -1,0 +1,68 @@
+Problem Statement: Given a string s, containing lowercase alphabetical characters. The task is to print all non-empty substrings of the given string.
+Examples : 
+Input :  s = "abc"
+Output :  "a", "ab", "abc", "b", "bc", "c"
+Input :  s = "ab"
+Output :  "a",  "ab",  "b"
+Input :  s = "a"
+Output :  "a"
+
+
+// Recursive Function to find all
+// substrings of a string
+static void subString(String s, int n, int index,
+                      StringBuilder cur, List<String> res) {
+
+    // if we have reached the
+    // end of the string
+    if (index == n) {
+        return;
+    }
+
+    // add the character s.charAt(index)
+    // to the current string
+    cur.append(s.charAt(index));
+
+    // add the current string in result
+    res.add(cur.toString());
+
+    // move to next index
+    subString(s, n, index + 1, cur, res);
+
+    // remove the current character
+    // from the current string
+    cur.deleteCharAt(cur.length() - 1);
+
+    // if current string is empty
+    // skip the current index to
+    // start the new substring
+    if (cur.length() == 0) {
+        subString(s, n, index + 1, cur, res);
+    }
+}
+
+// Function to find all substrings
+static List<String> findSubstrings(String s) {
+
+    // to store all substrings
+    List<String> res = new ArrayList<>();
+
+    // to store current string
+    StringBuilder cur = new StringBuilder();
+    subString(s, s.length(), 0, cur, res);
+    return res;
+}
+
+public static void main(String[] args) {
+    String s = "abc";
+    List<String> res = findSubstrings(s);
+    for (String str : res) {
+        System.out.print(str + " ");
+    }
+}
+
+
+Time Complexity: O(2^n)
+Space Complexity: O(n²) (for storing substrings in res)
+Auxiliary stack space: O(n)
+

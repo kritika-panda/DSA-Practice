@@ -9,6 +9,27 @@ CAB
 CBA
 
 public class Permutations {
+static void generatePermutations(char[] arr, int index, List<String> res) {
+    if (index == arr.length) {
+        res.add(new String(arr));
+        return;
+    }
+
+    for (int i = index; i < arr.length; i++) {
+        swap(arr, index, i);
+        generatePermutations(arr, index + 1, res);
+        swap(arr, index, i); // backtrack
+    }
+}
+
+static void swap(char[] arr, int i, int j) {
+    char temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+OR 
+
     public static void generatePermutations(String str, StringBuilder permutation, boolean[] used) {
         if (permutation.length() == str.length()) { // Base case: All characters used
             System.out.println(permutation.toString());

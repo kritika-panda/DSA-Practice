@@ -9,6 +9,14 @@ Input: str = "aa"
 Output: a a aa 
 Explanation: Printing all the 3 subsequences for the string "aa"
 
+                      ""         (start at index 0)
+                   /     \
+                "a"       ""      (index 1)
+               /   \     /   \
+           "ab"   "a"  "b"   ""   (index 2)
+           / \    / \  / \   / \
+       "abc" "ab" "ac" "a" "bc" "b" "c" ""
+
 import java.util.*;
 class TUF{
 static void solve(int i, String s, String f) {

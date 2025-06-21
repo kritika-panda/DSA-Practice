@@ -16,6 +16,21 @@ O/p:
 
 
 class TUF {
+static void generateBinaryStrings(int n, String curr) {
+    if (curr.length() == n) {
+        System.out.println(curr);
+        return;
+    }
+
+    // Add '0' and recurse
+    generateBinaryStrings(n, curr + '0');
+
+    // Add '1' and recurse
+    generateBinaryStrings(n, curr + '1');
+}
+
+OR 
+
     static void generateBinaryStrings(int n, StringBuilder sb) {
         if (sb.length() == n) {
             System.out.println(sb.toString());

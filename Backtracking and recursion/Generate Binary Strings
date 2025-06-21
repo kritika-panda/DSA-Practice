@@ -15,6 +15,15 @@ O/p:
 111
 
 
+                          ""
+                         /   \
+                      "0"     "1"
+                     /  \     /  \
+                 "00" "01" "10" "11"
+                 / \   / \   / \   / \
+              000 001 010 011 100 101 110 111
+
+
 class TUF {
 static void generateBinaryStrings(int n, String curr) {
     if (curr.length() == n) {
@@ -58,7 +67,6 @@ OR
     }
 }
 
-
 🔹 Time Complexity (TC)
 At each index in the binary string of length n, you have 2 choices: append '0' or '1'. This results in:
 - Number of total binary strings = 2ⁿ
@@ -71,4 +79,4 @@ There are two components:
 - Recursive call stack: The recursion goes to a depth of n, so that’s O(n).
 - StringBuilder: Holds at most n characters at any point → O(n).
 - No extra memory is used to store all generated strings (they're printed, not stored).
-🔸 Space Complexity: O(n
+🔸 Space Complexity: O(n)

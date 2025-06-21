@@ -10,6 +10,25 @@ Output :  "a"
 
 // Recursive Function to find all
 // substrings of a string
+
+static void subString(String s, int n, int index, String cur, List<String> res) {
+    if (index == n) return;
+
+    // Include current character
+    cur = cur + s.charAt(index);
+    res.add(cur);
+
+    // Explore with current character included
+    subString(s, n, index + 1, cur, res);
+
+    // Explore new substring starting at next index
+    if (cur.length() == 1) {
+        subString(s, n, index + 1, "", res);
+    }
+}  
+
+OR 
+
 static void subString(String s, int n, int index,
                       StringBuilder cur, List<String> res) {
 

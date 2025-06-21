@@ -8,6 +8,14 @@ BCA
 CAB
 CBA
 
+            abc (index = 0)
+          /     |      \
+     [a]bc   [b]ac   [c]ba
+     / \       / \     / \
+  a[b]c a[c]b b[a]c b[c]a c[a]b c[b]a
+   |     |     |     |     |     |
+ abc   acb   bac   bca   cab   cba
+
 public class Permutations {
 static void generatePermutations(char[] arr, int index, List<String> res) {
     if (index == arr.length) {

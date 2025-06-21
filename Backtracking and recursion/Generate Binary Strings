@@ -1,0 +1,55 @@
+Problem Statement: Generate Binary Strings for a given 'n'.
+
+I/p: 
+n=3
+
+
+O/p:
+000
+001
+010
+011
+100
+101
+110
+111
+
+
+class TUF {
+    static void generateBinaryStrings(int n, StringBuilder sb) {
+        if (sb.length() == n) {
+            System.out.println(sb.toString());
+            return;
+        }
+
+        // Add '0' and recurse
+        sb.append('0');
+        generateBinaryStrings(n, sb);
+        sb.deleteCharAt(sb.length() - 1); // backtrack
+
+        // Add '1' and recurse
+        sb.append('1');
+        generateBinaryStrings(n, sb);
+        sb.deleteCharAt(sb.length() - 1); // backtrack
+    }
+
+    public static void main(String[] args) {
+        int n = 3; // change this to generate different lengths
+        generateBinaryStrings(n, new StringBuilder());
+    }
+}
+
+
+🔹 Time Complexity (TC)
+At each index in the binary string of length n, you have 2 choices: append '0' or '1'. This results in:
+- Number of total binary strings = 2ⁿ
+- Each recursive call takes O(1) time except for printing (which takes O(n) to convert StringBuilder to String)
+🔸 Time Complexity: O(n · 2ⁿ)
+The n factor comes from printing or creating strings of length n in each of the 2ⁿ combinations.
+
+🔹 Space Complexity (SC)
+There are two components:
+- Recursive call stack: The recursion goes to a depth of n, so that’s O(n).
+- StringBuilder: Holds at most n characters at any point → O(n).
+- No extra memory is used to store all generated strings (they're printed, not stored).
+🔸 Space Complexity: O(n

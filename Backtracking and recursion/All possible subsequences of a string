@@ -1,0 +1,66 @@
+Problem Statement: Given a string, find all the possible subsequences of the string.
+Example 1:
+Input: str = "abc"
+Output: a ab abc ac b bc c
+Explanation: Printing all the 7 subsequence for the string "abc".
+
+Example 2:
+Input: str = "aa"
+Output: a a aa 
+Explanation: Printing all the 3 subsequences for the string "aa"
+
+import java.util.*;
+class TUF{
+static void solve(int i, String s, String f) {
+	if (i == s.length()) {
+		System.out.print(f+" ");
+		return;
+	}
+	//picking 
+	//f = f + s.charAt(i);
+	solve(i + 1, s,  f+s.charAt(i));
+	//poping out while backtracking
+	//f.pop_back();
+	solve(i + 1, s,  f);
+}
+public static void main(String args[]) {
+	String s = "abc";
+	String f = "";
+	System.out.println("All possible subsequences are: ");
+	solve(0, s, f);
+}
+}
+
+OR
+
+import java.util.*;
+class TUF {
+    static void solve(int i, String s, StringBuilder f) {
+        if (i == s.length()) {
+            System.out.print(f.toString() + " ");
+            return;
+        }
+
+        // Pick the current character
+        f.append(s.charAt(i));
+        solve(i + 1, s, f);
+
+        // Backtrack: remove the last character
+        f.deleteCharAt(f.length() - 1);
+
+        // Don't pick the current character
+        solve(i + 1, s, f);
+    }
+
+    public static void main(String args[]) {
+        String s = "abc";
+        StringBuilder f = new StringBuilder();
+        System.out.println("All possible subsequences are: ");
+        solve(0, s, f);
+    }
+}
+
+
+
+Time Complexity: O(2^n)
+Space Complexity: O(n), recursion stack.

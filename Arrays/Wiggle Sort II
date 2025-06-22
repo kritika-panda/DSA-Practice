@@ -1,0 +1,109 @@
+324. Wiggle Sort II
+Given an integer array nums, reorder it such that nums[0] < nums[1] > nums[2] < nums[3]....
+You may assume the input array always has a valid answer.
+Example 1:
+Input: nums = [1,5,1,1,6,4]
+Output: [1,6,1,5,1,4]
+Explanation: [1,4,1,5,1,6] is also accepted.
+
+Example 2:
+Input: nums = [1,3,2,2,3,1]
+Output: [2,3,1,3,1,2]
+
+
+public class Solution {
+    public void wiggleSort(int[] nums) {
+        int n = nums.length;
+        int[] sorted = nums.clone();
+        Arrays.sort(sorted);
+        int mid = (n + 1) / 2, end = n;
+
+        // Fill from end of both halves in reverse
+        int j = mid - 1; // smaller half
+        int k = end - 1; // larger half
+
+        for (int i = 0; i < n; i++) {
+            nums[i] = (i % 2 == 0) ? sorted[j--] : sorted[k--];
+        }
+    }
+}
+
+
+ Time Complexity
+- Sorting: O(n log n)
+- Reordering into wiggle: O(n)
+Total: O(n log n)
+While not linear, this is efficient and works well in practice, especially since the reordering phase is in-place and lightweight.
+
+
+🧠 Space Complexity
+- Uses a clone of the array to preserve sorted values → O(n)
+- If modifying in-place without sorting clone → O(1)
+So the current version has O(n) space, but a more advanced approach using QuickSelect + index mapping can achieve O(1) extra space.
+
+
+
+
+
+
+
+
+
+
+Using Quick select:
+- Time: O(n) average (QuickSelect + partitioning)
+- Space: O(1) extra (in-place)
+
+
+public class Solution {
+    public void wiggleSort(int[] nums) {
+        int n = nums.length;
+        int median = findKthLargest(nums, (n + 1) / 2);
+
+        // Virtual index mapping
+        int left = 0, i = 0, right = n - 1;
+        while (i <= right) {
+            int mapped = virtualIndex(i, n);
+            if (nums[mapped] > median) {
+                swap(nums, virtualIndex(left++, n), mapped);
+                i++;
+            } else if (nums[mapped] < median) {
+                swap(nums, mapped, virtualIndex(right--, n));
+            } else {
+                i++;
+            }
+        }
+    }
+
+    private int virtualIndex(int i, int n) {
+        return (1 + 2 * i) % (n | 1);
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+
+    // QuickSelect to find kth largest
+    private int findKthLargest(int[] nums, int k) {
+        int low = 0, high = nums.length - 1;
+        while (true) {
+            int pivot = partition(nums, low, high);
+            if (pivot == k - 1) return nums[pivot];
+            else if (pivot < k - 1) low = pivot + 1;
+            else high = pivot - 1;
+        }
+    }
+
+    private int partition(int[] nums, int low, int high) {
+        int pivot = nums[high], i = low;
+        for (int j = low; j < high; j++) {
+            if (nums[j] >= pivot) {
+                swap(nums, i++, j);
+            }
+        }
+        swap(nums, i, high);
+        return i;
+    }
+}

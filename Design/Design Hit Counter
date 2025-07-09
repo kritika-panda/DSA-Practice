@@ -1,0 +1,69 @@
+Design a hit counter which counts the number of hits received in the past 5 minutes.
+
+“Design hit counter” problem has recently been asked by many companies including Dropbox and the question is harder than it seems to be. This week, we’ll uncover all the mysteries of the problem. A couple of topics are discussed including basic data structures design, various optimization, concurrency and distributed counter.
+
+Each function accepts a timestamp parameter (in seconds granularity) and you may assume that calls are being made to the system in chronological order (i.e. the timestamp is monotonically increasing). You may assume that the earliest timestamp starts at 1.
+
+Example:
+HitCounter counter = new HitCounter();
+
+// hit at timestamp 1.
+counter.hit(1);
+
+// hit at timestamp 2.
+counter.hit(2);
+
+// hit at timestamp 3.
+counter.hit(3);
+
+// get hits at timestamp 4, should return 3.
+counter.getHits(4);
+
+// hit at timestamp 300.
+counter.hit(300);
+
+// get hits at timestamp 300, should return 4.
+counter.getHits(300);
+
+// get hits at timestamp 301, should return 3.
+counter.getHits(301);
+
+
+
+
+
+
+
+
+Solution:
+class HitCounter {
+    private int[] times;
+    private int[] hits;
+
+    public HitCounter() {
+        times = new int[300]; // stores timestamps
+        hits = new int[300];  // stores hit counts
+    }
+
+    public void hit(int timestamp) {
+        int index = timestamp % 300;
+        if (times[index] != timestamp) {
+            // New timestamp, reset slot
+            times[index] = timestamp;
+            hits[index] = 1;
+        } else {
+            // Same timestamp, increment hit count
+            hits[index]++;
+        }
+    }
+
+    public int getHits(int timestamp) {
+        int total = 0;
+        for (int i = 0; i < 300; i++) {
+            if (timestamp - times[i] < 300) {
+                total += hits[i];
+            }
+        }
+        return total;
+    }
+}

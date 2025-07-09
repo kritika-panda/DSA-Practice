@@ -1,0 +1,42 @@
+https://leetcode.com/problems/design-browser-history/description/
+
+
+class BrowserHistory {
+    List<String> lis=new ArrayList<>();
+    int c=-1;
+    int index=0;
+    public BrowserHistory(String homepage) {
+        lis.add(homepage);
+        c=lis.size()-1;
+    }
+    
+    public void visit(String url) {
+        while (lis.size() > c + 1) {
+            lis.remove(lis.size() - 1);
+        }
+        lis.add(url);
+        c = lis.size() - 1;
+    }
+    
+    public String back(int steps) {
+        c=c-steps;
+        if(c<0)
+            c=0;
+        return lis.get(c);
+    }
+    
+    public String forward(int steps) {
+        c=c+steps;
+        if(c>=lis.size())
+            c=lis.size()-1;
+        return lis.get(c);
+    }
+}
+
+/**
+ * Your BrowserHistory object will be instantiated and called as such:
+ * BrowserHistory obj = new BrowserHistory(homepage);
+ * obj.visit(url);
+ * String param_2 = obj.back(steps);
+ * String param_3 = obj.forward(steps);
+ */

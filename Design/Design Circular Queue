@@ -1,0 +1,48 @@
+https://leetcode.com/problems/design-circular-queue/description/
+
+class MyCircularQueue {
+    List<Integer> lis;
+    int k;
+    int front;
+    int rear;
+    int size;
+
+    public MyCircularQueue(int k) {
+        this.k = k;
+        lis = new ArrayList<>(Collections.nCopies(k, 0)); // Preallocate with dummy values
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    public boolean enQueue(int value) {
+        if (isFull()) return false;
+        rear = (rear + 1) % k;
+        lis.set(rear, value);
+        size++;
+        return true;
+    }
+
+    public boolean deQueue() {
+        if (isEmpty()) return false;
+        front = (front + 1) % k;
+        size--;
+        return true;
+    }
+
+    public int Front() {
+        return isEmpty() ? -1 : lis.get(front);
+    }
+
+    public int Rear() {
+        return isEmpty() ? -1 : lis.get(rear);
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean isFull() {
+        return size == k;
+    }
+}

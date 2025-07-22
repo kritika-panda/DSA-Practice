@@ -1,0 +1,102 @@
+Partitioning a linked list around a given value and keeping the original order
+Given a linked list and a value x, partition it such that all nodes less than x come first, then all nodes with a 
+value equal to x, and finally nodes with a value greater than x. The original relative order of the nodes in each of the three 
+partitions should be preserved.
+
+Examples: 
+
+Input : 1 -> 4 -> 3 -> 2 -> 5 -> 2 -> 3, x = 3
+Output: 1 -> 2 -> 2 -> 3 -> 3 -> 4 -> 5
+Explanation: In the below linked list, all nodes with value less than 3 are on the left and rest of the nodes on the right by maintaining the relative order.
+ 
+Input: 10 -> 4 -> 20 -> 10 -> 3, x = 3
+Output: 3 -> 10 -> 4 -> 20 -> 10
+
+// Java program to partition a linked list
+// around a given value.
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int val) {
+        data = val;
+        next = null;
+    }
+}
+
+class GfG {
+
+    static Node partition(Node head, int x) {
+        // Dummy head for nodes less than x
+        Node lessHead = new Node(0);
+
+        // Dummy head for nodes equal to x
+        Node equalHead = new Node(0);
+
+        // Dummy head for nodes greater than or equal to x
+        Node greaterHead = new Node(0);
+
+        Node less = lessHead;
+        Node equal = equalHead;
+        Node greater = greaterHead;
+
+        Node curr = head;
+
+        while (curr != null) {
+            if (curr.data < x) {
+                less.next = curr;
+                less = less.next;
+            } else if (curr.data == x) {
+                equal.next = curr;
+                equal = equal.next;
+            } else {
+                greater.next = curr;
+                greater = greater.next;
+            }
+            curr = curr.next;
+        }
+
+        // Connect the partitions together
+        greater.next = null;
+
+        // Connect equal to greater
+        equal.next = greaterHead.next;
+
+        // Connect less to equal
+        less.next = equalHead.next;
+
+        // New head of the rearranged list
+        Node newHead = lessHead.next;
+
+        return newHead;
+    }
+
+    static void printList(Node head) {
+        Node curr = head;
+        while (curr != null) {
+            System.out.print(curr.data + " ");
+            curr = curr.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        // Creating the linked list: 1 -> 4 -> 3 -> 2 -> 5 -> 2
+        Node head = new Node(1);
+        head.next = new Node(4);
+        head.next.next = new Node(3);
+        head.next.next.next = new Node(2);
+        head.next.next.next.next = new Node(5);
+        head.next.next.next.next.next = new Node(2);
+		int x = 3;
+        head = partition(head, x);
+        printList(head);
+    }
+}
+
+
+Output
+1 2 2 3 4 5 
+Time complexity: O(n)
+Auxiliary Space: O(1)

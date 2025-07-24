@@ -1,0 +1,74 @@
+https://leetcode.com/problems/minimum-moves-to-move-a-box-to-their-target-location/
+
+class Solution {
+    private static final int[][] DIRS = {{0,1},{1,0},{0,-1},{-1,0}};
+    
+    public int minPushBox(char[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[] box = new int[2], player = new int[2], target = new int[2];
+        
+        // Locate box, player, and target
+        for (int i = 0; i < m; ++i)
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == 'B') box = new int[]{i, j};
+                else if (grid[i][j] == 'S') player = new int[]{i, j};
+                else if (grid[i][j] == 'T') target = new int[]{i, j};
+            }
+
+        Queue<int[]> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        queue.offer(new int[]{box[0], box[1], player[0], player[1], 0});
+        visited.add(encode(box[0], box[1], player[0], player[1]));
+
+        while (!queue.isEmpty()) {
+            int[] state = queue.poll();
+            int bx = state[0], by = state[1], px = state[2], py = state[3], pushes = state[4];
+
+            if (bx == target[0] && by == target[1]) return pushes;
+
+            for (int[] dir : DIRS) {
+                int nbx = bx + dir[0], nby = by + dir[1];
+                int ppx = bx - dir[0], ppy = by - dir[1];
+
+                if (isValid(grid, nbx, nby) && isValid(grid, ppx, ppy) &&
+                    canReach(grid, px, py, ppx, ppy, bx, by)) {
+                    
+                    String key = encode(nbx, nby, bx, by);
+                    if (visited.add(key)) {
+                        queue.offer(new int[]{nbx, nby, bx, by, pushes + 1});
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    private boolean isValid(char[][] grid, int x, int y) {
+        return x >= 0 && y >= 0 && x < grid.length && y < grid[0].length && grid[x][y] != '#';
+    }
+
+    private boolean canReach(char[][] grid, int sx, int sy, int tx, int ty, int bx, int by) {
+        Queue<int[]> q = new LinkedList<>();
+        boolean[][] visited = new boolean[grid.length][grid[0].length];
+        q.offer(new int[]{sx, sy});
+        visited[sx][sy] = true;
+
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            if (cur[0] == tx && cur[1] == ty) return true;
+
+            for (int[] dir : DIRS) {
+                int nx = cur[0] + dir[0], ny = cur[1] + dir[1];
+                if (isValid(grid, nx, ny) && !visited[nx][ny] && !(nx == bx && ny == by)) {
+                    visited[nx][ny] = true;
+                    q.offer(new int[]{nx, ny});
+                }
+            }
+        }
+        return false;
+    }
+
+    private String encode(int bx, int by, int px, int py) {
+        return bx + "," + by + "," + px + "," + py;
+    }
+}

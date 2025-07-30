@@ -30,3 +30,18 @@ class Solution {
         return res;
     }
 }
+
+Time Complexity: O(N × 2ⁿ) (worst case)
+- Let N be the length of the string s.
+- In the worst case, the string can be broken into words in an exponential number of ways.
+- Every suffix leads to recursive calls, but memoization significantly reduces redundant recomputation.
+- Actual performance depends on:
+- The density of word matches in the dictionary.
+- Depth and branching factor of recursive calls.
+- Optimistically: closer to polynomial with good memo hits and constrained dictionary.
+
+🧠 Space Complexity: O(N × K)
+- Memoization map stores results for up to N suffixes, each containing potentially K combinations.
+- Recursive call stack can go as deep as N.
+- Result list stores all valid segmentations, which adds additional space proportional to total number and length of those sentences.
+

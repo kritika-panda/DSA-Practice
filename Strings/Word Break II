@@ -1,47 +1,78 @@
 https://leetcode.com/problems/word-break-ii/description/?envType=problem-list-v2&envId=trie
 
 class Solution {
-    public List<String> wordBreak(String s, List<String> wordDict) {
-        Set<String> wordSet = new HashSet<>(wordDict);
-        Map<String, List<String>> memo = new HashMap<>();
-        return dfs(s, wordSet, memo);
+    class TrieNode {
+        Map<Character, TrieNode> children = new HashMap<>();
+        boolean isWord = false;
     }
 
-    private List<String> dfs(String s, Set<String> wordSet, Map<String, List<String>> memo) {
-        if (memo.containsKey(s)) return memo.get(s);
-        
-        List<String> res = new ArrayList<>();
-        if (s.length() == 0) {
-            res.add(""); // Base case for recursion
-            return res;
-        }
+    TrieNode root = new TrieNode();
 
-        for (int end = 1; end <= s.length(); end++) {
-            String prefix = s.substring(0, end);
-            if (wordSet.contains(prefix)) {
-                List<String> suffixBreaks = dfs(s.substring(end), wordSet, memo);
-                for (String suffix : suffixBreaks) {
-                    res.add(prefix + (suffix.isEmpty() ? "" : " " + suffix));
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        for (String word : wordDict) insert(word);
+        Map<String, List<String>> memo = new HashMap<>();
+        return dfs(s, memo);
+    }
+
+    private void insert(String word) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            node = node.children.computeIfAbsent(c, k -> new TrieNode());
+        }
+        node.isWord = true;
+    }
+
+    private List<String> dfs(String s, Map<String, List<String>> memo) {
+        if (memo.containsKey(s)) return memo.get(s);
+        List<String> res = new ArrayList<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            TrieNode node = root;
+            for (int j = i; j < s.length(); j++) {
+                char c = s.charAt(j);
+                if (!node.children.containsKey(c)) break;
+                node = node.children.get(c);
+                if (node.isWord) {
+                    String word = s.substring(i, j + 1);
+                    String remainder = s.substring(j + 1);
+                    List<String> suffixes = dfs(remainder, memo);
+                    for (String suffix : suffixes) {
+                        res.add(word + (suffix.isEmpty() ? "" : " " + suffix));
+                    }
                 }
             }
+            break; // only start from s[0], then move forward in recursive calls
         }
 
+        if (s.isEmpty()) res.add(""); // base case
         memo.put(s, res);
         return res;
     }
 }
 
-Time Complexity: O(N × 2ⁿ) (worst case)
-- Let N be the length of the string s.
-- In the worst case, the string can be broken into words in an exponential number of ways.
-- Every suffix leads to recursive calls, but memoization significantly reduces redundant recomputation.
-- Actual performance depends on:
-- The density of word matches in the dictionary.
-- Depth and branching factor of recursive calls.
-- Optimistically: closer to polynomial with good memo hits and constrained dictionary.
 
-🧠 Space Complexity: O(N × K)
-- Memoization map stores results for up to N suffixes, each containing potentially K combinations.
-- Recursive call stack can go as deep as N.
-- Result list stores all valid segmentations, which adds additional space proportional to total number and length of those sentences.
+Time Complexity: O(N × M × L) (in practice; worst case exponential)
+- N is the length of the input string s.
+- M is the number of words in the dictionary.
+- L is the average length of those words.
+- The Trie speeds up prefix checking to O(L) instead of substring + set lookups.
+- The worst-case time is still exponential in terms of valid sentence combinations (similar to original DFS), but prefix lookups and memoization help prune the recursion tree significantly.
+Worst Case
+- Every character could lead to branching — and each branch can explore all valid suffixes.
+- If s = "aaaa...a" and dict = ["a", "aa", "aaa", ...], you can get exponential branching despite the Trie.
+
+🧠 Space Complexity: O(N × K + T)
+| Component | Space | 
+| Memoization | O(N × K) where K is average number of results | 
+| Trie | O(M × L) for storing all dictionary words | 
+| Call Stack | Up to O(N) for depth of recursion | 
+| Results List | Depends on number of valid segmentations | 
+
+
+
+🔍 TL;DR
+- Trie improves lookup speed, not the exponential nature of combinatorics.
+- Memoization avoids repeated work, which helps a lot in realistic inputs.
+- Still not optimal for huge s + extremely combinable dictionaries, unless you limit result size or add DP constraints.
+
 

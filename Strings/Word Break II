@@ -1,0 +1,32 @@
+https://leetcode.com/problems/word-break-ii/description/?envType=problem-list-v2&envId=trie
+
+class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        Set<String> wordSet = new HashSet<>(wordDict);
+        Map<String, List<String>> memo = new HashMap<>();
+        return dfs(s, wordSet, memo);
+    }
+
+    private List<String> dfs(String s, Set<String> wordSet, Map<String, List<String>> memo) {
+        if (memo.containsKey(s)) return memo.get(s);
+        
+        List<String> res = new ArrayList<>();
+        if (s.length() == 0) {
+            res.add(""); // Base case for recursion
+            return res;
+        }
+
+        for (int end = 1; end <= s.length(); end++) {
+            String prefix = s.substring(0, end);
+            if (wordSet.contains(prefix)) {
+                List<String> suffixBreaks = dfs(s.substring(end), wordSet, memo);
+                for (String suffix : suffixBreaks) {
+                    res.add(prefix + (suffix.isEmpty() ? "" : " " + suffix));
+                }
+            }
+        }
+
+        memo.put(s, res);
+        return res;
+    }
+}

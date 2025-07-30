@@ -17,7 +17,10 @@ class Solution {
     private void insert(String word) {
         TrieNode node = root;
         for (char c : word.toCharArray()) {
-            node = node.children.computeIfAbsent(c, k -> new TrieNode());
+            //node = node.children.computeIfAbsent(c, k -> new TrieNode());
+            if (!node.children.containsKey(c)) 
+                    node.children.put(c, new TrieNode());
+            node = node.children.get(c);
         }
         node.isWord = true;
     }

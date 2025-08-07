@@ -1,0 +1,36 @@
+https://leetcode.com/problems/number-of-nodes-in-the-sub-tree-with-the-same-label/description/
+
+import java.util.*;
+
+class Solution {
+    public int[] countSubTrees(int n, int[][] edges, String labels) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0; i < n; i++) adjList.add(new ArrayList<>());
+
+        for (int[] edge : edges) {
+            adjList.get(edge[0]).add(edge[1]);
+            adjList.get(edge[1]).add(edge[0]);
+        }
+
+        int[] resArr = new int[n];
+        dfs(0, -1, adjList, labels.toCharArray(), resArr);
+        return resArr;
+    }
+
+    private int[] dfs(int node, int parent, List<List<Integer>> adjList, char[] labels, int[] resArr) {
+        int[] count = new int[26];
+        count[labels[node] - 'a'] = 1;
+
+        for (int neighbor : adjList.get(node)) {
+            if (neighbor == parent) continue; // Avoid revisiting parent
+
+            int[] childCount = dfs(neighbor, node, adjList, labels, resArr);
+            for (int i = 0; i < 26; i++) {
+                count[i] += childCount[i];
+            }
+        }
+
+        resArr[node] = count[labels[node] - 'a'];
+        return count;
+    }
+}

@@ -1,0 +1,58 @@
+https://www.geeksforgeeks.org/dsa/introduction-to-segment-trees-2/
+
+
+ Initial Array
+arr[] = {1, 3, 5, 7, 9, 11}
+
+
+🌳 Segment Tree Construction (constructST)
+We build the tree recursively. Each node stores the sum of a segment of the array.
+| Node Index | Segment (ss–se) | Value (Sum) | Explanation | 
+| 0 | 0–5 | 36 | Sum of all elements | 
+| 1 | 0–2 | 9 | 1 + 3 + 5 | 
+| 2 | 3–5 | 27 | 7 + 9 + 11 | 
+| 3 | 0–1 | 4 | 1 + 3 | 
+| 4 | 2–2 | 5 | Leaf node | 
+| 5 | 3–4 | 16 | 7 + 9 | 
+| 6 | 5–5 | 11 | Leaf node | 
+| 7 | 0–0 | 1 | Leaf node | 
+| 8 | 1–1 | 3 | Leaf node | 
+| 9–14 | — | — | Not used yet | 
+
+
+
+🔧 Update Operation (updateRange(n, 1, 5, 10))
+We add 10 to all elements from index 1 to 5. This affects nodes that fully or partially overlap with this range.
+Step-by-Step Updates
+| Node | Segment | Action | New Value | Lazy Updates | 
+| 0 | 0–5 | Partial overlap → recurse | — | — | 
+| 1 | 0–2 | Partial overlap → recurse | — | — | 
+| 3 | 0–1 | Partial overlap → recurse | — | — | 
+| 7 | 0–0 | No overlap → return | 1 | — | 
+| 8 | 1–1 | Full overlap → update | 3 + 10 = 13 | — | 
+| 4 | 2–2 | Full overlap → update | 5 + 10 = 15 | — | 
+| 2 | 3–5 | Full overlap → update | 27 + 30 = 57 | lazy[5] = 10, lazy[6] = 10 | 
+
+
+Recalculate Parent Nodes
+| Node | New Value | 
+| 3 | 1 + 13 = 14 | 
+| 1 | 14 + 15 = 29 | 
+| 0 | 29 + 57 = 86 | 
+
+
+🌳 Updated Segment Tree Table
+| Node Index | Segment (ss–se) | Value | Lazy | 
+| 0 | 0–5 | 86 | 0 | 
+| 1 | 0–2 | 29 | 0 | 
+| 2 | 3–5 | 57 | 0 | 
+| 3 | 0–1 | 14 | 0 | 
+| 4 | 2–2 | 15 | 0 | 
+| 5 | 3–4 | 16 | 10 | 
+| 6 | 5–5 | 11 | 10 | 
+| 7 | 0–0 | 1 | 0 | 
+| 8 | 1–1 | 13 | 0 | 
+
+
+
+

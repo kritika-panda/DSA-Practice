@@ -1,0 +1,22 @@
+class Solution {
+    public String reformatNumber(String number) {
+        // Remove spaces and dashes
+        String digits = number.replaceAll("[\\s-]", "");
+        StringBuilder res = new StringBuilder();
+        int i = 0;
+        
+        while (digits.length() - i > 4) {
+            res.append(digits, i, i + 3).append("-");
+            i += 3;
+        }
+        
+        int remaining = digits.length() - i;
+        if (remaining == 4) {
+            res.append(digits, i, i + 2).append("-").append(digits, i + 2, i + 4);
+        } else {
+            res.append(digits.substring(i));
+        }
+        
+        return res.toString();
+    }
+}

@@ -1,0 +1,88 @@
+https://leetcode.com/problems/decode-string/description/
+
+
+// class Solution {
+//     public String decodeString(String s) {
+//         Stack<Character> st=new Stack<>();
+//         StringBuilder sb=new StringBuilder();
+//         String app="";
+//         int count=0;
+//         for(int i=0;i<s.length();i++)
+//         {
+//             st.push(s.charAt(i));
+//         }
+//         while(!st.isEmpty())
+//         {
+//             char ch=st.pop();
+//             if(Character.isLetter(ch))
+//             {
+//                 app+=ch;
+//                 System.out.println(app);
+//             }
+//             if(ch==']')
+//             {
+//                 count++;
+//                 if(app.length()!=0){
+//                 sb.append(app);
+//                 app="";
+//                 }
+//             }
+//             if(ch=='[')
+//             {
+//                ch=st.pop();
+//                if(Character.isDigit(ch))
+//                {
+//                     String val=String.valueOf(ch);
+//                     while(!st.isEmpty() && Character.isDigit(st.peek()))
+//                     {
+//                         val=st.pop()+val;
+//                     }
+//                     System.out.println(ch);
+//                     app=app.repeat(Integer.valueOf(val));
+//                     if(!st.isEmpty() && st.peek()!=']')
+//                         continue;
+//                     sb.append(app);
+//                     app="";
+//                }
+//             }
+//         }
+//         if(app.length()!=0)
+//             sb.append(app);
+//         return sb.reverse().toString();
+//     }
+// }
+
+
+class Solution {
+    public String decodeString(String s) {
+        Stack<Integer> countStack = new Stack<>();
+        Stack<StringBuilder> stringStack = new Stack<>();
+        StringBuilder current = new StringBuilder();
+        int k = 0;
+        for (char ch : s.toCharArray()) {
+            if (Character.isDigit(ch)) {
+                // build the multiplier number
+                k = k * 10 + (ch - '0');
+            } else if (ch == '[') {
+                // push current multiplier and string into stacks
+                countStack.push(k);
+                stringStack.push(current);
+                // reset
+                k = 0;
+                current = new StringBuilder();
+            } else if (ch == ']') {
+                // pop last string and multiplier
+                int repeat = countStack.pop();
+                StringBuilder decoded = stringStack.pop();
+                for (int i = 0; i < repeat; i++) {
+                    decoded.append(current);
+                }
+                current = decoded;
+            } else {
+                // normal character
+                current.append(ch);
+            }
+        }
+        return current.toString();
+    }
+}

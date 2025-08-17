@@ -1,58 +1,5 @@
 https://leetcode.com/problems/decode-string/description/
 
-
-// class Solution {
-//     public String decodeString(String s) {
-//         Stack<Character> st=new Stack<>();
-//         StringBuilder sb=new StringBuilder();
-//         String app="";
-//         int count=0;
-//         for(int i=0;i<s.length();i++)
-//         {
-//             st.push(s.charAt(i));
-//         }
-//         while(!st.isEmpty())
-//         {
-//             char ch=st.pop();
-//             if(Character.isLetter(ch))
-//             {
-//                 app+=ch;
-//                 System.out.println(app);
-//             }
-//             if(ch==']')
-//             {
-//                 count++;
-//                 if(app.length()!=0){
-//                 sb.append(app);
-//                 app="";
-//                 }
-//             }
-//             if(ch=='[')
-//             {
-//                ch=st.pop();
-//                if(Character.isDigit(ch))
-//                {
-//                     String val=String.valueOf(ch);
-//                     while(!st.isEmpty() && Character.isDigit(st.peek()))
-//                     {
-//                         val=st.pop()+val;
-//                     }
-//                     System.out.println(ch);
-//                     app=app.repeat(Integer.valueOf(val));
-//                     if(!st.isEmpty() && st.peek()!=']')
-//                         continue;
-//                     sb.append(app);
-//                     app="";
-//                }
-//             }
-//         }
-//         if(app.length()!=0)
-//             sb.append(app);
-//         return sb.reverse().toString();
-//     }
-// }
-
-
 class Solution {
     public String decodeString(String s) {
         Stack<Integer> countStack = new Stack<>();

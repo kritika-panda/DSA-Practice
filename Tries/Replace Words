@@ -1,0 +1,56 @@
+https://leetcode.com/problems/replace-words/description/?envType=problem-list-v2&envId=trie
+
+class Trie {
+    boolean isEndOfWord = false;
+    Trie[] children = new Trie[26];
+}
+
+class Solution {
+    Trie head = new Trie();
+
+    public String replaceWords(List<String> dictionary, String sentence) {
+        for (String word : dictionary) {
+            insertIntoTrie(word);
+        }
+
+        StringBuilder res = new StringBuilder();
+        String[] words = sentence.split(" +");
+
+        for (String word : words) {
+            String replacement = findPrefix(word);
+            res.append(replacement).append(" ");
+        }
+
+        return res.toString().trim();
+    }
+
+    private void insertIntoTrie(String word) {
+        Trie node = head;
+        for (char ch : word.toCharArray()) {
+            int idx = ch - 'a';
+            if (node.children[idx] == null)
+                node.children[idx] = new Trie();
+            node = node.children[idx];
+        }
+        node.isEndOfWord = true;
+    }
+
+    private String findPrefix(String word) {
+        Trie node = head;
+        StringBuilder prefix = new StringBuilder();
+
+        for (char ch : word.toCharArray()) {
+            int idx = ch - 'a';
+            if (node.children[idx] == null)
+                break;
+
+            prefix.append(ch);
+            node = node.children[idx];
+
+            if (node.isEndOfWord)
+                return prefix.toString();
+        }
+
+        return word; // No root found
+    }
+}

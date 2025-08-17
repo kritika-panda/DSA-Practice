@@ -1,0 +1,45 @@
+https://leetcode.com/problems/map-sum-pairs/?envType=problem-list-v2&envId=trie
+
+class Trie{
+    boolean isEndOfWord=false;
+    Trie[] children=new Trie[26];
+    int sum=0;
+}
+class MapSum {
+    Trie head;
+    HashMap<String,Integer> hm;
+    public MapSum() {
+        head=new Trie();
+        hm=new HashMap<>();
+    }
+    public void insert(String key, int val) {
+        int replace = val - hm.getOrDefault(key, 0);
+        hm.put(key, val);
+        Trie node = head;
+        for (char ch : key.toCharArray()) {
+            int idx = ch - 'a';
+            if (node.children[idx] == null)
+                node.children[idx] = new Trie();
+            node = node.children[idx];
+            node.sum+=replace;
+        }
+        node.isEndOfWord = true;
+    }
+    public int sum(String prefix) {
+        Trie node = head;
+        for (char ch : prefix.toCharArray()) {
+            int idx = ch - 'a';
+            if (node.children[idx] == null)
+                return 0;
+            node = node.children[idx];
+        }
+        return node.sum;
+    }
+}
+
+/**
+ * Your MapSum object will be instantiated and called as such:
+ * MapSum obj = new MapSum();
+ * obj.insert(key,val);
+ * int param_2 = obj.sum(prefix);
+ */

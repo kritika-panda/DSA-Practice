@@ -1,0 +1,28 @@
+https://leetcode.com/problems/number-of-matching-subsequences/description/?envType=problem-list-v2&envId=trie
+
+
+public int numMatchingSubseq(String s, String[] words) {
+    List<Queue<String>> buckets = new ArrayList<>();
+    for (int i = 0; i < 26; i++) buckets.add(new LinkedList<>());
+
+    for (String word : words) {
+        buckets.get(word.charAt(0) - 'a').offer(word);
+    }
+
+    int count = 0;
+    for (char ch : s.toCharArray()) {
+        Queue<String> queue = buckets.get(ch - 'a');
+        int size = queue.size();
+        for (int i = 0; i < size; i++) {
+            String word = queue.poll();
+            if (word.length() == 1) {
+                count++;
+            } else {
+                buckets.get(word.charAt(1) - 'a').offer(word.substring(1));
+            }
+        }
+    }
+
+    return count;
+}
+}

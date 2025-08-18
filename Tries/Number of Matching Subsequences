@@ -1,4 +1,5 @@
 https://leetcode.com/problems/number-of-matching-subsequences/description/?envType=problem-list-v2&envId=trie
+//Optimal solution is not this, it is in Strings folder
 
 class TrieNode {
     TrieNode[] children = new TrieNode[26];

@@ -1,0 +1,42 @@
+https://leetcode.com/problems/short-encoding-of-words/description/?envType=problem-list-v2&envId=trie
+
+
+class TrieNode {
+    TrieNode[] children = new TrieNode[26];
+    boolean isLeaf = true;
+}
+
+class Solution {
+    TrieNode root = new TrieNode();
+    Map<TrieNode, Integer> depthMap = new HashMap<>();
+
+    public int minimumLengthEncoding(String[] words) {
+        Arrays.sort(words, (a, b) -> b.length() - a.length()); // longest first
+
+        for (int i = 0; i < words.length; i++) {
+            insert(words[i], i);
+        }
+
+        int total = 0;
+        for (Map.Entry<TrieNode, Integer> entry : depthMap.entrySet()) {
+            if (entry.getKey().isLeaf) {
+                total += entry.getValue() + 1;
+            }
+        }
+
+        return total;
+    }
+
+    private void insert(String word, int index) {
+        TrieNode node = root;
+        for (int i = word.length() - 1; i >= 0; i--) {
+            int ch = word.charAt(i) - 'a';
+            if (node.children[ch] == null) {
+                node.children[ch] = new TrieNode();
+                node.isLeaf = false;
+            }
+            node = node.children[ch];
+        }
+        depthMap.put(node, word.length());
+    }
+}

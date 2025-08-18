@@ -1,0 +1,45 @@
+https://leetcode.com/problems/number-of-matching-subsequences/description/?envType=problem-list-v2&envId=trie
+
+class TrieNode {
+    TrieNode[] children = new TrieNode[26];
+    int count = 0; // number of words ending here
+}
+
+class Solution {
+    TrieNode root = new TrieNode();
+
+    public int numMatchingSubseq(String s, String[] words) {
+        for (String word : words) {
+            insert(word);
+        }
+        return dfs(s, 0, root);
+    }
+
+    private void insert(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            int idx = ch - 'a';
+            if (node.children[idx] == null)
+                node.children[idx] = new TrieNode();
+            node = node.children[idx];
+        }
+        node.count++; // mark end of word
+    }
+
+    private int dfs(String s, int pos, TrieNode node) {
+        int matches = node.count;
+
+        for (int i = 0; i < 26; i++) {
+            TrieNode child = node.children[i];
+            if (child != null) {
+                char nextChar = (char) ('a' + i);
+                int nextPos = s.indexOf(nextChar, pos);
+                if (nextPos != -1) {
+                    matches += dfs(s, nextPos + 1, child);
+                }
+            }
+        }
+
+        return matches;
+    }}
+

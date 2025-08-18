@@ -1,0 +1,49 @@
+https://leetcode.com/problems/longest-word-in-dictionary/?envType=problem-list-v2&envId=trie
+
+
+class Trie {
+    boolean isEndOfWord = false;
+    Trie[] children = new Trie[26];
+}
+
+class Solution {
+    Trie head = new Trie();
+
+    public String longestWord(String[] words) {
+        for (String word : words)
+            insertIntoTrie(word);
+
+        String result = "";
+        for (String word : words) {
+            if (isBuildable(word)) {
+                if (word.length() > result.length() ||
+                    (word.length() == result.length() && word.compareTo(result) < 0)) {
+                    result = word;
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean isBuildable(String word) {
+        Trie node = head;
+        for (char ch : word.toCharArray()) {
+            int idx = ch - 'a';
+            node = node.children[idx];
+            if (node == null || !node.isEndOfWord)
+                return false;
+        }
+        return true;
+    }
+
+    private void insertIntoTrie(String word) {
+        Trie node = head;
+        for (char ch : word.toCharArray()) {
+            int idx = ch - 'a';
+            if (node.children[idx] == null)
+                node.children[idx] = new Trie();
+            node = node.children[idx];
+        }
+        node.isEndOfWord = true;
+    }
+}

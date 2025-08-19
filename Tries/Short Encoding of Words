@@ -40,3 +40,6 @@ class Solution {
         depthMap.put(node, word.length());
     }
 }
+
+TC: O(N*K) where N is the number of words and K is the average word length.
+SC: O(N*K) 

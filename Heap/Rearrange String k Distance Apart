@@ -1,0 +1,36 @@
+https://leetcode.ca/all/358.html
+
+public String rearrangeString(String s, int k) {
+    if (k == 0) return s;
+
+    Map<Character, Integer> freqMap = new HashMap<>();
+    for (char c : s.toCharArray()) {
+        freqMap.put(c, freqMap.getOrDefault(c, 0) + 1);
+    }
+
+    PriorityQueue<Character> maxHeap = new PriorityQueue<>(
+        (a, b) -> freqMap.get(b) - freqMap.get(a)
+    );
+    maxHeap.addAll(freqMap.keySet());
+
+    Queue<Character> waitQueue = new LinkedList<>();
+    Map<Character, Integer> cooldown = new HashMap<>();
+    StringBuilder result = new StringBuilder();
+
+    while (!maxHeap.isEmpty()) {
+        char curr = maxHeap.poll();
+        result.append(curr);
+        freqMap.put(curr, freqMap.get(curr) - 1);
+        cooldown.put(curr, cooldown.getOrDefault(curr, 0) + 1);
+        waitQueue.offer(curr);
+
+        if (waitQueue.size() >= k) {
+            char ready = waitQueue.poll();
+            if (freqMap.get(ready) > 0) {
+                maxHeap.offer(ready);
+            }
+        }
+    }
+
+    return result.length() == s.length() ? result.toString() : "";
+}

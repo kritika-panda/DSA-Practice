@@ -39,6 +39,9 @@ class Solution {
             int freq = entry.getValue();
             String word = entry.getKey();
             treeMap.computeIfAbsent(freq, x -> new TreeSet<>()).add(word);
+            // if (!treeMap.containsKey(freq)) 
+            //     treeMap.put(freq, new TreeSet<>());
+            // treeMap.get(freq).add(word);
         }
 
         List<String> result = new ArrayList<>();

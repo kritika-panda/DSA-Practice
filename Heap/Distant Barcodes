@@ -1,0 +1,27 @@
+https://leetcode.com/problems/distant-barcodes/
+
+class Solution {
+    public int[] rearrangeBarcodes(int[] barcodes) {
+        Map<Integer, Integer> freqMap = new HashMap<>();
+        for (int b:barcodes) 
+            freqMap.put(b, freqMap.getOrDefault(b, 0) + 1);
+    PriorityQueue<Integer> maxHeap = new PriorityQueue<>(
+        (a, b) -> freqMap.get(b) - freqMap.get(a)
+    );
+    maxHeap.addAll(freqMap.keySet());
+    int ans[]=new int[barcodes.length];
+    Integer prevChar = null;
+    int prevFreq = 0;
+    int i=0;
+    while (!maxHeap.isEmpty()) {
+        int curr = maxHeap.poll();
+        ans[i++]=curr;
+        freqMap.put(curr, freqMap.get(curr) - 1);
+        if (prevChar!=null && prevFreq > 0) 
+            maxHeap.offer(prevChar);
+        prevChar = curr;
+        prevFreq = freqMap.get(curr);
+    }
+    return ans;
+    }
+}

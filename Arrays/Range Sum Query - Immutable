@@ -14,3 +14,7 @@ class NumArray {
     }
 }
 
+Time & Space Complexity
+• 	Constructor: O(n) — builds prefix sum array
+• 	sumRange: O(1) — constant time query
+• 	Space: O(n) — stores prefix sums

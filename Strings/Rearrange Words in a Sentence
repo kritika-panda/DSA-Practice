@@ -1,0 +1,19 @@
+https://leetcode.com/problems/rearrange-words-in-a-sentence/description/
+
+class Solution {
+    public String arrangeWords(String text) {
+        // Convert the first word to lowercase
+        String[] words = text.toLowerCase().split(" ");
+        // Convert all words to lowercase for uniformity
+        for (int i = 1; i < words.length; i++) 
+            words[i] = words[i].toLowerCase();
+        Arrays.sort(words, new Comparator<String>() {
+            public int compare(String a, String b) {
+                return Integer.compare(a.length(), b.length());
+            }
+        });
+        // Capitalize the first word
+        words[0] = Character.toUpperCase(words[0].charAt(0)) + words[0].substring(1);
+        return String.join(" ", words);
+    }
+}

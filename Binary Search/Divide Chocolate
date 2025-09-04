@@ -1,0 +1,31 @@
+https://leetcode.ca/all/1231.html
+
+class Solution {
+    public int maximizeSweetness(int[] sweetness, int k) {
+        int low = 1;
+        int high = Arrays.stream(sweetness).sum();
+
+        while (low < high) {
+            int mid = (low + high + 1) / 2;
+            if (canDivide(sweetness, k + 1, mid)) {
+                low = mid;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        return low;
+    }
+
+    private boolean canDivide(int[] sweetness, int pieces, int minSweetness) {
+        int count = 0, sum = 0;
+        for (int s : sweetness) {
+            sum += s;
+            if (sum >= minSweetness) {
+                count++;
+                sum = 0;
+            }
+        }
+        return count >= pieces;
+    }
+}

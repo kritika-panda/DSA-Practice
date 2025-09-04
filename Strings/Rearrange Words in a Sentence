@@ -6,7 +6,6 @@ class Solution {
         String[] words = text.toLowerCase().split(" ");
         // Convert all words to lowercase for uniformity
         for (int i = 1; i < words.length; i++) 
-            words[i] = words[i].toLowerCase();
         Arrays.sort(words, new Comparator<String>() {
             public int compare(String a, String b) {
                 return Integer.compare(a.length(), b.length());

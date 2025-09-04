@@ -5,30 +5,23 @@ class Solution {
         Deque<Integer> maxDeque = new ArrayDeque<>();
         Deque<Integer> minDeque = new ArrayDeque<>();
         int left = 0, result = 0;
-
         for (int right = 0; right < nums.length; right++) {
             // Maintain max deque
-            while (!maxDeque.isEmpty() && nums[right] > maxDeque.peekLast()) {
+            while (!maxDeque.isEmpty() && nums[right] > maxDeque.peekLast()) 
                 maxDeque.pollLast();
-            }
             maxDeque.offerLast(nums[right]);
-
             // Maintain min deque
-            while (!minDeque.isEmpty() && nums[right] < minDeque.peekLast()) {
+            while (!minDeque.isEmpty() && nums[right] < minDeque.peekLast()) 
                 minDeque.pollLast();
-            }
             minDeque.offerLast(nums[right]);
-
             // Shrink window if condition violated
             while (maxDeque.peekFirst() - minDeque.peekFirst() > limit) {
                 if (maxDeque.peekFirst() == nums[left]) maxDeque.pollFirst();
                 if (minDeque.peekFirst() == nums[left]) minDeque.pollFirst();
                 left++;
             }
-
             result = Math.max(result, right - left + 1);
         }
-
         return result;
     }
 }

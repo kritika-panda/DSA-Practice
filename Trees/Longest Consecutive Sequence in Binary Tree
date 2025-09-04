@@ -1,0 +1,25 @@
+https://www.geeksforgeeks.org/dsa/longest-consecutive-sequence-binary-tree/
+
+class Solution {
+    private int maxLen = 0;
+    public int longestConsecutive(TreeNode root) {
+        if (root == null) return 0;
+        dfs(root, root.val, 0);
+        return maxLen;
+    }
+    private void dfs(TreeNode node, int expected, int currLen) {
+        if (node == null) return;
+        if (node.val == expected) 
+            currLen++;
+         else 
+            currLen = 1;
+        maxLen = Math.max(maxLen, currLen);
+        dfs(node.left, node.val + 1, currLen);
+        dfs(node.right, node.val + 1, currLen);
+    }
+}
+
+
+Time & Space Complexity
+• 	Time: O(n), where n is the number of nodes
+• 	Space: O(h), where h is the height of the tree (due to recursion)

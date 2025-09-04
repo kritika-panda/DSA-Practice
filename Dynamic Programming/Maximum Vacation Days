@@ -1,0 +1,37 @@
+https://leetcode.ca/all/568.html
+
+class Solution {
+    public int maxVacationDays(int[][] flights, int[][] days) {
+        int n = flights.length;     // number of cities
+        int k = days[0].length;     // number of weeks
+        int[] dp = new int[n];
+
+        for (int week = 0; week < k; week++) {
+            int[] temp = new int[n];
+            Arrays.fill(temp, -1);
+
+            for (int city = 0; city < n; city++) {
+                for (int prev = 0; prev < n; prev++) {
+                    if (city == prev || flights[prev][city] == 1) {
+                        if (dp[prev] != -1) {
+                            temp[city] = Math.max(temp[city], dp[prev] + days[city][week]);
+                        }
+                    }
+                }
+            }
+
+            dp = temp;
+        }
+
+        int max = 0;
+        for (int val : dp) {
+            max = Math.max(max, val);
+        }
+
+        return max;
+    }
+}
+
+
+• 	Time: O(n² × k) — same as before, since we still check all city-to-city transitions per week
+• 	Space: O(n) — only storing current and previous week’s data

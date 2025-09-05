@@ -1,0 +1,49 @@
+https://leetcode.ca/all/444.html
+
+public class Solution {
+    public boolean sequenceReconstruction(List<Integer> org, List<List<Integer>> seqs) {
+        if (seqs.isEmpty()) return false;
+
+        int n = org.size();
+        Map<Integer, Set<Integer>> graph = new HashMap<>();
+        int[] inDegree = new int[n + 1];
+        boolean[] seen = new boolean[n + 1];
+
+        // Build graph
+        for (List<Integer> seq : seqs) {
+            for (int num : seq) {
+                if (num < 1 || num > n) return false;
+                seen[num] = true;
+                graph.putIfAbsent(num, new HashSet<>());
+            }
+            for (int i = 1; i < seq.size(); i++) {
+                int u = seq.get(i - 1), v = seq.get(i);
+                if (graph.get(u).add(v)) inDegree[v]++;
+            }
+        }
+
+        // Check if all elements in org are seen
+        for (int i = 1; i <= n; i++) {
+            if (!seen[i]) return false;
+        }
+
+        // Topological sort with uniqueness check
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 1; i <= n; i++) {
+            if (inDegree[i] == 0) queue.offer(i);
+        }
+
+        int idx = 0;
+        while (!queue.isEmpty()) {
+            if (queue.size() > 1) return false; // Multiple choices → not unique
+            int curr = queue.poll();
+            if (org.get(idx++) != curr) return false;
+
+            for (int neighbor : graph.getOrDefault(curr, new HashSet<>())) {
+                if (--inDegree[neighbor] == 0) queue.offer(neighbor);
+            }
+        }
+
+        return idx == n;
+    }
+}

@@ -1,0 +1,23 @@
+https://leetcode.com/problems/stone-game-vii/description/
+
+class Solution {
+    public int stoneGameVII(int[] stones) {
+        int n = stones.length;
+        int[][] dp = new int[n][n];
+        int[] prefix = new int[n + 1];
+        // Build prefix sum
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + stones[i];
+        }
+        // Fill DP table
+        for (int len = 1; len < n; len++) {
+            for (int i = 0; i + len < n; i++) {
+                int j = i + len;
+                int removeLeft = prefix[j + 1] - prefix[i + 1] - dp[i + 1][j];
+                int removeRight = prefix[j] - prefix[i] - dp[i][j - 1];
+                dp[i][j] = Math.max(removeLeft, removeRight);
+            }
+        }
+        return dp[0][n - 1];
+    }
+}

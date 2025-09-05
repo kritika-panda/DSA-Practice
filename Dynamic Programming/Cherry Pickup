@@ -1,0 +1,33 @@
+https://leetcode.com/problems/cherry-pickup/description/
+
+class Solution {
+    public int cherryPickup(int[][] grid) {
+        int n = grid.length;
+        Integer[][][] memo = new Integer[n][n][n];
+        return Math.max(0, dfs(grid, 0, 0, 0, memo));
+    }
+
+    private int dfs(int[][] grid, int x1, int y1, int x2, Integer[][][] memo) {
+        int y2 = x1 + y1 - x2;
+        int n = grid.length;
+
+        if (x1 >= n || y1 >= n || x2 >= n || y2 >= n ||
+            grid[x1][y1] == -1 || grid[x2][y2] == -1) return -1;
+
+        if (x1 == n - 1 && y1 == n - 1) return grid[x1][y1];
+
+        if (memo[x1][y1][x2] != null) return memo[x1][y1][x2];
+
+        int max = Math.max(
+            Math.max(dfs(grid, x1 + 1, y1, x2 + 1, memo), dfs(grid, x1 + 1, y1, x2, memo)),
+            Math.max(dfs(grid, x1, y1 + 1, x2 + 1, memo), dfs(grid, x1, y1 + 1, x2, memo))
+        );
+
+        if (max == -1) return memo[x1][y1][x2] = -1;
+
+        int cherries = grid[x1][y1];
+        if (x1 != x2 || y1 != y2) cherries += grid[x2][y2];
+
+        return memo[x1][y1][x2] = cherries + max;
+    }
+}

@@ -1,0 +1,20 @@
+https://leetcode.com/problems/subarray-sums-divisible-by-k/description/
+
+class Solution {
+    public int subarraysDivByK(int[] nums, int k) {
+        Map<Integer, Integer> remainderCount = new HashMap<>();
+        remainderCount.put(0, 1); // To count subarrays starting from index 0
+
+        int prefixSum = 0, count = 0;
+
+        for (int num : nums) {
+            prefixSum += num;
+            int remainder = ((prefixSum % k) + k) % k; // Handle negative remainders
+
+            count += remainderCount.getOrDefault(remainder, 0);
+            remainderCount.put(remainder, remainderCount.getOrDefault(remainder, 0) + 1);
+        }
+
+        return count;
+    }
+}

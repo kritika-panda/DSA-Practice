@@ -1,0 +1,29 @@
+https://leetcode.ca/all/1066.html
+
+class Solution {
+    public int assignBikes(int[][] workers, int[][] bikes) {
+        int n = workers.length;
+        int m = bikes.length;
+        int[] memo = new int[1 << m];
+        Arrays.fill(memo, Integer.MAX_VALUE);
+        return dfs(workers, bikes, 0, 0, memo);
+    }
+
+    private int dfs(int[][] workers, int[][] bikes, int workerIndex, int usedMask, int[] memo) {
+        if (workerIndex == workers.length) return 0;
+        if (memo[usedMask] != Integer.MAX_VALUE) return memo[usedMask];
+
+        int minDist = Integer.MAX_VALUE;
+        for (int bikeIndex = 0; bikeIndex < bikes.length; bikeIndex++) {
+            if ((usedMask & (1 << bikeIndex)) == 0) {
+                int dist = Math.abs(workers[workerIndex][0] - bikes[bikeIndex][0]) +
+                           Math.abs(workers[workerIndex][1] - bikes[bikeIndex][1]);
+                int nextMask = usedMask | (1 << bikeIndex);
+                minDist = Math.min(minDist, dist + dfs(workers, bikes, workerIndex + 1, nextMask, memo));
+            }
+        }
+
+        memo[usedMask] = minDist;
+        return minDist;
+    }
+}

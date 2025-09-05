@@ -1,0 +1,38 @@
+https://leetcode.com/problems/redundant-connection-ii/description/
+
+class Solution {
+    public int[] findRedundantDirectedConnection(int[][] edges) {
+        int n = edges.length;
+        int[] parent = new int[n + 1];
+        int[] cand1 = null, cand2 = null;
+        // Step 1: Detect node with two parents
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1];
+            if (parent[v] == 0) {
+                parent[v] = u;
+            } else {
+                cand1 = new int[]{parent[v], v};
+                cand2 = new int[]{u, v};
+                edge[1] = 0; // Temporarily invalidate cand2
+            }
+        }
+        // Step 2: Union-Find to detect cycle
+        for (int i = 0; i <= n; i++) parent[i] = i;
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1];
+            if (v == 0) continue; // Skip invalidated edge
+            int pu = find(parent, u);
+            if (pu == v) {
+                // Cycle detected
+                return cand1 != null ? cand1 : edge;
+            }
+            parent[v] = pu;
+        }
+        // No cycle → return second candidate
+        return cand2;
+    }
+    private int find(int[] parent, int x) {
+        if (parent[x] != x) parent[x] = find(parent, parent[x]);
+        return parent[x];
+    }
+}

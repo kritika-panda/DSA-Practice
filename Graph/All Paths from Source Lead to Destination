@@ -1,0 +1,30 @@
+https://leetcode.ca/all/1059.html
+
+public class Solution {
+    public boolean leadsToDestination(int n, int[][] edges, int source, int destination) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+        for (int[] edge : edges) graph.get(edge[0]).add(edge[1]);
+
+        int[] state = new int[n]; // 0 = unvisited, 1 = visiting, 2 = visited
+
+        return dfs(graph, state, source, destination);
+    }
+
+    private boolean dfs(List<List<Integer>> graph, int[] state, int node, int destination) {
+        if (state[node] != 0) return state[node] == 2;
+
+        if (graph.get(node).isEmpty()) return node == destination;
+
+        state[node] = 1; // mark as visiting
+
+        for (int neighbor : graph.get(node)) {
+            if (state[neighbor] == 1 || !dfs(graph, state, neighbor, destination)) {
+                return false;
+            }
+        }
+
+        state[node] = 2; // mark as visited
+        return true;
+    }
+}

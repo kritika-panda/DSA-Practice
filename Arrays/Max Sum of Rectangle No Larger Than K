@@ -1,0 +1,26 @@
+https://leetcode.com/problems/max-sum-of-rectangle-no-larger-than-k/description/
+
+class Solution {
+    public int maxSumSubmatrix(int[][] matrix, int k) {
+        int m = matrix.length, n = matrix[0].length;
+        int max = Integer.MIN_VALUE;
+        for (int top = 0; top < m; top++) {
+            int[] colSum = new int[n];
+            for (int bottom = top; bottom < m; bottom++) {
+                for (int col = 0; col < n; col++) 
+                    colSum[col] += matrix[bottom][col];
+            TreeSet<Integer> prefixSet = new TreeSet<>();
+                prefixSet.add(0);
+                int prefixSum = 0;
+                for (int sum : colSum) {
+                    prefixSum += sum;
+                    Integer target = prefixSet.ceiling(prefixSum - k);
+                    if (target != null) 
+                        max = Math.max(max, prefixSum - target);
+                    prefixSet.add(prefixSum);
+                }
+            }
+        }
+        return max;
+    }
+}

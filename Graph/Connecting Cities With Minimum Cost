@@ -1,0 +1,25 @@
+https://leetcode.ca/all/1135.html
+
+class Solution {
+    public int minimumCost(int n, int[][] connections) {
+        Arrays.sort(connections, (a, b) -> a[2] - b[2]); // Sort by cost
+        int[] parent = new int[n + 1];
+        for (int i = 1; i <= n; i++) parent[i] = i;
+        int cost = 0, edgesUsed = 0;
+        for (int[] conn : connections) {
+            int u = conn[0], v = conn[1], w = conn[2];
+            int pu = find(parent, u), pv = find(parent, v);
+
+            if (pu != pv) {
+                parent[pu] = pv; // Union
+                cost += w;
+                edgesUsed++;
+            }
+        }
+        return edgesUsed == n - 1 ? cost : -1;
+    }
+    private int find(int[] parent, int x) {
+        if (parent[x] != x) parent[x] = find(parent, parent[x]); // Path compression
+        return parent[x];
+    }
+}

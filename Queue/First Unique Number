@@ -1,0 +1,39 @@
+https://leetcode.ca/all/1429.html
+
+class FirstUnique {
+    private Map<Integer, Integer> count;
+    private Queue<Integer> queue;
+
+    public FirstUnique(int[] nums) {
+        count = new HashMap<>();
+        queue = new LinkedList<>();
+        for (int num : nums) {
+            add(num);
+        }
+    }
+
+    public int showFirstUnique() {
+        while (!queue.isEmpty() && count.get(queue.peek()) > 1) {
+            queue.poll();
+        }
+        return queue.isEmpty() ? -1 : queue.peek();
+    }
+
+    public void add(int value) {
+        count.put(value, count.getOrDefault(value, 0) + 1);
+        if (count.get(value) == 1) {
+            queue.offer(value);
+        }
+    }
+}
+
+
+
+
+// Time & Space Complexity:
+// add()             -> O(1)
+// showFirstUnique() -> O(1) amortized
+// Space Complexity  -> O(n)
+
+
+

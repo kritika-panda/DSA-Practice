@@ -1,0 +1,39 @@
+https://leetcode.com/problems/knight-probability-in-chessboard/description/
+
+class Solution {
+    public double knightProbability(int n, int k, int row, int column) {
+        double[][] dp = new double[n][n];
+        dp[row][column] = 1.0;
+
+        int[][] dirs = {
+            {1, 2}, {2, 1}, {2, -1}, {1, -2},
+            {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}
+        };
+
+        for (int move = 0; move < k; move++) {
+            double[][] next = new double[n][n];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (dp[i][j] > 0) {
+                        for (int[] d : dirs) {
+                            int x = i + d[0], y = j + d[1];
+                            if (x >= 0 && x < n && y >= 0 && y < n) {
+                                next[x][y] += dp[i][j] / 8.0;
+                            }
+                        }
+                    }
+                }
+            }
+            dp = next;
+        }
+
+        double total = 0.0;
+        for (double[] rowProb : dp) {
+            for (double prob : rowProb) {
+                total += prob;
+            }
+        }
+
+        return total;
+    }
+}

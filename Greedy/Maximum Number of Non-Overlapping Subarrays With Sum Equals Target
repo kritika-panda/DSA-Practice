@@ -1,0 +1,24 @@
+https://leetcode.com/problems/maximum-number-of-non-overlapping-subarrays-with-sum-equals-target/description/
+
+class Solution {
+    public int maxNonOverlapping(int[] nums, int target) {
+        Set<Integer> seen = new HashSet<>();
+        seen.add(0);
+
+        int count = 0, prefixSum = 0;
+
+        for (int num : nums) {
+            prefixSum += num;
+            if (seen.contains(prefixSum - target)) {
+                count++;
+                seen.clear();
+                seen.add(0);
+                prefixSum = 0;
+            } else {
+                seen.add(prefixSum);
+            }
+        }
+
+        return count;
+    }
+}

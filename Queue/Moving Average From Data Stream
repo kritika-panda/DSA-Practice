@@ -1,0 +1,39 @@
+Implement a class MovingAverage that calculates the moving average of the last size elements from a stream of integers. The class should support two operations:
+MovingAverage(int size): Constructor to initialize the object with the window size.
+double next(int val): Returns the moving average of the last size values of the data stream (including the new value val).
+Example Test Cases
+Example 1:
+MovingAverage obj = new MovingAverage(3);
+obj.next(1);   // returns 1.0
+obj.next(10);  // returns (1 + 10) / 2 = 5.5
+obj.next(3);   // returns (1 + 10 + 3) / 3 = 4.67
+obj.next(5);   // returns (10 + 3 + 5) / 3 = 6.0
+Example 2:
+MovingAverage obj = new MovingAverage(2);
+obj.next(5);   // returns 5.0
+obj.next(15);  // returns (5 + 15) / 2 = 10.0
+obj.next(10);  // returns (15 + 10) / 2 = 12.5
+
+
+
+
+class MovingAverage {
+    private Queue<Integer> window;
+    private int maxSize;
+    private double sum;
+
+    public MovingAverage(int size) {
+        window = new LinkedList<>();
+        maxSize = size;
+        sum = 0;
+    }
+
+    public double next(int val) {
+        if (window.size() == maxSize) {
+            sum -= window.poll();
+        }
+        window.offer(val);
+        sum += val;
+        return sum / window.size();
+    }
+}

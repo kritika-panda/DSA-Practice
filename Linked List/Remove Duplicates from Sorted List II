@@ -1,0 +1,20 @@
+https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/description/
+
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode dummy = new ListNode(0, head);
+        ListNode prev = dummy;
+        while (head != null) {
+            // Detect duplicates
+            if (head.next != null && head.val == head.next.val) {
+                // Skip all nodes with this value
+                while (head.next != null && head.val == head.next.val) 
+                    head = head.next;
+                prev.next = head.next; // Remove all duplicates
+            } else 
+                prev = prev.next; // Move forward
+            head = head.next;
+        }
+        return dummy.next;
+    }
+}

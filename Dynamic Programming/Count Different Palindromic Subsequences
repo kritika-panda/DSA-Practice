@@ -1,0 +1,42 @@
+https://leetcode.com/problems/count-different-palindromic-subsequences/description/
+
+class Solution {
+    public int countPalindromicSubsequences(String s) {
+        int MOD = 1_000_000_007;
+        int n = s.length();
+        int[][][] dp = new int[n][n][4]; // dp[i][j][k]: count of palindromes from i to j starting and ending with char k
+
+        for (int i = 0; i < n; i++) {
+            dp[i][i][s.charAt(i) - 'a'] = 1;
+        }
+
+        for (int len = 2; len <= n; len++) {
+            for (int i = 0; i + len <= n; i++) {
+                int j = i + len - 1;
+                for (int k = 0; k < 4; k++) {
+                    char c = (char) ('a' + k);
+                    if (s.charAt(i) == c && s.charAt(j) == c) {
+                        int sum = 0;
+                        for (int m = 0; m < 4; m++) {
+                            sum = (sum + dp[i + 1][j - 1][m]) % MOD;
+                        }
+                        dp[i][j][k] = (2 + sum) % MOD;
+                    } else if (s.charAt(i) == c) {
+                        dp[i][j][k] = dp[i][j - 1][k];
+                    } else if (s.charAt(j) == c) {
+                        dp[i][j][k] = dp[i + 1][j][k];
+                    } else {
+                        dp[i][j][k] = dp[i + 1][j - 1][k];
+                    }
+                }
+            }
+        }
+
+        int result = 0;
+        for (int k = 0; k < 4; k++) {
+            result = (result + dp[0][n - 1][k]) % MOD;
+        }
+
+        return result;
+    }
+}

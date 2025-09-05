@@ -1,0 +1,32 @@
+https://leetcode.com/problems/split-linked-list-in-parts/submissions/1760102497/
+
+class Solution {
+    public ListNode[] splitListToParts(ListNode head, int k) {
+        ListNode[] result = new ListNode[k];
+        int length = 0;
+        ListNode curr = head;
+        // Step 1: Count total nodes
+        while (curr != null) {
+            length++;
+            curr = curr.next;
+        }
+        // Step 2: Determine base size and extra nodes
+        int baseSize = length / k;
+        int extra = length % k;
+        curr = head;
+        for (int i = 0; i < k; i++) {
+            ListNode dummy = new ListNode(0);
+            ListNode tail = dummy;
+            int partSize = baseSize + (extra-- > 0 ? 1 : 0);
+            for (int j = 0; j < partSize; j++) {
+                tail.next = curr;
+                tail = tail.next;
+                if (curr != null) curr = curr.next;
+            }
+            // Disconnect current part
+            if (tail != null) tail.next = null;
+            result[i] = dummy.next;
+        }
+        return result;
+    }
+}

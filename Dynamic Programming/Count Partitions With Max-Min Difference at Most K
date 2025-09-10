@@ -1,0 +1,29 @@
+https://leetcode.com/problems/count-partitions-with-max-min-difference-at-most-k/description/?envType=problem-list-v2&envId=monotonic-queue
+
+class Solution {
+public int countPartitions(int[] nums, int k) {
+    final int MOD = 1_000_000_007;
+    int n = nums.length;
+    int[] dp = new int[n + 1];       // dp[i]: number of ways to partition first i elements
+    int[] prefix = new int[n + 1];   // prefix[i]: sum of dp[0..i]
+    dp[0] = 1;
+    prefix[0] = 1;
+    TreeMap<Integer, Integer> window = new TreeMap<>();
+    int left = 0;
+    for (int right = 0; right < n; right++) {
+        // Add current element to window
+        window.put(nums[right], window.getOrDefault(nums[right], 0) + 1);
+        // Shrink window until max - min ≤ k
+        while (window.lastKey() - window.firstKey() > k) {
+            int val = nums[left];
+            window.put(val, window.get(val) - 1);
+            if (window.get(val) == 0) window.remove(val);
+            left++;
+        }
+        // Update dp and prefix
+        dp[right + 1] = (prefix[right] - (left > 0 ? prefix[left - 1] : 0) + MOD) % MOD;
+        prefix[right + 1] = (prefix[right] + dp[right + 1]) % MOD;
+    }
+    return dp[n];
+}
+}

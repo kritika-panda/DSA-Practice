@@ -8,19 +8,51 @@ Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.
 
 class Solution {
     public int longestOnes(int[] nums, int k) {
-        int left = 0, maxLength = 0, zeroCount = 0;
-        for (int right = 0; right < nums.length; ++right) {
-            if (nums[right] == 0) {
-                zeroCount++;
+        int l = 0, maxi = 0, c = 0;
+        int r=0;
+        int n=nums.length;
+        while(r<n)
+        {
+            if (nums[r] == 0) 
+                c++;
+            while (c > k) 
+            {
+                if (nums[l] == 0) 
+                    c--;
+                l++;
             }
-            while (zeroCount > k) {
-                if (nums[left] == 0) {
-                    zeroCount--;
-                }
-                left++;
-            }
-            maxLength = Math.max(maxLength, right - left + 1);
+            maxi = Math.max(maxi, r - l + 1);
+            r++;
         }
-        return maxLength;
+        return maxi;
     }
 }
+
+
+
+// class Solution {
+//     public int longestOnes(int[] nums, int k) {
+//         int n=nums.length;
+//         List<Integer> list=new ArrayList<>();
+//         int l=0,r=0;
+//         int maxi=0;
+//         int c=0;
+//         while(r<n)
+//         {
+//             if(nums[r]==0)
+//             {
+//                list.add(r);
+//                 c++;
+//             }
+//             if(c>k)
+//             {
+//                 l=list.get(0)+1;
+//                 list.remove(0);
+//                 c--;
+//             }
+//             maxi=Math.max(maxi,r-l+1);
+//             r++;
+//         }
+//         return maxi;
+//     }
+// }

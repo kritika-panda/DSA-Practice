@@ -16,12 +16,34 @@ Input: fruits = [0,1,2,2]
 Output: 3
 Explanation: We can pick from trees [1,2,2].
 If we had started at the first tree, we would only pick from trees [0,1].
-Example 3:
 
-Input: fruits = [1,2,3,2,2]
-Output: 4
-Explanation: We can pick from trees [2,3,2,2].
-If we had started at the first tree, we would only pick from trees [1,2].
+
+
+class Solution {
+    public int totalFruit(int[] fruits) {
+        HashMap<Integer,Integer> hm=new HashMap<>();
+        int l=0,r=0;
+        int n=fruits.length;
+        int maxi=0;
+        while(r<n)
+        {
+            hm.put(fruits[r], hm.getOrDefault(fruits[r], 0) + 1);
+            while(hm.size()>2)
+            {
+                hm.put(fruits[l],hm.get(fruits[l])-1);
+                if(hm.get(fruits[l]) == 0)
+                    hm.remove(fruits[l]);                    
+                l++;
+            }
+            maxi=Math.max(maxi,r-l+1);
+            r++;
+        }
+        return maxi;
+    }
+}
+
+
+
 
 
 

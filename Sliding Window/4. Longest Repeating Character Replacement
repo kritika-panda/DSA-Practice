@@ -1,0 +1,79 @@
+Problem Statement: Given an integer k and a string s, any character in the string can be selected and changed to any other 
+uppercase English character. This operation can be performed up to k times. After completing these steps, return the length of 
+the longest substring that contains the same letter.
+
+Examples
+Input: s = "BAABAABBBAAA", k = 2  
+Output: 6  
+Explanation: We can change the B at index 0 and 3 (0-based indexing) to A. The new string becomes "AAAAAABBBAAA". The substring 
+"AAAAAA" is the longest substring with the same letter, and its length is 6. 
+
+Input: s = "AABABBA", k = 1  
+Output: 4  
+Explanation: We can change one character to get the new string "AABBBBA". The substring "BBBB" is the longest with the same 
+character. There are other ways to achieve this result as well.
+
+
+class Solution {
+    // Function to return the length of the longest substring that can be made of repeating characters
+    // by replacing at most k characters
+    public int characterReplacement(String s, int k) {
+        // Frequency array for A-Z
+        int[] freq = new int[26];
+
+        // Left and right pointers of sliding window
+        int left = 0, right = 0;
+
+        // Tracks the count of the most frequent character in current window
+        int maxCount = 0;
+
+        // Stores the maximum length of valid window
+        int maxLength = 0;
+
+        // Iterate through the string with right pointer
+        while (right < s.length()) {
+
+            // Increment the frequency of current character
+            freq[s.charAt(right) - 'A']++;
+
+            // Update maxCount with the max frequency seen so far
+            maxCount = Math.max(maxCount, freq[s.charAt(right) - 'A']);
+
+            // If the current window needs more than k replacements, move left
+            while ((right - left + 1) - maxCount > k) {
+                freq[s.charAt(left) - 'A']--;
+                left++;
+            }
+
+            // Update the maximum window length
+            maxLength = Math.max(maxLength, right - left + 1);
+
+            // Move right pointer forward
+            right++;
+        }
+
+        // Return the maximum valid window length
+        return maxLength;
+    }
+}
+
+Time Complexity: O(n), where n is the length of the string,each character is processed at most twice once by the right pointer, once by the left. All operations inside the loop run in constant time.
+
+Space Complexity: O(1), constant space .Only a fixed-size frequency array (26 letters) is used, regardless of input size.
+
+
+Note: we don’t reduce maxFreq when shrinking. Keeping maxFreq=3 is fine and still correct.
+
+Why we don't recalculate maxFreq
+Imagine recalculating maxFreq every shrink:
+You would do O(26) or even O(window) work every time →
+turn a linear-time O(n) solution into O(n²) or O(n * alphabet).
+No thanks.
+By not decreasing maxFreq, we get:
+✔ Correct validity checks
+✔ Correct max window size
+✔ O(n) speed
+✔ Simple code
+The trick is:
+Keeping maxFreq artificially high makes the window shrink earlier, not later.
+That still produces the correct longest window.

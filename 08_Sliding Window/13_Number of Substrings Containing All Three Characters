@@ -1,0 +1,27 @@
+Problem Statement: Given a string s , consisting only of characters 'a' , 'b' , 'c'.Find the number of substrings that contain at least one occurrence of all these characters 'a' , 'b' , 'c'.
+
+Examples
+Input : s = "abcba"
+Output :  5
+Explanation : The substrings containing at least one occurrence of the characters 'a' , 'b' , 'c' are "abc" , "abcb" , "abcba" , "bcba" , "cba".
+
+
+Input : s = "ccabcc"
+Output : 8
+Explanation : The substrings containing at least one occurrence of the characters 'a' , 'b' , 'c' are "ccab" , "ccabc" , "ccabcc" , "cab" , "cabc" , "cabcc" , "abc" , "abcc
+
+
+
+class Solution{
+public int numberOfSubstrings(String s) {
+    int[] last = {-1, -1, -1}; // last seen indices of 'a', 'b', 'c'
+    int res = 0;
+    for (int i = 0; i < s.length(); i++) {
+        last[s.charAt(i) - 'a'] = i;
+        res += Math.min(last[0], Math.min(last[1], last[2])) + 1;
+    }
+    return res;
+}
+}
+
+/*Every time you reach a position in the string where all three characters have appeared, you can form multiple valid substrings ending at that position. The trick is to track the latest index of 'a', 'b', and 'c' as you iterate.*/

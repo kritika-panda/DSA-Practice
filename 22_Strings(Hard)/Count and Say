@@ -1,0 +1,54 @@
+Problem Statement: The count-and-say sequence is a sequence of digit strings defined by the recursive formula:
+countAndSay(1) = "1"
+countAndSay(n) is the run-length encoding of countAndSay(n - 1).
+
+Run-length encoding (RLE) is a string compression method that works by replacing consecutive identical characters (repeated 2 or more times) with the concatenation of the character and the number marking the count of the characters (length of the run). For example, to compress the string "3322251" we replace "33" with "23", replace "222" with "32", replace "5" with "15" and replace "1" with "11". Thus the compressed string becomes "23321511".
+
+Given a positive integer n, return the nth element of the count-and-say sequence.
+
+Examples
+Input: 4
+Output: "1211"
+Explanation:  
+countAndSay(1) = "1"
+countAndSay(2) = RLE of "1" = "11"
+countAndSay(3) = RLE of "11" = "21"
+countAndSay(4) = RLE of "21" = "1211"
+Input: 1
+Output: "1"
+Explanation: This is the base case.
+
+
+
+
+public class Solution {
+    public String countAndSay(int n) {
+        String result = "1";
+
+        for (int i = 1; i < n; i++) {
+            StringBuilder next = new StringBuilder();
+            int count = 1;
+            char prev = result.charAt(0);
+
+            for (int j = 1; j < result.length(); j++) {
+                char curr = result.charAt(j);
+                if (curr == prev) {
+                    count++;
+                } else {
+                    next.append(count).append(prev);
+                    count = 1;
+                    prev = curr;
+                }
+            }
+
+            next.append(count).append(prev); // append last group
+            result = next.toString();
+        }
+
+        return result;
+    }
+}
+
+Time & Space Complexity
+- Time: O(n · m), where m is the average length of intermediate strings.
+- Space: O(m) for each intermediate string.

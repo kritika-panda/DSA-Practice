@@ -13,6 +13,17 @@ Example 3:
 Input: list1 = [], list2 = [0]
 Output: [0]
 
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
 class Solution {
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         ListNode dummy = new ListNode(0);
@@ -32,3 +43,13 @@ class Solution {
         return dummy.next;
     }
 }
+
+/*
+Time Complexity: O(n + m)
+- Each node from both lists is visited once.
+- n = length of list1, m = length of list2.
+
+Space Complexity: O(1)
+- Only a few pointers are used (dummy, current).
+- No extra data structures created.
+*/

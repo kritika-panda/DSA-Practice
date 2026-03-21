@@ -1,1 +1,52 @@
+214. Shortest Palindrome
+Hard
+Topics
+premium lock icon
+Companies
+You are given a string s. You can convert s to a palindrome by adding characters in front of it.
+Return the shortest palindrome you can find by performing this transformation.
+
+Example 1:
+
+Input: s = "aacecaaa"
+Output: "aaacecaaa"
+Example 2:
+
+Input: s = "abcd"
+Output: "dcbabcd"
+
+
+class Solution {
+    public String shortestPalindrome(String s) {
+        String rev = new StringBuilder(s).reverse().toString();
+        String combined = s + "#" + rev;
+        int[] lps = new int[combined.length()];
+        for (int i = 1; i < combined.length(); i++)
+        {
+            int j = lps[i - 1];
+            while (j > 0 && combined.charAt(i) != combined.charAt(j)) 
+                j = lps[j - 1];
+            if (combined.charAt(i) == combined.charAt(j)) 
+                j++;
+            lps[i] = j;
+        }
+        int longestPrefix = lps[combined.length() - 1];
+        return rev.substring(0, s.length() - longestPrefix) + s;
+    }
+}
+
+
+Time Complexity: O(n)
+- Building reverse string: O(n)
+- Constructing combined string: O(n)
+- Computing KMP prefix table: O(n)
+- Final string construction: O(n)
+Overall: O(n)
+
+Space Complexity: O(n)
+- Reverse string: O(n)
+- Combined string: O(n)
+- LPS array: O(n)
+Overall: O(n)
+
 

@@ -1,0 +1,40 @@
+Problem Statement: Given a string s, return the longest happy prefix of s. A happy prefix is a string that is both a proper prefix and a proper suffix.
+If no such prefix exists, return an empty string .
+
+Note: A proper prefix/proper suffix of a string is any prefix/suffix that is not equal to the entire string.
+
+Examples
+Input: s = "ababab"
+Output: "abab"
+Explanation:  "abab" is the longest prefix which is also suffix. They can overlap in the original string.
+Input: s = "aaaa"
+Output: "aaa"
+Explanation: "aaa" is the longest proper prefix which is also a proper suffix in the string "aaaa".
+
+
+class Solution {
+    public String longestPrefix(String s) {
+        int[] dp = new int[s.length()];
+        int len = 0, i = 1;
+        while(i < s.length()){
+            if(s.charAt(i) == s.charAt(len)){
+                dp[i] = ++len;
+                i++;
+            }
+            else{
+                if(len>0){
+                    len = dp[len-1];
+                }
+                else{
+                    dp[i] = 0;
+                    i++;
+                }
+            }
+        }
+        return s.substring(0,dp[dp.length-1]);
+    }
+}
+
+Complexity Analysis
+Time Complexity: O(n), we traverse the string once to compute the LPS array and use it to get the result.
+Space Complexity: O(n), extra space is used for the LPS array of length n.

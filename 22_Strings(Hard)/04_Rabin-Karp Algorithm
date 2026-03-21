@@ -1,0 +1,97 @@
+Given two strings a and b, return the minimum number of times you should repeat string a so that string b is a substring of it. If it is impossible for b​​​​​​ to be a substring of a after repeating it, return -1.
+
+Notice: string "abc" repeated 0 times is "", repeated 1 time is "abc" and repeated 2 times is "abcabc".
+
+ 
+Example 1:
+
+Input: a = "abcd", b = "cdabcdab"
+Output: 3
+Explanation: We return 3 because by repeating a three times "abcdabcdabcd", b is a substring of it.
+Example 2:
+
+Input: a = "a", b = "aa"
+Output: 2
+
+
+
+https://www.geeksforgeeks.org/dsa/pattern-searching/
+
+- Text: "boybirthday"
+- Pattern: "birth"
+- Base: 256
+- Prime modulus: 101
+- Indexing: 1-based (so output shows human-readable positions)
+
+🧮 Step 1: Precompute Variables
+int d = 256;
+int q = 101;
+int M = 5;              // length of "birth"
+int N = 11;             // length of "boybirthday"
+int p = 0, t = 0, h = 1;
+ArrayList<Integer> ans = new ArrayList<>();
+
+
+Compute h = pow(d, M-1) % q:
+h = (256^4) % 101 = 88
+
+
+
+🧮 Step 2: Initial Hashes
+Compute hash of "birth" (pattern) and "boybi" (first window of text):
+| i | Character | Pattern p Update | Text t Update | 
+| 0 | 'b' | p = (0×256 + 98) % 101 = 98 | t = (0×256 + 98) % 101 = 98 | 
+| 1 | 'i' | p = (98×256 + 105) % 101 = 70 | t = (98×256 + 111) % 101 = 48 | 
+| 2 | 'r' | p = (70×256 + 114) % 101 = 77 | t = (48×256 + 121) % 101 = 31 | 
+| 3 | 't' | p = (77×256 + 116) % 101 = 84 | t = (31×256 + 98) % 101 = 99 | 
+| 4 | 'h' | p = (84×256 + 104) % 101 = 18 | t = (99×256 + 105) % 101 = 90 | 
+
+
+So final pattern hash p = 18
+Initial window hash t = 90
+No match yet.
+
+🔁 Step 3: Slide Window
+We move the window from positions i = 0 to N-M = 6 (1-based indices 1 to 7):
+➤ i = 0 → Window = "boybi"
+t = 90 ≠ 18 → No match
+Update t:
+t = (256 × (90 - 98×88) + 'r') % 101
+  = (256 × (90 - 8624) + 114) % 101
+  = large negative → normalize → t = 43
+
+
+➤ i = 1 → "oybir"
+t = 43 ≠ 18 → No match
+→ Update t → t = 87
+
+
+➤ i = 2 → "ybirt"
+t = 87 ≠ 18 → No match
+→ Update t → t = 18 ✅ match!
+
+Compare actual substring:  
+`txt.substring(3, 8)` = `"birth"` matches pattern → store `i + 1 = 3 + 1 = 4`
+
+So, **match found at position 4 (1-based index)**
+
+→ Update t → t = 61
+
+#### ➤ `i = 3` → `"irthd"` → t = 61 → no match  
+→ Update t → t = 49
+
+#### ➤ `i = 4` → `"rthda"` → t = 49 → no match  
+→ Update t → t = 84
+
+#### ➤ `i = 5` → `"thday"` → t = 84 → no match  
+→ End
+
+---
+
+### ✅ Final Result
+
+```java
+ans = [4]
+
+
+Meaning: the pattern "birth" is found starting at the 4th character of "boybirthday" (1-based indexing).

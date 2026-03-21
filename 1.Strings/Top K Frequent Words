@@ -1,0 +1,54 @@
+https://leetcode.com/problems/top-k-frequent-words/description/?envType=problem-list-v2&envId=trie
+
+class Solution {
+    public List<String> topKFrequent(String[] words, int k) {
+        Map<String, Integer> freqMap = new HashMap<>();
+        for (String word : words) {
+            freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
+        }
+        PriorityQueue<String> heap = new PriorityQueue<>((a, b) -> {
+            int freqCompare = freqMap.get(a) - freqMap.get(b);
+            if (freqCompare == 0) 
+                return b.compareTo(a); // reverse lex order for min-heap
+            return freqCompare;
+        });
+        for (String word : freqMap.keySet()) {
+            heap.offer(word);
+            if (heap.size() > k) 
+                heap.poll();
+        }
+        List<String> result = new ArrayList<>();
+        while (!heap.isEmpty()) 
+            result.add(heap.poll());
+        Collections.reverse(result); // because we used min-heap
+        return result;
+    }
+}
+
+OR
+
+class Solution {
+    public List<String> topKFrequent(String[] words, int k) {
+        Map<String, Integer> freqMap = new HashMap<>();
+        for (String word : words) {
+            freqMap.put(word, freqMap.getOrDefault(word, 0) + 1);
+        }
+
+        TreeMap<Integer, TreeSet<String>> treeMap = new TreeMap<>(Collections.reverseOrder());
+        for (Map.Entry<String, Integer> entry : freqMap.entrySet()) {
+            int freq = entry.getValue();
+            String word = entry.getKey();
+            treeMap.computeIfAbsent(freq, x -> new TreeSet<>()).add(word);
+        }
+
+        List<String> result = new ArrayList<>();
+        for (Map.Entry<Integer, TreeSet<String>> entry : treeMap.entrySet()) {
+            for (String word : entry.getValue()) {
+                result.add(word);
+                if (result.size() == k) return result;
+            }
+        }
+
+        return result;
+    }
+}

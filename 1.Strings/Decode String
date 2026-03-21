@@ -1,0 +1,35 @@
+https://leetcode.com/problems/decode-string/description/
+
+class Solution {
+    public String decodeString(String s) {
+        Stack<Integer> countStack = new Stack<>();
+        Stack<StringBuilder> stringStack = new Stack<>();
+        StringBuilder current = new StringBuilder();
+        int k = 0;
+        for (char ch : s.toCharArray()) {
+            if (Character.isDigit(ch)) {
+                // build the multiplier number
+                k = k * 10 + (ch - '0');
+            } else if (ch == '[') {
+                // push current multiplier and string into stacks
+                countStack.push(k);
+                stringStack.push(current);
+                // reset
+                k = 0;
+                current = new StringBuilder();
+            } else if (ch == ']') {
+                // pop last string and multiplier
+                int repeat = countStack.pop();
+                StringBuilder decoded = stringStack.pop();
+                for (int i = 0; i < repeat; i++) {
+                    decoded.append(current);
+                }
+                current = decoded;
+            } else {
+                // normal character
+                current.append(ch);
+            }
+        }
+        return current.toString();
+    }
+}

@@ -1,0 +1,34 @@
+https://leetcode.com/problems/find-and-replace-in-string/description/?envType=problem-list-v2&envId=string
+
+
+class Solution {
+    public String findReplaceString(String s, int[] indices, String[] sources, String[] targets) {
+        int n = s.length();
+        StringBuilder result = new StringBuilder();
+        Map<Integer, Integer> replaceMap = new HashMap<>();
+
+        // Mark valid replacements
+        for (int i = 0; i < indices.length; i++) {
+            int idx = indices[i];
+            String src = sources[i];
+            if (s.startsWith(src, idx)) {
+                replaceMap.put(idx, i);
+            }
+        }
+
+        // Build result
+        int i = 0;
+        while (i < n) {
+            if (replaceMap.containsKey(i)) {
+                int k = replaceMap.get(i);
+                result.append(targets[k]);
+                i += sources[k].length();
+            } else {
+                result.append(s.charAt(i));
+                i++;
+            }
+        }
+
+        return result.toString();
+    }
+}

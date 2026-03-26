@@ -1,0 +1,25 @@
+https://leetcode.com/problems/longest-common-prefix/description/?envType=problem-list-v2&envId=string
+
+
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if (strs == null || strs.length == 0) 
+                return "";
+        String prefix = strs[0]; 
+        for (int i = 1; i < strs.length; i++) 
+        {
+            while (strs[i].indexOf(prefix) != 0) 
+            {
+                prefix = prefix.substring(0, prefix.length() - 1);
+                if (prefix.isEmpty()) return "";
+            }
+        }
+        return prefix;
+    }
+}
+
+//System.out.println("flower".indexOf("flow"));   // 0  (because "flow" is at the start)
+//System.out.println("flow".indexOf("flower"));   // -1 (not found)
+//System.out.println("flow".indexOf("flo"));      // 0  (found at start)
+//System.out.println("flow".indexOf("ow"));       // 2  (found at index 2)
+Time and Space Complexity: 𝑂(n.m)

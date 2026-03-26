@@ -23,3 +23,378 @@ class Solution {
 //System.out.println("flow".indexOf("flo"));      // 0  (found at start)
 //System.out.println("flow".indexOf("ow"));       // 2  (found at index 2)
 Time and Space Complexity: 𝑂(n.m)
+
+
+Today
+13. Roman to Integer solution in java
+Here’s a clean and efficient Java solution for the Roman to Integer problem (LeetCode #13):
+
+java
+import java.util.HashMap;
+import java.util.Map;
+
+public class RomanToInteger {
+    public int romanToInt(String s) {
+        Map<Character, Integer> romanMap = new HashMap<>();
+        romanMap.put('I', 1);
+        romanMap.put('V', 5);
+        romanMap.put('X', 10);
+        romanMap.put('L', 50);
+        romanMap.put('C', 100);
+        romanMap.put('D', 500);
+        romanMap.put('M', 1000);
+
+        int result = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int value = romanMap.get(s.charAt(i));
+            
+            // If the next value is larger, subtract current value
+            if (i + 1 < s.length() && value < romanMap.get(s.charAt(i + 1))) {
+                result -= value;
+            } else {
+                result += value;
+            }
+        }
+        return result;
+    }
+
+    // Example usage
+    public static void main(String[] args) {
+        RomanToInteger converter = new RomanToInteger();
+        System.out.println(converter.romanToInt("III"));    // Output: 3
+        System.out.println(converter.romanToInt("LVIII"));  // Output: 58
+        System.out.println(converter.romanToInt("MCMXCIV"));// Output: 1994
+    }
+}
+🔑 Key Points:
+Uses a HashMap to store Roman numeral values.
+
+Iterates through the string:
+
+If the current numeral is smaller than the next, subtract it.
+
+Otherwise, add it.
+
+Time complexity: O(n) (linear scan).
+
+Space complexity: O(1) (fixed map size).
+
+This is the most common and optimal approach for this problem.
+
+Would you like me to also show you a more concise version without using a HashMap (just with a helper method), so you can compare both styles?
+
+class Solution {
+    public int romanToInt(String s) {
+        
+    }
+}
+Here’s how you can complete your Solution class for LeetCode 13: Roman to Integer in Java:
+
+java
+class Solution {
+    public int romanToInt(String s) {
+        int result = 0;
+        int prevValue = 0;
+
+        for (int i = s.length() - 1; i >= 0; i--) {
+            int value = getValue(s.charAt(i));
+
+            // If current value is smaller than the previous one, subtract it
+            if (value < prevValue) {
+                result -= value;
+            } else {
+                result += value;
+            }
+
+            prevValue = value;
+        }
+
+        return result;
+    }
+
+    private int getValue(char c) {
+        switch (c) {
+            case 'I': return 1;
+            case 'V': return 5;
+            case 'X': return 10;
+            case 'L': return 50;
+            case 'C': return 100;
+            case 'D': return 500;
+            case 'M': return 1000;
+            default: return 0;
+        }
+    }
+}
+⚡ Explanation:
+We traverse the string from right to left.
+
+Keep track of the previous numeral’s value.
+
+If the current numeral is smaller than the previous, subtract it (e.g., IV = 5 - 1 = 4).
+
+Otherwise, add it.
+
+This avoids using a HashMap and keeps the code concise.
+
+✅ Example runs:
+
+"III" → 3
+
+"LVIII" → 58
+
+"MCMXCIV" → 1994
+
+Would you like me to also show you a HashMap-based version inside the same Solution class, so you can compare both approaches side by side?
+
+Longest Common Prefix
+Here’s a neat and efficient Java solution for LeetCode 14: Longest Common Prefix:
+
+java
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if (strs == null || strs.length == 0) return "";
+
+        String prefix = strs[0]; // assume first string as prefix
+
+        for (int i = 1; i < strs.length; i++) {
+            // shrink prefix until it matches the start of strs[i]
+            while (strs[i].indexOf(prefix) != 0) {
+                prefix = prefix.substring(0, prefix.length() - 1);
+                if (prefix.isEmpty()) return "";
+            }
+        }
+
+        return prefix;
+    }
+}
+🔑 Explanation:
+Start with the first string as the initial prefix.
+
+Compare it with each subsequent string:
+
+If the current string doesn’t start with the prefix, shorten the prefix by one character.
+
+Repeat until it matches or becomes empty.
+
+Return the final prefix.
+
+✅ Example Runs:
+["flower","flow","flight"] → "fl"
+
+["dog","racecar","car"] → ""
+
+["interview","internet","internal"] → "inte"
+
+This approach is O(S) where S is the sum of all characters across strings, since each character is checked at most once.
+
+Would you like me to also show you a horizontal scanning vs vertical scanning comparison for this problem, so you can see different styles of solving it?
+
+time complexity
+For the Longest Common Prefix solution I shared, the time complexity is:
+
+⏱ Time Complexity
+Worst case:  
+Each string is compared character by character until the prefix is reduced to the smallest common part.
+If there are 
+𝑛
+ strings and the average length of strings is 
+𝑚
+, the complexity is:
+
+𝑂
+(
+𝑛
+⋅
+𝑚
+)
+Explanation:
+
+For each of the 
+𝑛
+−
+1
+ comparisons, we may need to check up to 
+𝑚
+ characters.
+
+In the worst case (all strings are identical), we scan through all characters of all strings.
+
+📦 Space Complexity
+Only a few variables and substrings are stored.
+
+No extra data structures proportional to input size.
+
+So:
+
+𝑂
+(
+1
+)
+✅ Example:
+
+Input: ["flower","flow","flight"]
+
+𝑛
+=
+3
+, 
+𝑚
+=
+6
+ (length of "flower")
+
+Complexity: 
+𝑂
+(
+3
+⋅
+6
+)
+=
+𝑂
+(
+18
+)
+, which is linear in practice.
+
+Would you like me to also break down the vertical scanning approach (checking character by character across all strings) and compare its complexity with the horizontal scanning one? That way you’ll see why both end up at 
+𝑂
+(
+𝑛
+⋅
+𝑚
+)
+ but differ in implementation style.
+
+"flower".indexOf("flow")
+In Java, the expression:
+
+java
+"flower".indexOf("flow")
+returns 0.
+
+Why?
+The indexOf(String str) method checks where the substring str first appears in the given string.
+
+"flower" starts with "flow", so the substring "flow" is found at index 0 (the beginning).
+
+If the substring isn’t found, indexOf returns -1.
+
+✅ Examples:
+
+java
+System.out.println("flower".indexOf("flow"));   // 0
+System.out.println("flower".indexOf("owe"));    // 2
+System.out.println("flower".indexOf("er"));     // 4
+System.out.println("flower".indexOf("cat"));    // -1
+This is exactly why the Longest Common Prefix solution works: it keeps shrinking the prefix until strs[i].indexOf(prefix) == 0, meaning the current string starts with that prefix.
+
+Would you like me to walk through a step-by-step dry run of how "flower","flow","flight" gets reduced to "fl" using this logic?
+
+"flow".indexOf("flower")
+In Java, the expression:
+
+java
+"flow".indexOf("flower")
+returns -1.
+
+Why?
+The indexOf(String str) method looks for the first occurrence of the substring str inside the given string.
+
+"flow" is shorter than "flower", and "flower" cannot be found inside "flow".
+
+Since the substring doesn’t exist, indexOf returns -1.
+
+✅ Examples to contrast:
+
+java
+System.out.println("flower".indexOf("flow"));   // 0  (because "flow" is at the start)
+System.out.println("flow".indexOf("flower"));   // -1 (not found)
+System.out.println("flow".indexOf("flo"));      // 0  (found at start)
+System.out.println("flow".indexOf("ow"));       // 2  (found at index 2)
+This highlights the directionality of substring checks: "A".indexOf("B") only succeeds if "B" is contained within "A".
+
+Would you like me to walk through how this behavior directly impacts the Longest Common Prefix algorithm, especially why we shrink the prefix until strs[i].indexOf(prefix) == 0?
+
+dry run the below code for:
+Example 1:
+
+Input: strs = ["flower","flow","flight"]
+Output: "fl"
+Example 2:
+
+Input: strs = ["dog","racecar","car"]
+Output: ""
+Explanation: There is no common prefix among the input strings.
+
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if (strs == null || strs.length == 0) 
+                return "";
+        String prefix = strs[0]; 
+        for (int i = 1; i < strs.length; i++) 
+        {
+            while (strs[i].indexOf(prefix) != 0) 
+            {
+                prefix = prefix.substring(0, prefix.length() - 1);
+                if (prefix.isEmpty()) return "";
+            }
+        }
+        return prefix;
+    }
+}
+Let’s dry run your code step by step for both examples:
+
+Example 1
+Input: ["flower","flow","flight"]
+
+Initialization
+
+prefix = "flower"
+
+Compare with "flow"
+
+"flow".indexOf("flower") = -1 → not a prefix.
+
+Shrink prefix:
+
+"flow".indexOf("flowe") = -1 → shrink again
+
+"flow".indexOf("flow") = 0 → match found
+
+Now prefix = "flow"
+
+Compare with "flight"
+
+"flight".indexOf("flow") = -1 → shrink
+
+"flight".indexOf("flo") = -1 → shrink
+
+"flight".indexOf("fl") = 0 → match found
+
+Now prefix = "fl"
+
+End of loop
+
+Return "fl"
+
+✅ Output: "fl"
+
+Example 2
+Input: ["dog","racecar","car"]
+
+Initialization
+
+prefix = "dog"
+
+Compare with "racecar"
+
+"racecar".indexOf("dog") = -1 → shrink
+
+"racecar".indexOf("do") = -1 → shrink
+
+"racecar".indexOf("d") = -1 → shrink
+
+prefix = "" → immediately return ""
+
+✅ Output: ""

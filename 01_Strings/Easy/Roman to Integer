@@ -5,23 +5,18 @@ class Solution {
     public int romanToInt(String s) {
         int result = 0;
         int prevValue = 0;
-
-        for (int i = s.length() - 1; i >= 0; i--) {
+        for (int i = s.length() - 1; i >= 0; i--) 
+        {
             int value = getValue(s.charAt(i));
-
-            // If current value is smaller than the previous one, subtract it
-            if (value < prevValue) {
+            if (value < prevValue) 
                 result -= value;
-            } else {
+             else 
                 result += value;
-            }
-
+    
             prevValue = value;
         }
-
         return result;
     }
-
     private int getValue(char c) {
         switch (c) {
             case 'I': return 1;
@@ -35,3 +30,4 @@ class Solution {
         }
     }
 }
+

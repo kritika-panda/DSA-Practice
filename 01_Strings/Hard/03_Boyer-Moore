@@ -1,0 +1,85 @@
+The **Boyer-Moore algorithm** is one of the most efficient string searching algorithms in practice.  
+It uses two heuristics to skip ahead intelligently when mismatches occur:
+
+1. **Bad Character Rule**: If a mismatch occurs, shift the pattern so that the mismatched character in the text aligns with the last occurrence of that character in the pattern.  
+2. **Good Suffix Rule**: If a suffix of the pattern matches but a mismatch occurs before it, shift the pattern to align the next possible occurrence of that suffix.
+
+---
+
+## Key Points
+- **Best case complexity:** O(n/m) (very fast when mismatches occur often).  
+- **Worst case complexity:** O(n · m) (rare, e.g., repetitive patterns).  
+- **Average case:** Much faster than naive search, especially for large alphabets.
+
+---
+
+## Java Implementation (Bad Character Rule Only)
+import java.util.*;
+
+class BoyerMoore {
+    private final int ALPHABET_SIZE = 256; // ASCII
+
+    // Preprocess: build last occurrence table
+    private int[] buildLast(String pattern) {
+        int[] last = new int[ALPHABET_SIZE];
+        Arrays.fill(last, -1);
+        for (int i = 0; i < pattern.length(); i++) {
+            last[pattern.charAt(i)] = i;
+        }
+        return last;
+    }
+
+    // Search function
+    public int search(String text, String pattern) {
+        int[] last = buildLast(pattern);
+        int n = text.length();
+        int m = pattern.length();
+        int i = m - 1; // index in text
+        int j = m - 1; // index in pattern
+
+        while (i < n) {
+            if (text.charAt(i) == pattern.charAt(j)) {
+                if (j == 0) {
+                    return i; // match found
+                }
+                i--;
+                j--;
+            } else {
+                int lo = last[text.charAt(i)];
+                i = i + m - Math.min(j, 1 + lo);
+                j = m - 1;
+            }
+        }
+        return -1; // not found
+    }
+
+    // Example usage
+    public static void main(String[] args) {
+        BoyerMoore bm = new BoyerMoore();
+        String text = "HERE IS A SIMPLE EXAMPLE";
+        String pattern = "EXAMPLE";
+        int index = bm.search(text, pattern);
+        System.out.println("Pattern found at index: " + index);
+    }
+}
+
+Example Run
+Text: "HERE IS A SIMPLE EXAMPLE"
+Pattern: "EXAMPLE"
+Output: Pattern found at index: 17
+
+Summary
+Boyer-Moore is highly efficient for large texts and patterns.
+It skips ahead instead of checking every character.
+Combining Bad Character and Good Suffix rules makes it even faster.
+In practice, it often outperforms KMP and Rabin-Karp for single pattern searches.
+
+Time Complexity: Best O(n/m), Worst O(n·m).
+Idea: Skip ahead using bad‑character and good‑suffix heuristics.
+Often fastest in practice for large alphabets.
+
+Summary
+Naive search (indexOf): O(n·m), simple and fine for small strings.
+KMP: O(n + m), avoids redundant comparisons.
+Rabin-Karp: Good for multiple pattern searches, uses hashing.
+Boyer-Moore: Very efficient in practice, skips ahead intelligently.

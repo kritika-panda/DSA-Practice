@@ -1,0 +1,30 @@
+# Time Complexity Analysis of strStr Implementation
+
+## Step 1: Outer Loop
+- Runs from `i = 0` to `i = n - m`.
+- That’s about `(n - m + 1)` iterations in the worst case.
+
+## Step 2: Substring Creation
+- `haystack.substring(i, i + m)` creates a new string of length `m`.
+- In modern Java (post‑Java 7u6), substring copies characters into a new `String` object.
+- **Cost:** O(m)
+
+## Step 3: Equality Check
+- `.equals(needle)` compares up to `m` characters.
+- **Cost:** O(m)
+
+## Combined Cost per Iteration
+- Substring creation: O(m)  
+- Equality check: O(m)  
+- **Total per iteration:** O(m)
+
+## Overall Complexity
+- Outer loop: O(n − m + 1) iterations  
+- Each iteration: O(m)  
+- **Worst case:**  
+  O((n − m + 1) ⋅ m) ≈ O(n ⋅ m)
+
+## Space Complexity
+- Each substring creates a new `String` object of length `m`.
+- But only one is alive at a time (previous ones eligible for GC).
+- **Space:** O(m)

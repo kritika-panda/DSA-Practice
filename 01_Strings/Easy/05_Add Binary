@@ -18,10 +18,10 @@ class Solution {
             int sum = carry;
             if (i >= 0) sum += a.charAt(i--) - '0';
             if (j >= 0) sum += b.charAt(j--) - '0';
-            sb.append(sum % 2);   
+            sb.append(sum % 2);      // or sb.insert(0,sum % 2);   
             carry = sum / 2;      
         }
-        return sb.reverse().toString();
+        return sb.reverse().toString();   // or sb.toString();
     }
 }
 

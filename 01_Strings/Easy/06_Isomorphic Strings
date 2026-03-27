@@ -17,11 +17,9 @@ class Solution {
                 System.out.println("mapS[c1]: "+mapS[c1]); // ASCII value 
                 //example 97 for 'a'
                 mapT[c2] = c1;
-            } else 
-            {
-                if (mapS[c1] != c2 || mapT[c2] != c1) 
+            } 
+            else if (mapS[c1] != c2 || mapT[c2] != c1) 
                     return false;
-            }
         }
         return true;
     }

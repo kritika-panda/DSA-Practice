@@ -1,0 +1,65 @@
+Given a string s consisting of words and spaces, return the length of the last word in the string.
+A word is a maximal substring consisting of non-space characters only.
+
+Example 1:
+Input: s = "Hello World"
+Output: 5
+Explanation: The last word is "World" with length 5.
+Example 2:
+
+Input: s = "   fly me   to   the moon  "
+Output: 4
+Explanation: The last word is "moon" with length 4.
+Example 3:
+
+Input: s = "luffy is still joyboy"
+Output: 6
+Explanation: The last word is "joyboy" with length 6.
+
+
+class Solution {
+    public int lengthOfLastWord(String s) {
+        int i = s.length() - 1;
+        int length = 0;
+        while (i >= 0 && s.charAt(i) == ' ') 
+            i--;
+        while (i >= 0 && s.charAt(i) != ' ') 
+        {
+            length++;
+            i--;
+        }
+        return length;
+    }
+}
+
+# Length of Last Word – Complexity Analysis
+
+## Time Complexity
+- Let `n` = length of the input string.
+- Step 1: Skip trailing spaces → in worst case, we scan all `n` characters.
+- Step 2: Count characters of the last word → in worst case, we scan all `n` characters again.
+- Together, this is at most **2n operations**, which simplifies to:
+  - **Time Complexity:** O(n)
+
+## Space Complexity
+- We only use:
+  - An integer index `i`
+  - A counter `length`
+- No extra data structures are created.
+- **Space Complexity:** O(1)
+
+---
+
+## Example Walkthrough
+Input: `"   fly me   to   the moon  "`
+- Skip trailing spaces → scans last 2 spaces.
+- Count last word `"moon"` → scans 4 characters.
+- Total scanned characters ≤ n.
+- Output: `4`
+
+---
+
+## Summary
+- **Time Complexity:** O(n)  
+- **Space Complexity:** O(1)  
+- Efficient solution: single pass from the end of the string, constant extra space.

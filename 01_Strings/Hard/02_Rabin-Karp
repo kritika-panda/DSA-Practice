@@ -1,0 +1,29 @@
+Time Complexity: Average O(n + m), Worst O(n·m).
+
+Idea: Use hashing to compare substrings quickly.
+
+java
+class RabinKarp {
+    public int strStr(String haystack, String needle) {
+        int n = haystack.length(), m = needle.length();
+        if (m == 0) return 0;
+        int base = 256, mod = 101;
+        int hashNeedle = 0, hashWindow = 0;
+
+        for (int i = 0; i < m; i++) {
+            hashNeedle = (hashNeedle * base + needle.charAt(i)) % mod;
+            hashWindow = (hashWindow * base + haystack.charAt(i)) % mod;
+        }
+
+        for (int i = 0; i <= n - m; i++) {
+            if (hashNeedle == hashWindow) {
+                if (haystack.substring(i, i + m).equals(needle)) return i;
+            }
+            if (i < n - m) {
+                hashWindow = (hashWindow - haystack.charAt(i) * (int)Math.pow(base, m-1) % mod + mod) % mod;
+                hashWindow = (hashWindow * base + haystack.charAt(i + m)) % mod;
+            }
+        }
+        return -1;
+    }
+}

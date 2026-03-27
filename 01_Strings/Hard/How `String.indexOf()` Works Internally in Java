@@ -1,0 +1,63 @@
+Java’s `String.indexOf(String needle)` uses a **naive substring search algorithm**.  
+It scans the haystack character by character until it finds the target substring or concludes it doesn’t exist.
+
+---
+
+## Simplified Internal Logic (based on OpenJDK source)
+
+```java
+public int indexOf(String str, int fromIndex) {
+    char[] value = this.value;      // haystack characters
+    char[] target = str.value;      // needle characters
+    int targetCount = str.length();
+
+    int max = value.length - targetCount;
+
+    for (int i = fromIndex; i <= max; i++) {
+        int j = 0;
+        while (j < targetCount && value[i + j] == target[j]) {
+            j++;
+        }
+        if (j == targetCount) {
+            return i; // match found
+        }
+    }
+    return -1; // not found
+}
+
+Step-by-Step Description
+Step 1: Loop over haystack
+Iterate from fromIndex to n - m.
+
+At each position, check if the substring starting at i matches the needle.
+
+Step 2: Character comparison
+Compare haystack and needle characters one by one.
+
+If all characters match, return the starting index.
+
+Step 3: Mismatch handling
+If mismatch occurs, move to the next position in haystack.
+
+Continue until either a match is found or the end is reached.
+
+Step 4: Return value
+If match found → return starting index.
+
+If no match → return -1.
+
+Complexity
+Worst case: O(n · m)
+For each of the (n - m + 1) positions, up to m comparisons.
+
+Best case: O(m) if the substring is found at the start.
+
+Space: O(1) (just counters and comparisons).
+
+Example
+java
+String haystack = "mississippi";
+String needle = "issip";
+
+System.out.println(haystack.indexOf(needle)); // Output: 4
+At index 4, "issip" matches exactly.

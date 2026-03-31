@@ -1,0 +1,48 @@
+Given a string columnTitle that represents the column title as appears in an Excel sheet, return its corresponding column number.
+For example:
+A -> 1
+B -> 2
+C -> 3
+...
+Z -> 26
+AA -> 27
+AB -> 28 
+...
+
+Example 1:
+Input: columnTitle = "A"
+Output: 1
+
+Example 2:
+Input: columnTitle = "AB"
+Output: 28
+
+Example 3:
+Input: columnTitle = "ZY"
+Output: 701
+
+
+class Solution {
+    public int titleToNumber(String columnTitle) {
+        int result = 0;
+        for (int i = 0; i < columnTitle.length(); i++) 
+        {
+            char c = columnTitle.charAt(i);
+            int value = c - 'A' + 1; // map A→1, B→2, ..., Z→26
+            result = result * 26 + value;
+        }
+        return result;
+    }
+}
+
+
+Example Walkthrough
+Input: "AB"
+Start with result = 0
+First char 'A': value = 1 → result = 0 * 26 + 1 = 1
+Second char 'B': value = 2 → result = 1 * 26 + 2 = 28
+Output = 28
+
+Complexity
+Time Complexity: 𝑂(𝑘), where 𝑘 = length of the string (since we process each character once).
+Space Complexity: 𝑂(1)

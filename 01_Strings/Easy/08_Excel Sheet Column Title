@@ -1,0 +1,78 @@
+Given an integer columnNumber, return its corresponding column title as it appears in an Excel sheet.
+For example:
+A -> 1
+B -> 2
+C -> 3
+...
+Z -> 26
+AA -> 27
+AB -> 28 
+...
+ 
+Example 1:
+Input: columnNumber = 1
+Output: "A"
+
+Example 2:
+Input: columnNumber = 28
+Output: "AB"
+
+Example 3:
+Input: columnNumber = 701
+Output: "ZY"
+
+
+
+class Solution {
+    public String convertToTitle(int columnNumber) {
+        StringBuilder result = new StringBuilder();
+        while (columnNumber > 0) 
+        {
+            columnNumber--; // adjust for 1-indexing
+            int remainder = columnNumber % 26;
+            char letter = (char) ('A' + remainder);
+            result.insert(0, letter); // prepend
+            columnNumber /= 26;
+        }
+        return result.toString();
+    }
+}
+
+Example Walkthrough
+Input: 28
+Step 1: 28 - 1 = 27, remainder = 27 % 26 = 1 → B
+Step 2: 27 / 26 = 1, then 1 - 1 = 0, remainder = 0 % 26 = 0 → A
+Result = "AB"
+
+Complexity
+Time Complexity: 𝑂(log 26(𝑛)), since we divide by 26 each step.
+
+Why 𝑂(log 26(𝑛))?
+Each iteration of the loop divides the input number by 26.
+This is exactly like converting a number into another base (base-26 in this case).
+The number of steps required is proportional to the number of "digits" in base-26.
+Analogy with Base Conversion:
+Think of converting a number into base-10:
+To represent a number 𝑛 in base-10, you need about log 10(𝑛) digits.
+Similarly, to represent a number 𝑛in base-26, you need about log 26(𝑛) digits.
+So the loop runs once for each "digit" in the base-26 representation.
+Example:
+Take 𝑛 = 28:
+Step 1: 28÷26=1 → one iteration
+Step 2: 1÷26=0 → second iteration
+So 28 requires 2 iterations, which matches the fact that "AB" has 2 letters.
+
+Take 𝑛 = 1000:
+1000÷26=38 → iteration 1
+38÷26=1 → iteration 2
+1÷26=0 → iteration 3
+So 1000 requires 3 iterations, meaning its Excel column title has 3 letters.
+
+Formal Complexity
+Time Complexity: 𝑂(log 26(𝑛))  Because the loop runs once per base-26 digit.
+Space Complexity: 𝑂(1) aside from the output string.
+
+👉 In simpler terms:
+The bigger the number, the more letters you need to represent it. The number of letters grows logarithmically with the size of 
+n, and the base of that logarithm is 26 because there are 26 possible letters per "digit."
+Space Complexity: 𝑂(1), aside from the output string.

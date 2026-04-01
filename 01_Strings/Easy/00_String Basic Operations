@@ -1,0 +1,21 @@
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+class Main {
+    public static void main(String[] args) {
+        int a=100;
+        char ch=(char)a;
+        char num='2';
+        System.out.println(ch);    //d
+        System.out.println((int)ch);  //100
+        System.out.println(Integer.valueOf(ch)); //100
+        System.out.println(Integer.parseInt("123")); //123
+        System.out.println(String.valueOf(a));  //100
+        System.out.println(String.valueOf(ch)); //d
+        System.out.println(ch -'a'); //3
+        System.out.println(ch + 1);          // 101
+        System.out.println((char)(ch + 1));  // e
+        System.out.println(num + ch); // 150 (100 + ASCII of '2' which is 50)
+    System.out.println(Character.getNumericValue('7')); // 7
+    System.out.println(Character.getNumericValue('A')); // 10 (hex-like behavior)
+    }
+}

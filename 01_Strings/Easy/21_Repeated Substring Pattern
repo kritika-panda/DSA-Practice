@@ -1,0 +1,79 @@
+Given a string s, check if it can be constructed by taking a substring of it and appending multiple copies of the substring together.
+Example 1:
+Input: s = "abab"
+Output: true
+Explanation: It is the substring "ab" twice.
+
+Example 2:
+Input: s = "aba"
+Output: false
+
+Example 3:
+Input: s = "abcabcabcabc"
+Output: true
+Explanation: It is the substring "abc" four times or the substring "abcabc" twice.
+
+
+
+class Solution {
+    public boolean repeatedSubstringPattern(String s) {
+        String doubled = s + s;
+        return doubled.substring(1, doubled.length() - 1).contains(s);
+    }
+}
+
+
+// Time: O(n)
+// Space: O(n)
+
+
+
+Brute force approach:
+class Solution {
+    public boolean repeatedSubstringPattern(String s) {
+        int n = s.length();
+        for (int len = 1; len <= n / 2; len++) {
+            if (n % len == 0) {
+                String sub = s.substring(0, len);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < n / len; i++) {
+                    sb.append(sub);
+                }
+                if (sb.toString().equals(s)) return true;
+            }
+        }
+        return false;
+    }
+}
+
+
+Dry Run Example: s = "abab"
+n = 4
+Loop: len = 1 → 2 (since n/2 = 2)
+Iteration 1: len = 1
+n % len = 4 % 1 = 0 ✅
+sub = "a"
+Build string: repeat "a" 4 times → "aaaa"
+Compare "aaaa".equals("abab") → false ❌
+Iteration 2: len = 2
+n % len = 4 % 2 = 0 ✅
+sub = "ab"
+Build string: repeat "ab" 2 times → "abab"
+Compare: "abab".equals("abab") → true ✅
+Return true.
+
+Time Complexity
+Outer loop runs up to n/2 times.
+For each valid divisor len, you build a string of length n using StringBuilder.
+That takes O(n).
+Comparing with s also takes O(n).
+So worst case:
+O(n2⋅n)=O(n2)
+
+Space Complexity
+StringBuilder stores a candidate string of length n.
+Substring extraction (s.substring(0, len)) is O(len).
+Overall auxiliary space: O(n).
+✅ Final Answer
+Time Complexity: O(n2)
+Space Complexity: O(n)

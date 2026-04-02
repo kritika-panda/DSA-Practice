@@ -28,7 +28,7 @@ class Solution {
         if (firstGroupLen > 0) {
             sb.append(cleaned.substring(0, firstGroupLen));
             i = firstGroupLen;
-            if (i < cleaned.length()) sb.append("-");
+            if (i < cleaned.length()) sb.append("-");  //Used to handle case if the string ends and there are no more letters.
         }
         // Handle remaining groups of size k
         while (i < cleaned.length()) {

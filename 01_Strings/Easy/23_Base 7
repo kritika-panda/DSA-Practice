@@ -25,3 +25,22 @@ class Solution {
         return sb.reverse().toString();
     }
 }
+
+
+TC: O(log⁡∣num∣)
+SC: O(log⁡∣num∣)
+
+
+🔹 Time Complexity
+We repeatedly divide num by 7 until it becomes 0.
+Each division produces one digit in base 7.
+So, the number of iterations = number of digits in base 7.
+🔹 How many digits in base 7?
+The number of digits of a number n in base b is about:
+⌊log⁡b(n)⌋+1
+So for base 7:
+digits≈log⁡7(n)
+Each loop iteration is O(1) (just division and modulus).
+Total iterations = log⁡7(n).
+Therefore:
+TC=O(log⁡7(n))(which is equivalent to O(log⁡n) in Big-O notation)

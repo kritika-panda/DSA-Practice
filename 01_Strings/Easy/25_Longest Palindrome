@@ -1,0 +1,32 @@
+https://leetcode.com/problems/longest-palindrome/?envType=problem-list-v2&envId=string
+
+
+class Solution {
+    public int longestPalindrome(String s) {
+        int[] freq = new int[128]; // ASCII range
+        //0–31: Control characters (non-printable, like newline, tab); 32–126: Printable characters (letters, digits, symbols); 127: DEL (delete). So, the standard ASCII set has 128 characters total (from 0 to 127).
+        int length = 0;
+        boolean oddFound = false;
+        for (char c : s.toCharArray()) 
+            freq[c]++;
+        for (int count : freq) 
+        {
+            length += (count / 2) * 2; 
+            if (count % 2 == 1) 
+                oddFound = true; 
+        }
+        if (oddFound) 
+            length++;
+        return length;
+    }
+}
+
+
+For each character frequency:
+(count / 2) * 2 → adds the largest even number ≤ count.
+Example: if a character appears 5 times, we can use 4 of them (2 pairs).
+If count is odd, we mark oddFound = true.
+If there was at least one odd frequency, we can place one extra character in the middle of the palindrome.
+Example: "abccccdd" → longest palindrome is "dccaccd" with length 7.
+
+

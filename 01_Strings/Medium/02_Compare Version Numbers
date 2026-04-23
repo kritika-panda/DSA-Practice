@@ -16,3 +16,6 @@ class Solution {
         return 0;
     }
 }
+
+
+TC & SC: O(n)

@@ -1,0 +1,39 @@
+https://leetcode.com/problems/repeated-dna-sequences/description/?envType=problem-list-v2&envId=string
+
+
+class Solution {
+    public List<String> findRepeatedDnaSequences(String s) {
+        Set<String> seen = new HashSet<>();
+        Set<String> repeated = new HashSet<>();
+        for (int i = 0; i + 10 <= s.length(); i++) {
+            String sub = s.substring(i, i + 10);
+            if (!seen.add(sub)) 
+                repeated.add(sub);
+        }
+        return new ArrayList<>(repeated);
+    }
+}
+
+
+Time Complexity
+You loop through the string once, extracting substrings of length 10:
+java
+for (int i = 0; i + 10 <= s.length(); i++) {
+    String sub = s.substring(i, i + 10);
+    ...
+}
+Each substring extraction is O(10) = O(1) since the length is fixed.
+Adding to a HashSet is O(1) average time.
+Total iterations = n−9≈O(n), where n = length of the string.
+Final TC:
+O(n)
+💾 Space Complexity
+seen set can hold up to n−9 substrings in the worst case.
+Each substring has fixed length 10, so storage per substring is constant.
+repeated set also holds at most n−9 substrings.
+Final SC:
+O(n)
+✅ Summary
+Time Complexity: O(n)
+Space Complexity: O(n)
+

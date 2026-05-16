@@ -1,0 +1,33 @@
+https://leetcode.com/problems/kth-largest-element-in-a-stream/editorial/?envType=problem-list-v2&envId=heap-priority-queue#overview
+
+class KthLargest {
+    PriorityQueue<Integer> pq;
+    int k=0;
+    public KthLargest(int k, int[] nums) {
+        pq=new PriorityQueue<>((a,b)->a-b);
+        this.k=k;
+        for(int n:nums)
+        {
+            pq.add(n);
+            if(pq.size()>k)
+                pq.poll();
+        }
+    }
+    public int add(int val) {
+         pq.add(val);
+         if(pq.size()>k) pq.poll();
+         return pq.peek();
+    }
+}
+
+1. Constructor: KthLargest(int k, int[] nums)
+Time Complexity: O(N log k) where N is the initial number of elements in the nums array.
+Why: You iterate through all N elements. For each element, you push it into the priority queue, which takes O(log(text{current size of heap})). Because your code immediately thins out the heap whenever its size exceeds k via pq.poll(), the heap size never goes past k + 1. Thus, each insertion and eviction operation is bounded by O(log k). Doing this N times yields O(N log k).
+Space Complexity: O(k)
+Why: The min-heap dynamically discards smaller elements and stays capped at a maximum size of k items.
+
+2. Stream Addition: add(int val)
+Time Complexity: O(log k)
+Why: No matter how many millions of elements have passed through the stream, the min-heap only holds a maximum of k+1 elements at any moment. Inserting a new element (pq.add) takes O(log k) time, and extracting the minimum element (pq.poll) if it overflows also takes O(log k) time. Retrieving the top element (pq.peek) is a constant-time operation (O(1)).
+Space Complexity: O(1) auxiliary space
+Why: The add method only modifies the existing heap structure in-place and does not allocate any additional scaling memory. (The overall space constraint remains bounded to the global O(k) object storage established in the constructor).

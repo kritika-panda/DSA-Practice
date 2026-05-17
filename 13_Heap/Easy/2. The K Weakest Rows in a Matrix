@@ -52,14 +52,17 @@ class Solution {
 1. Time Complexity (TC): O(m log n + m log k)
 The algorithm processes each row one by one, performing two main operations per row:
 Binary Search to count soldiers: O(log n)
-Since the 1s (soldiers) always appear to the left of the 0s (civilians), each row is effectively sorted. We can find the boundary where 1s end using binary search in O(log n) time. Doing this for all m rows takes O(m log n).
+Since the 1s (soldiers) always appear to the left of the 0s (civilians), each row is effectively sorted. We can find the 
+boundary where 1s end using binary search in O(log n) time. Doing this for all m rows takes O(m log n).
 Heap push/pop operations: O(log k)
-We maintain a Max-Heap of size at most k. Inserting an element into a heap of size k takes O(log k) time. If the heap size exceeds k, popping the strongest row also takes O(log k). Doing this for all m rows takes O(m log k).
+We maintain a Max-Heap of size at most k. Inserting an element into a heap of size k takes O(log k) time. If the heap 
+size exceeds k, popping the strongest row also takes O(log k). Doing this for all m rows takes O(m log k).
 Building the output array: O(k log k)
 At the end, we extract the k elements from the heap to form our final answer, which takes O(k log k) time.
 Total Time Complexity:
 O(m log n + m log k + k log k)
-Since k le m, the k log k term is dominated by m log k, simplifying the total time complexity to O(m log n + m log k) (or O(m log(n cdot k))).
+Since k le m, the k log k term is dominated by m log k, simplifying the total time complexity to O(m log n + m log k) 
+(or O(m log(n cdot k))).
 
 2. Space Complexity (SC): O(k)
 Priority Queue (Max-Heap): O(k)

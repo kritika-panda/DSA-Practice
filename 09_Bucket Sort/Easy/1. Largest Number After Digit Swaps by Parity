@@ -1,0 +1,45 @@
+https://leetcode.com/problems/largest-number-after-digit-swaps-by-parity/?envType=problem-list-v2&envId=heap-priority-queue
+
+class Solution {
+    public int largestInteger(int num) {
+        char[] digits = String.valueOf(num).toCharArray();
+        // Frequency arrays for odd and even digits (0-9)
+        int[] evens = new int[10];
+        int[] odds = new int[10];
+        
+        // Step 1: Count frequencies of each digit
+        for (char c : digits) {
+            int val = c - '0';
+            if (val % 2 == 0) 
+                evens[val]++;
+             else 
+                odds[val]++;
+        }
+        
+        // Pointers to track the largest available even/odd digit
+        int evenPtr = 8;
+        int oddPtr = 9;
+        
+        // Step 2: Reconstruct the largest number
+        for (int i = 0; i < digits.length; i++) {
+            int val = digits[i] - '0';
+            if (val % 2 == 0) {
+                // Find the next largest available even digit
+                while (evens[evenPtr] == 0) 
+                    evenPtr -= 2;
+                digits[i] = (char) (evenPtr + '0');
+                evens[evenPtr]--;
+            } else {
+                // Find the next largest available odd digit
+                while (odds[oddPtr] == 0) 
+                    oddPtr -= 2;
+                digits[i] = (char) (oddPtr + '0');
+                odds[oddPtr]--;
+            }
+        }
+        return Integer.parseInt(new String(digits));
+    }
+}
+
+
+TC & SC: O(n)

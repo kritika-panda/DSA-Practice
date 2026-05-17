@@ -1,0 +1,69 @@
+https://leetcode.com/problems/the-k-weakest-rows-in-a-matrix/description/?envType=problem-list-v2&envId=heap-priority-queue
+
+
+
+import java.util.PriorityQueue;
+
+class Solution {
+    public int[] kWeakestRows(int[][] mat, int k) {
+        // Max-Heap: stores pairs of {soldier_count, row_index}
+        // We want the strongest rows at the top of the heap so we can pop them out
+        PriorityQueue<int[]> maxHeap = new PriorityQueue<>((a, b) -> {
+            if (a[0] != b[0]) {
+                return b[0] - a[0]; // Higher soldier count comes first
+            }
+            return b[1] - a[1];     // Higher row index breaks ties
+        });
+        
+        for (int i = 0; i < mat.length; i++) {
+            int soldiers = countSoldiers(mat[i]);
+            maxHeap.offer(new int[]{soldiers, i});
+            
+            // If the heap exceeds size k, discard the strongest row
+            if (maxHeap.size() > k) {
+                maxHeap.poll();
+            }
+        }
+        
+        // Pop elements from the heap into the result array (right to left)
+        int[] res = new int[k];
+        for (int i = k - 1; i >= 0; i--) {
+            res[i] = maxHeap.poll()[1];
+        }
+        
+        return res;
+    }
+    
+    // Binary search to find the number of 1s in a row
+    private int countSoldiers(int[] row) {
+        int low = 0, high = row.length;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (row[mid] == 1) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+}
+
+1. Time Complexity (TC): O(m log n + m log k)
+The algorithm processes each row one by one, performing two main operations per row:
+Binary Search to count soldiers: O(log n)
+Since the 1s (soldiers) always appear to the left of the 0s (civilians), each row is effectively sorted. We can find the boundary where 1s end using binary search in O(log n) time. Doing this for all m rows takes O(m log n).
+Heap push/pop operations: O(log k)
+We maintain a Max-Heap of size at most k. Inserting an element into a heap of size k takes O(log k) time. If the heap size exceeds k, popping the strongest row also takes O(log k). Doing this for all m rows takes O(m log k).
+Building the output array: O(k log k)
+At the end, we extract the k elements from the heap to form our final answer, which takes O(k log k) time.
+Total Time Complexity:
+O(m log n + m log k + k log k)
+Since k le m, the k log k term is dominated by m log k, simplifying the total time complexity to O(m log n + m log k) (or O(m log(n cdot k))).
+
+2. Space Complexity (SC): O(k)
+Priority Queue (Max-Heap): O(k)
+The heap is strictly capped at a maximum size of k + 1 elements during execution before a element is popped out. It stores arrays of fixed size 2 (e.g., [soldier_count, row_index]), meaning it consumes O(k) auxiliary space.
+Output Array: O(k)
+The final returned array requires O(k) space to store the indices of the k weakest rows.
+Total Auxiliary Space Complexity: O(k) (excluding the input matrix).

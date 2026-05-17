@@ -66,7 +66,8 @@ Since k le m, the k log k term is dominated by m log k, simplifying the total ti
 
 2. Space Complexity (SC): O(k)
 Priority Queue (Max-Heap): O(k)
-The heap is strictly capped at a maximum size of k + 1 elements during execution before a element is popped out. It stores arrays of fixed size 2 (e.g., [soldier_count, row_index]), meaning it consumes O(k) auxiliary space.
+The heap is strictly capped at a maximum size of k + 1 elements during execution before a element is popped out. 
+It stores arrays of fixed size 2 (e.g., [soldier_count, row_index]), meaning it consumes O(k) auxiliary space.
 Output Array: O(k)
 The final returned array requires O(k) space to store the indices of the k weakest rows.
 Total Auxiliary Space Complexity: O(k) (excluding the input matrix).

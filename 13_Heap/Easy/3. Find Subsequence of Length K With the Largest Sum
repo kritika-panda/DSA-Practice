@@ -1,0 +1,50 @@
+https://leetcode.com/problems/find-subsequence-of-length-k-with-the-largest-sum/description/?envType=problem-list-v2&envId=heap-priority-queue
+
+class Solution {
+    public int[] maxSubsequence(int[] nums, int k) 
+    {
+       PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->Integer.compare(a[0],b[0]));
+       int res[]=new int[k];
+       for(int i=0;i<nums.length;i++)
+       {
+            pq.add(new int[]{nums[i],i});
+            if(pq.size()>k)
+                pq.poll();
+       }
+    //        PriorityQueue<int[]> pq1=new PriorityQueue<>((a,b)->Integer.compare(a[1],b[1]));
+    // while(!pq.isEmpty())
+    //     pq1.add(pq.poll());
+    // for(int i=0;i<k;i++)
+    //     res[i]=pq1.poll()[0];
+
+       // Alternative to Phase 2: Use an array instead of pq1
+        int[][] temp = new int[k][2];
+        int idx = 0;
+        while (!pq.isEmpty()) 
+            temp[idx++] = pq.poll();
+        Arrays.sort(temp, (a, b) -> Integer.compare(a[1], b[1]));
+        for (int i = 0; i < k; i++) 
+            res[i] = temp[i][0];
+
+    return res;
+    }
+}
+
+
+Time Complexity (TC): O(N log k)
+Let N be the total number of elements in the nums array, and k be the target subsequence length.
+Building the Min-Heap (pq): You loop through the array nums exactly N times. For each element, you perform a heap insertion (pq.add()). Because you maintain the heap size at a maximum of k, each insertion and subsequent deletion (pq.poll()) takes O(log k) time.
+textCost = N times log k = O(N log k)
+Transferring to the Index Heap (pq1): You empty out the k elements left in pq and insert them into pq1. Each of the k operations takes O(log k) time.
+textCost = k times log k = O(k log k)
+Building the Result Array: You pull k elements out of pq1. This takes O(k log k) time.
+Since k <= N, the first step dominates the overall time. Thus, the total Time Complexity simplifies to:
+O(N log k + k log k) -> O(N log k)
+
+Space Complexity (SC): O(k)
+Your solution is incredibly memory-efficient because its auxiliary storage scales only with k, not the size of the entire input array N.
+pq (Value Heap): Storing a maximum of k + 1 elements at any given second before purging the smallest. -> O(k)
+pq1 (Index Heap): Storing exactly k elements. -> O(k)
+res[] Array: Storing the final k integers. (Often considered part of the output, but even if counted as auxiliary space, it is bounded by k). -> O(k)
+Total Space Complexity:
+O(k)

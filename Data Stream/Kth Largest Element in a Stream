@@ -1,0 +1,39 @@
+https://leetcode.com/problems/kth-largest-element-in-a-stream/description/?envType=problem-list-v2&envId=data-stream
+
+
+import java.util.PriorityQueue;
+
+class KthLargest {
+    private PriorityQueue<Integer> minHeap;
+    private int k;
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        this.minHeap = new PriorityQueue<>(k);
+     for (int num : nums) 
+            add(num);
+    }
+    public int add(int val) {
+        minHeap.offer(val);
+        if (minHeap.size() > k) 
+            minHeap.poll();
+        return minHeap.peek();
+    }
+}
+
+
+Time Complexity
+Constructor (KthLargest): O(N log k)
+We iterate through the initial array of N elements.
+For each element, we call the add method.
+Inside add, inserting into a heap of maximum size k takes O(log k) time.
+Therefore, processing all initial elements takes O(N log k) time.
+add(val) Method: O(log k)
+Pushing the new element into the priority queue takes O(log k) time.
+Popping the smallest element (if the heap size exceeds k) also takes O(log k) time.
+Since these heap operations are bounded by the maximum size k, each add call runs in logarithmic time relative to k.
+
+Space Complexity
+Overall Space Complexity: O(k)
+The Min-Heap is strictly constrained to hold at most k elements at any given moment.
+Even if the incoming stream grows to millions of scores, the memory footprint remains constant at O(k) because we instantly discard elements that drop out of the top k threshold.
+

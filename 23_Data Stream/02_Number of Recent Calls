@@ -1,0 +1,26 @@
+https://leetcode.com/problems/number-of-recent-calls/description/?envType=problem-list-v2&envId=data-stream
+
+
+import java.util.LinkedList;
+import java.util.Queue;
+class RecentCounter {
+    private Queue<Integer> requests;
+    public RecentCounter(){
+        requests = new LinkedList<>();
+    }
+    public int ping(int t) {
+        requests.add(t);
+        // Step 2: Remove all timestamps that are older than t - 3000
+        while (!requests.isEmpty() && requests.peek() < t - 3000) 
+            requests.poll();
+        // Step 3: The remaining items in the queue are within the [t - 3000, t] range
+        return requests.size();
+    }
+}
+
+Time Complexity: O(1) amortized per ping call. While a single ping might trigger a while loop that removes 
+multiple elements, each timestamp is added to the queue exactly once and removed from the queue at most once 
+across the entire lifecycle of the stream.
+Space Complexity: O(W), where W is the maximum number of requests that can arrive within a 3000 ms window. In the 
+worst-case scenario given by the problem constraints, the queue will hold at most 3001 elements.
+

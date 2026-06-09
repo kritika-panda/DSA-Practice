@@ -1,0 +1,53 @@
+https://leetcode.com/problems/design-an-ordered-stream/description/?envType=problem-list-v2&envId=data-stream
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+class OrderedStream {
+    private String[] stream;
+    private int ptr; // Keeps track of the current smallest unreturned index
+    public OrderedStream(int n) {
+        // Size n + 1 so we can use 1-based idKey indexing safely
+        stream = new String[n + 1]; 
+        ptr = 1; // The stream expects idKey 1 first
+    }
+    public List<String> insert(int idKey, String value) {
+        List<String> res = new ArrayList<>();
+        
+        // Insert the value at its 1-based index position
+        stream[idKey] = value;
+        
+        // If the inserted item matches our current expected pointer,
+        // collect it and any consecutive items that follow
+        while (ptr < stream.length && stream[ptr] != null) {
+            res.add(stream[ptr]);
+            ptr++; // Move the pointer forward
+        }
+        
+        return res;
+    }
+}
+
+
+1. Time Complexity (TC)
+OrderedStream(int n): O(n)
+Initializing a fixed-size array of size n + 1 takes linear time in Java, as the system allocates memory and fills 
+the slots with null.
+insert(int idKey, String value): Amortized O(1)
+Individual Call: In the worst-case scenario, a single call to insert might run a loop that iterates up to n times 
+(e.g., if you insert items 2, 3, 4, 5 out of order, and then finally insert item 1, the pointer will catch up and 
+loop through all of them at once). Across all calls: Because the pointer ptr only moves forward and never resets, 
+it will visit each index in the array exactly once across the entire lifecycle of the stream. Therefore, over n 
+total insertions, the loop runs a maximum of n times total. This averages out to an amortized time complexity of 
+O(1) per insertion.
+
+2. Space Complexity (SC)
+Overall Class Space: O(n)
+We allocate a String[] array of size n + 1 to store the incoming stream elements, which scales linearly with the 
+input size n.
+insert Method Auxiliary Space: O(1) (excluding the return list)
+The method only uses a couple of temporary variables to process the logic. The List<String> res that is returned 
+takes up space proportional to the number of elements outputted in that specific call (at most O(n) if all elements 
+are released at once), but this is generally considered output space rather than extra auxiliary overhead.
+

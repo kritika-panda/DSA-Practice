@@ -3,7 +3,6 @@ https://leetcode.com/problems/design-an-ordered-stream/description/?envType=prob
 
 import java.util.ArrayList;
 import java.util.List;
-
 class OrderedStream {
     private String[] stream;
     private int ptr; // Keeps track of the current smallest unreturned index

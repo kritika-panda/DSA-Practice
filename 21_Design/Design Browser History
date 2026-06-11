@@ -1,42 +1,129 @@
 https://leetcode.com/problems/design-browser-history/description/
 
-
-class BrowserHistory {
-    List<String> lis=new ArrayList<>();
-    int c=-1;
-    int index=0;
-    public BrowserHistory(String homepage) {
-        lis.add(homepage);
-        c=lis.size()-1;
-    }
+Approach 1: Doubly Linked List
+class Node {
+    Node prev;
+    Node next;
+    String data;
     
-    public void visit(String url) {
-        while (lis.size() > c + 1) {
-            lis.remove(lis.size() - 1);
-        }
-        lis.add(url);
-        c = lis.size() - 1;
-    }
-    
-    public String back(int steps) {
-        c=c-steps;
-        if(c<0)
-            c=0;
-        return lis.get(c);
-    }
-    
-    public String forward(int steps) {
-        c=c+steps;
-        if(c>=lis.size())
-            c=lis.size()-1;
-        return lis.get(c);
+    Node(String data) {
+        this.data = data;
+        prev = next = null;
     }
 }
 
-/**
- * Your BrowserHistory object will be instantiated and called as such:
- * BrowserHistory obj = new BrowserHistory(homepage);
- * obj.visit(url);
- * String param_2 = obj.back(steps);
- * String param_3 = obj.forward(steps);
- */
+class BrowserHistory {
+    Node curr;
+
+    public BrowserHistory(String homepage) {
+        curr = new Node(homepage);
+    }
+    
+    public void visit(String url) {
+        Node newNode = new Node(url);
+        curr.next = newNode;
+        newNode.prev = curr;
+        curr = newNode; // Move current pointer to the newly visited page
+        // Any old forward history is automatically cut off and garbage collected!
+    }
+    
+    public String back(int steps) {
+        // Move back until we hit the beginning of history OR run out of steps
+        while (steps > 0 && curr.prev != null) {
+            curr = curr.prev;
+            steps--;
+        }
+        return curr.data;
+    }
+    
+    public String forward(int steps) {
+        // Move forward until we hit the end of history OR run out of steps
+        while (steps > 0 && curr.next != null) {
+            curr = curr.next;
+            steps--;
+        }
+        return curr.data;
+    }
+}
+
+
+Approach 2: ArrayList
+import java.util.ArrayList;
+import java.util.List;
+
+class BrowserHistory {
+    private List<String> history;
+    private int currIndex;
+    private int maxIndex;
+
+    public BrowserHistory(String homepage) {
+        history = new ArrayList<>();
+        history.add(homepage);
+        currIndex = 0;
+        maxIndex = 0;
+    }
+    
+    public void visit(String url) {
+        currIndex++;
+        // If we are overwriting existing forward history, update the element
+        if (currIndex < history.size()) {
+            history.set(currIndex, url);
+        } else {
+            history.add(url);
+        }
+        // Move the boundary marker to the current position, clearing forward history
+        maxIndex = currIndex;
+    }
+    
+    public String back(int steps) {
+        // Ensure we don't go past the homepage (index 0)
+        currIndex = Math.max(0, currIndex - steps);
+        return history.get(currIndex);
+    }
+    
+    public String forward(int steps) {
+        // Ensure we don't go past the newest available history (maxIndex)
+        currIndex = Math.min(maxIndex, currIndex + steps);
+        return history.get(currIndex);
+    }
+}
+
+
+# 1. Time Complexity: A Hidden Win for Array
+
+On paper, both approaches look identical in terms of asymptotic time complexity:
+
+- **visit:** `O(1)` for both.
+- **back / forward:** `O(steps)` for the Linked List, and technically `O(1)` arithmetic for the Array.  
+  However, because the problem limits the number of steps or requires returning the element, the absolute time bounds are similar.
+
+**The Real Difference:**  
+The Array approach performs the boundary check instantly using basic math (`O(1)`), whereas the Linked List requires a `while` loop to physically traverse nodes one by one. In practice, jumping directly to an index is much faster than pointer chasing.
+
+---
+
+# 2. Memory Efficiency (Cache Locality)
+
+- **Doubly Linked List:** Each page visit allocates a brand new Node object on the heap. Each node stores a `String` reference and two pointer references (`prev` and `next`). These nodes are scattered across memory, which causes cache misses when traversing back and forth.
+- **Array/ArrayList:** Elements are stored in contiguous memory blocks. More importantly, when you go back and visit a new page, the Array overwrites the existing index instead of throwing it away. It reuses the memory, significantly reducing garbage collection overhead.
+
+---
+
+# 3. Code Maintainability and Safety
+
+- **Doubly Linked List:** Managing pointers manually is highly prone to edge‑case bugs. A single misplaced pointer can easily lead to a `NullPointerException` (as seen in your original error).
+- **Array/ArrayList:** The logic relies entirely on simple index boundaries (`currIndex` and `maxIndex`). There are no pointers to manage, making the code clean, readable, and virtually impossible to throw a `NullPointerException`.
+
+---
+
+# Quick Comparison Table
+
+| Feature              | Doubly Linked List                  | Array / ArrayList (Best)       |
+|----------------------|-------------------------------------|--------------------------------|
+| **visit Time**       | O(1)                                | O(1)                           |
+| **back/forward Time**| O(steps)                            | O(1)                           |
+| **Memory Overhead**  | High (3 references per node)        | Low (Contiguous array layout)  |
+| **Memory Reuse**     | No (Deletes forward history)        | Yes (Overwrites forward history)|
+| **Code Simplicity**  | Complex (Pointer management)        | Simple (Index arithmetic)      |
+
+

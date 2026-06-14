@@ -1,0 +1,74 @@
+https://leetcode.com/problems/design-front-middle-back-queue/description/?envType=problem-list-v2&envId=data-stream
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+class FrontMiddleBackQueue {
+    private Deque<Integer> left;
+    private Deque<Integer> right;
+
+    public FrontMiddleBackQueue() {
+        left = new ArrayDeque<>();
+        right = new ArrayDeque<>();
+    }
+    
+    // New Invariant:
+    // Even total size -> left.size() == right.size()
+    // Odd total size  -> left.size() == right.size() + 1
+    private void balance() {
+        if (left.size() > right.size() + 1) {
+            right.addFirst(left.removeLast());
+        } else if (right.size() > left.size()) {
+            left.addLast(right.removeFirst());
+        }
+    }
+
+    public void pushFront(int val) {
+        left.addFirst(val);
+        balance();
+    }
+    
+    public void pushMiddle(int val) {
+        if (left.size() > right.size()) {
+            // Total size is odd, so pushing to the middle means 
+            // moving the current middle to right, and adding new val to left
+            right.addFirst(left.removeLast());
+            left.addLast(val);
+        } else {
+            // Total size is even, left gets the new element
+            left.addLast(val);
+        }
+    }
+    
+    public void pushBack(int val) {
+        right.addLast(val);
+        balance();
+    }
+    
+    public int popFront() {
+        if (left.isEmpty() && right.isEmpty()) return -1;
+        
+        int val = left.removeFirst();
+        balance();
+        return val;
+    }
+    
+    public int popMiddle() {
+        if (left.isEmpty() && right.isEmpty()) return -1;
+        
+        // With our new invariant, the frontmost middle is ALWAYS at the back of left
+        int val = left.removeLast();
+        balance();
+        return val;
+    }
+    
+    public int popBack() {
+        if (left.isEmpty() && right.isEmpty()) return -1;
+        
+        // If right is empty, the only element left is in left
+        int val = right.isEmpty() ? left.removeLast() : right.removeLast();
+        balance();
+        return val;
+    }
+}
+

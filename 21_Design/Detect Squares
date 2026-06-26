@@ -1,0 +1,74 @@
+https://leetcode.com/problems/detect-squares/?envType=problem-list-v2&envId=data-stream
+
+
+import java.util.*;
+
+class DetectSquares {
+    // Maps an X-coordinate to a Map of Y-coordinates and their frequencies
+    private Map<Integer, Map<Integer, Integer>> pointCounts;
+    // Stores a list of all unique points to iterate through by X-coordinate
+    private Map<Integer, List<Integer>> xToYPoints;
+
+    public DetectSquares() {
+        pointCounts = new HashMap<>();
+        xToYPoints = new HashMap<>();
+    }
+    
+    public void add(int[] point) {
+        int x = point[0];
+        int y = point[1];
+        
+        // Update frequencies map
+        pointCounts.putIfAbsent(x, new HashMap<>());
+        Map<Integer, Integer> yCounts = pointCounts.get(x);
+        yCounts.put(y, yCounts.getOrDefault(y, 0) + 1);
+        
+        // Track unique Y coordinates for a given X to optimize enumeration
+        if (yCounts.get(y) == 1) {
+            xToYPoints.putIfAbsent(x, new ArrayList<>());
+            xToYPoints.get(x).add(y);
+        }
+    }
+    
+    public int count(int[] point) {
+        int px = point[0];
+        int py = point[1];
+        int totalSquares = 0;
+        
+        // If there are no points sharing the same X-coordinate as our query,
+        // no squares can be formed.
+        if (!xToYPoints.containsKey(px)) {
+            return 0;
+        }
+        
+        // Grab all points that share the same X-coordinate as the query point
+        // Let's call this vertical line neighbor: P4 = (px, cy)
+        for (int cy : xToYPoints.get(px)) {
+            if (cy == py) continue; // Skip the query point itself (area must be > 0)
+            
+            // The side length of the square
+            int sideLength = Math.abs(py - cy);
+            
+            // A square can be formed either to the right or to the left of our vertical line
+            int[] potentialXCoordinates = {px + sideLength, px - sideLength};
+            
+            for (int cx : potentialXCoordinates) {
+                // Check if the other components of the square exist
+                if (pointCounts.containsKey(cx)) {
+                    Map<Integer, Integer> oppositeYCounts = pointCounts.get(cx);
+                    
+                    // We need P3 = (cx, cy) and P2 = (cx, py) to exist
+                    if (oppositeYCounts.containsKey(cy) && oppositeYCounts.containsKey(py)) {
+                        int countP4 = pointCounts.get(px).get(cy);
+                        int countP3 = oppositeYCounts.get(cy);
+                        int countP2 = oppositeYCounts.get(py);
+                        
+                        totalSquares += countP4 * countP3 * countP2;
+                    }
+                }
+            }
+        }
+        
+        return totalSquares;
+    }
+}

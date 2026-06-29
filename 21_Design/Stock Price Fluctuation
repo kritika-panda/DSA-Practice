@@ -1,0 +1,44 @@
+https://leetcode.com/problems/stock-price-fluctuation/description/?envType=problem-list-v2&envId=data-stream
+
+
+class StockPrice {
+    // 1. Keeps track of: timestamp -> price
+    private TreeMap<Integer, Integer> timePriceMap;
+    
+    // 2. Keeps track of: price -> count (frequency)
+    private TreeMap<Integer, Integer> priceFreqMap;
+
+    public StockPrice() {
+        timePriceMap = new TreeMap<>();
+        priceFreqMap = new TreeMap<>();
+    }
+    
+    public void update(int timestamp, int price) {
+        // If this timestamp already exists, we need to remove its OLD price from our frequency map
+        if (timePriceMap.containsKey(timestamp)) {
+            int oldPrice = timePriceMap.get(timestamp);
+            priceFreqMap.put(oldPrice, priceFreqMap.get(oldPrice) - 1);
+            if (priceFreqMap.get(oldPrice) == 0) 
+                priceFreqMap.remove(oldPrice);
+        }
+        
+        // Add the new price to both maps
+        timePriceMap.put(timestamp, price);
+        priceFreqMap.put(price, priceFreqMap.getOrDefault(price, 0) + 1);
+    }
+    
+    public int current() {
+        // O(log N) to find the highest timestamp key
+        return timePriceMap.lastEntry().getValue();
+    }
+    
+    public int maximum() {
+        // O(log N) to get the highest price key
+        return priceFreqMap.lastKey();
+    }
+    
+    public int minimum() {
+        // O(log N) to get the lowest price key
+        return priceFreqMap.firstKey();
+    }
+}

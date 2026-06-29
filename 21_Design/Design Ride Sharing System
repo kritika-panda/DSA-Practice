@@ -1,0 +1,53 @@
+https://leetcode.com/problems/design-ride-sharing-system/description/?envType=problem-list-v2&envId=data-stream
+
+
+class RideSharingSystem {
+    private LinkedHashSet<Integer> riderSet;
+    private LinkedHashSet<Integer> driverSet;
+
+    public RideSharingSystem() {
+        riderSet=new LinkedHashSet<>();
+        driverSet=new LinkedHashSet<>();
+    }
+    
+    public void addRider(int riderId) {
+        riderSet.add(riderId);
+    }
+    
+    public void addDriver(int driverId) {
+        driverSet.add(driverId);
+    }
+    
+    public int[] matchDriverWithRider() {
+        int isDriverAvailable=!driverSet.isEmpty()?driverSet.getFirst():-1;
+        int isRiderAvailable=!riderSet.isEmpty()?riderSet.getFirst():-1;
+        if(isDriverAvailable==-1 || isRiderAvailable==-1)
+            return new int[]{-1,-1};
+        driverSet.removeFirst();
+        riderSet.removeFirst();
+        return new int[]{isDriverAvailable,isRiderAvailable};
+    }
+    
+    public void cancelRider(int riderId) {
+        if(riderSet.contains(riderId))
+            riderSet.remove(riderId);
+    }
+}
+
+
+
+Time Complexity (TC)
+addRider(int riderId): O(1)
+Adding an element to a LinkedHashSet takes constant time on average because it internally uses a hash table.
+addDriver(int driverId): O(1)
+Same as addRider, inserting into the LinkedHashSet takes constant time.
+matchDriverWithRider(): O(1)
+Using Java 21's getFirst() and removeFirst() on a LinkedHashSet takes constant time. This is because LinkedHashSet maintains a doubly-linked list behind the scenes, allowing it to instantly peek at or remove the head node in O(1) time without needing to iterate.
+cancelRider(int riderId): O(1)
+Checking .contains() and calling .remove() by value both use the underlying hash table lookup, taking constant time on average.
+
+Space Complexity (SC)
+Overall Space Complexity: O(R + D)
+Where R is the number of active riders currently waiting in the system and D is the number of available drivers.
+Each unique ID stored inside riderSet and driverSet consumes memory proportional to the number of elements actively kept in the system. Canceled or matched entries are fully removed from memory.
+

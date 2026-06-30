@@ -1,0 +1,45 @@
+https://leetcode.com/problems/design-exam-scores-tracker/description/?envType=problem-list-v2&envId=design
+
+
+
+import java.util.*;
+
+class ExamTracker {
+    List<Integer> t = new ArrayList<>();
+    List<Long> x = new ArrayList<>();
+
+    public ExamTracker() {}
+
+    public void record(int time, int score) {
+        t.add(time);
+        long c = (x.isEmpty() ? 0 : x.get(x.size()-1)) + score;
+        x.add(c);
+    }
+
+    private int solve(List<Integer> t, int tar){
+        int i = 0, j = t.size();
+        while(i < j){
+            int mid = i + (j-i)/2;
+            if(t.get(mid) <= tar) i = mid + 1;
+            else j = mid;
+        }
+        return i-1;
+    }
+
+    public long totalScore(int sT, int eT){
+        int r = solve(t, eT);
+        int l = solve(t, sT-1);
+        if(r < 0) return 0;
+        return x.get(r) - (l >= 0 ? x.get(l) : 0);
+    }
+}
+
+
+
+
+Final Complexity Summary
+Method	Time Complexity	Space Complexity
+record	O(1)	O(n) (for all records)
+solve	O(log n)	O(1)
+totalScore	O(log n)	O(1)
+

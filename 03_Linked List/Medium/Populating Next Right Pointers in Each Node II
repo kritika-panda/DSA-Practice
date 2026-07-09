@@ -48,3 +48,40 @@ class Solution {
         return root;
     }
 }
+
+
+Step 1: Start at Root
+curr = 1
+Create dummy and tail for the next level.
+Traverse level 1:
+Node 1 has left child → connect tail.next = 2, move tail = 2.
+Node 1 has right child → connect tail.next = 3, move tail = 3.
+End of level → dummy.next = 2.
+Move curr = 2.
+
+🔹 Step 2: Process Level 2 (Nodes 2 → 3)
+curr = 2, dummy reset, tail = dummy.
+Node 2:
+Left child → connect tail.next = 4, move tail = 4.
+Right child → connect tail.next = 5, move tail = 5.
+Move curr = 3.
+Node 3:
+Left child → none.
+Right child → connect tail.next = 7, move tail = 7.
+End of level → dummy.next = 4.
+Move curr = 4.
+
+🔹 Step 3: Process Level 3 (Nodes 4 → 5 → 7)
+curr = 4, dummy reset, tail = dummy.
+Node 4: no children.
+Move curr = 5.
+Node 5: no children.
+Move curr = 7.
+Node 7: no children.
+End of level → dummy.next = null.
+Move curr = null. Done.
+
+🔹 Final Connections
+Level 1: 1 → null
+Level 2: 2 → 3 → null
+Level 3: 4 → 5 → 7 → null

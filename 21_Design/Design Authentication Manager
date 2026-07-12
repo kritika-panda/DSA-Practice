@@ -11,7 +11,8 @@ class AuthenticationManager {
     public AuthenticationManager(int timeToLive) {
         this.timeToLive = timeToLive;
         this.tokenMap = new HashMap<>();
-        this.minHeap = new PriorityQueue<>((a, b) -> a[0] - b[0]); // sort by expiry
+        this.minHeap = new PriorityQueue<>((a, b) -> Integer.compare(a[0], b[0]));
+        //this.minHeap = new PriorityQueue<>((a, b) -> a[0] - b[0]); // sort by expiry
         this.activeCount = 0;
     }
 

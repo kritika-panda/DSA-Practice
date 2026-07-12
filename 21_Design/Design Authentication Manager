@@ -1,0 +1,103 @@
+https://leetcode.com/problems/design-authentication-manager/description/?envType=problem-list-v2&envId=linked-list
+
+import java.util.*;
+
+class AuthenticationManager {
+    private int timeToLive;
+    private Map<String, Integer> tokenMap; // tokenId -> expiryTime
+    private PriorityQueue<int[]> minHeap;  // [expiryTime, tokenIdHash]
+    private int activeCount;
+
+    public AuthenticationManager(int timeToLive) {
+        this.timeToLive = timeToLive;
+        this.tokenMap = new HashMap<>();
+        this.minHeap = new PriorityQueue<>((a, b) -> a[0] - b[0]); // sort by expiry
+        this.activeCount = 0;
+    }
+
+    public void generate(String tokenId, int currentTime) {
+        int expiry = currentTime + timeToLive;
+        tokenMap.put(tokenId, expiry);
+        minHeap.offer(new int[]{expiry, tokenId.hashCode()});
+        activeCount++;
+    }
+
+    public void renew(String tokenId, int currentTime) {
+        cleanup(currentTime);
+        if (tokenMap.containsKey(tokenId) && tokenMap.get(tokenId) > currentTime) {
+            int expiry = currentTime + timeToLive;
+            tokenMap.put(tokenId, expiry);
+            minHeap.offer(new int[]{expiry, tokenId.hashCode()});
+            // activeCount unchanged (still one active token)
+        }
+    }
+
+    public int countUnexpiredTokens(int currentTime) {
+        cleanup(currentTime);
+        return activeCount;
+    }
+
+    // Lazy cleanup of expired tokens
+    private void cleanup(int currentTime) {
+        while (!minHeap.isEmpty() && minHeap.peek()[0] <= currentTime) {
+            int[] top = minHeap.poll();
+            // Verify against latest expiry in tokenMap
+            // (since renew may have pushed newer expiry)
+            for (Map.Entry<String, Integer> entry : tokenMap.entrySet()) {
+                if (entry.getValue() == top[0] && entry.getKey().hashCode() == top[1]) {
+                    tokenMap.remove(entry.getKey());
+                    activeCount--;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+🔹 Complexity
+generate: O(log⁡n) (heap insert).
+renew: O(log⁡n) (heap insert + cleanup).
+countUnexpiredTokens: O(1) after cleanup.
+Space: O(n).
+
+
+
+
+
+OR
+
+
+
+
+
+
+class AuthenticationManager {
+    private int timeToLive;
+    private HashMap<String,Integer> tokenMap;
+    public AuthenticationManager(int timeToLive) {
+        this.timeToLive=timeToLive;
+        this.tokenMap=new HashMap<>();
+    }
+    
+    public void generate(String tokenId, int currentTime) {
+        tokenMap.put(tokenId,currentTime+timeToLive);
+    }
+    
+    public void renew(String tokenId, int currentTime) {
+        if(tokenMap.containsKey(tokenId) && tokenMap.get(tokenId)>currentTime)
+            tokenMap.put(tokenId,currentTime+timeToLive);
+    }
+    
+    public int countUnexpiredTokens(int currentTime) {
+         int count = 0;
+        for (int expiry : tokenMap.values()) 
+            if (expiry > currentTime) count++;
+        return count;
+    }
+}
+
+Complexity
+generate: O(1)
+renew: O(1)
+countUnexpiredTokens: O(n) (iterate all tokens)
+Space: O(n) for storing tokens.

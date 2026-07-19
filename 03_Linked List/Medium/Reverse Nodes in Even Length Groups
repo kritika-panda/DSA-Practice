@@ -1,0 +1,75 @@
+https://leetcode.com/problems/reverse-nodes-in-even-length-groups/?envType=problem-list-v2&envId=linked-list
+
+
+class Solution {
+    public int countNodes(ListNode temp)
+    {
+        int length=0;
+        while(temp!=null)
+        {
+            length++;
+            temp=temp.next;
+        }
+        return length;
+    }
+    public ListNode reverse(ListNode curr,int c,ListNode[] last,ListNode first)
+    {
+        ListNode prev=null;
+        int cnt=0;
+        first=curr;
+        while(curr!=null && cnt<c)
+        {
+            ListNode temp=curr.next;
+            curr.next=prev;
+            prev=curr;
+            curr=temp;
+            cnt++;
+        }
+        last[0]=curr;
+        curr=prev;
+        first.next=last[0];
+        return curr;
+    }
+    public ListNode reverseEvenLengthGroups(ListNode head) {
+        int length=countNodes(head);
+        int c=1;
+        ListNode ptr=head;
+        ListNode early=head;
+        ListNode first=null;
+        while(ptr!=null)
+        {
+            int finalc=0;
+            int sum=c*(c+1)/2;
+            finalc = (sum<length) ? c : length-(int)(c*(c-1)/2);
+            if(finalc%2==0)
+            {
+                    ListNode[] last=new ListNode[]{null};
+                    ListNode currptr=ptr;
+                    ptr=reverse(ptr,finalc,last,first);
+                    early.next=ptr;
+                    early=currptr;
+                    ptr=last[0];
+            }
+            else
+            {
+                int cnt=0;
+                while(cnt<c && ptr!=null)
+                {
+                    early=ptr;
+                    ptr=ptr.next;
+                    cnt++;
+                }
+            }
+            c++;
+        }
+        return head;
+    }
+}
+
+
+🔹 Complexity
+Time: 
+𝑂(𝑛) — each node visited once.
+
+Space: 
+𝑂(1) — in‑place reversal.

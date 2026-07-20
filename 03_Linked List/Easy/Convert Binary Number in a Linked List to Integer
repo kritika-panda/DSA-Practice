@@ -1,0 +1,26 @@
+https://leetcode.com/problems/convert-binary-number-in-a-linked-list-to-integer/description/?envType=problem-list-v2&envId=linked-list
+
+class Solution {
+    public int getDecimalValue(ListNode head) {
+        int result = 0;
+        ListNode curr = head;
+        while (curr != null) {
+            result = (result << 1) | curr.val; // shift left and add bit
+            curr = curr.next;
+        }
+        return result;
+    }
+}
+
+Example Dry Run
+Input list: 1 → 0 → 1
+
+Start: result = 0
+
+Node 1: (0 << 1) | 1 = 1
+
+Node 0: (1 << 1) | 0 = 2
+
+Node 1: (2 << 1) | 1 = 5
+
+Output: 5

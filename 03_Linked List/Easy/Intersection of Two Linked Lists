@@ -1,0 +1,65 @@
+https://leetcode.com/problems/intersection-of-two-linked-lists/?envType=problem-list-v2&envId=linked-list
+
+
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null) return null;
+        ListNode a=headA;
+        ListNode b=headB;
+        while(a!=b)
+        {
+            a = (a == null) ? headB : a.next;
+            b = (b == null) ? headA : b.next;
+        }
+        return a;
+    }
+}
+
+
+🔹 Case 1: Lists Intersect
+Example:
+
+Code
+List A: 1 → 2 → 3
+                 ↘
+                  7 → 8 → 9
+                 ↗
+List B:     4 → 5
+Two‑Pointer Walkthrough
+Start: a=1, b=4
+
+Traverse: a=2, b=5
+
+Traverse: a=3, b=7
+
+Traverse: a=7, b=8
+
+Now both pointers eventually align at node 7.
+
+Condition a == b becomes true → intersection found.
+
+🔹 Case 2: Lists Do Not Intersect
+Example:
+
+Code
+List A: 2 → 6 → 4
+List B: 1 → 5
+Two‑Pointer Walkthrough
+Start: a=2, b=1
+
+Traverse: a=6, b=5
+
+Traverse: a=4, b=null
+
+Redirect: a=null → headB=1, b=null → headA=2
+
+Continue traversing until both reach null.
+
+Condition a == b only becomes true when both are null.
+
+Return null → no intersection.
+
+🔹 Key Difference
+Intersection exists: Pointers meet at a real node reference (same memory address).
+
+No intersection: Pointers only become equal at null after traversing both lists fully.

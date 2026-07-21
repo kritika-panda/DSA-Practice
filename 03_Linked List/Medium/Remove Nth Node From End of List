@@ -1,0 +1,36 @@
+https://leetcode.com/problems/remove-nth-node-from-end-of-list/submissions/2075879078/?envType=problem-list-v2&envId=linked-list
+
+class Solution {
+    public int countNodes(ListNode temp)
+    {
+        int count=0;
+        while(temp!=null)
+        {
+            count++;
+            temp=temp.next;
+        }
+        return count;
+    }
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        int count=countNodes(head);
+        int k=count-n;
+        int ind=0;
+        ListNode temp=head;
+        ListNode prev1=new ListNode(-1);
+        ListNode prev=prev1;
+        while(temp!=null)
+        {
+            if(ind==k)
+            {
+                prev.next=temp.next;
+                break;
+            }
+            else
+                prev.next=temp;
+            ind++;
+            prev=prev.next;
+            temp=temp.next;
+        }
+        return prev1.next;
+    }
+}

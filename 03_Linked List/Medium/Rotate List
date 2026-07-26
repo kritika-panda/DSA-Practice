@@ -1,0 +1,33 @@
+https://leetcode.com/problems/rotate-list/?envType=problem-list-v2&envId=linked-list
+
+
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null || head.next == null || k == 0) return head;
+
+        // Step 1: Find length
+        ListNode temp = head;
+        int length = 1;
+        while (temp.next != null) {
+            temp = temp.next;
+            length++;
+        }
+
+        // Step 2: Make circular
+        temp.next = head;
+
+        // Step 3: Find new head
+        k = k % length;
+        int stepsToNewHead = length - k;
+        ListNode newTail = head;
+        for (int i = 1; i < stepsToNewHead; i++) 
+            newTail = newTail.next;
+
+        ListNode newHead = newTail.next;
+
+        // Step 4: Break circle
+        newTail.next = null;
+
+        return newHead;
+    }
+}

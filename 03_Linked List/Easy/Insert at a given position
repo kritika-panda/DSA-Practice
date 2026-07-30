@@ -1,0 +1,31 @@
+https://www.geeksforgeeks.org/problems/insertion-at-a-given-position-in-a-linked-list/1
+
+
+class Solution {
+    public Node insertPos(Node head, int pos, int val) {
+        Node temp=head;
+        Node prev=head;
+        int c=1;
+        while(temp!=null)
+        {
+            if(c==pos)
+            {
+                Node newNode=new Node(val);
+                if(pos==1)
+                {
+                    newNode.next=head;
+                    head=newNode;
+                }
+                else{
+                    prev.next=newNode;
+                    newNode.next=temp;
+                }
+                break;
+            }
+            prev=temp;
+            temp=temp.next;
+            c++;
+        }
+        return head;
+    }
+}

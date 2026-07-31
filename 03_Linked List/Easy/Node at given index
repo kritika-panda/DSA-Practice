@@ -1,0 +1,22 @@
+https://www.geeksforgeeks.org/problems/insertion-at-a-given-position-in-a-linked-list/1
+
+
+class Solution {
+    public int getNode(Node head, int k) {
+        Node temp=head;
+        int c=1;
+        Node prev=head;
+        int value=-1;
+        while(temp!=null)
+        {
+            if(c==k)
+            {
+                value=temp.data;
+                break;
+            }
+            c++;
+            temp=temp.next;
+        }
+        return value;
+    }
+}

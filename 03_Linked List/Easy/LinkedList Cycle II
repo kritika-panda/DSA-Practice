@@ -26,3 +26,17 @@ public class Solution {
         return null; // no cycle
     }
 }
+
+
+Context
+After slow and fast pointers meet inside the cycle, we know:
+Distance from head to cycle start = a
+Distance from cycle start to meeting point = b
+Cycle length = c
+Mathematically, when slow and fast meet:
+Slow has traveled a + b
+Fast has traveled a + b + n·c (some multiple of the cycle length)
+Because fast moves twice as fast, we get:
+2(a+b)=a+b+n⋅c⇒a=n⋅c−b
+This means: if one pointer starts at head and the other starts at the meeting point, and both move one step at a time, they will meet at the cycle start after exactly a steps.
+

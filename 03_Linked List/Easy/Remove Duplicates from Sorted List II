@@ -1,0 +1,24 @@
+https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/description/?envType=problem-list-v2&envId=linked-list
+
+
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null) return null;
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode prev = dummy;
+
+        while (head != null) {
+            if (head.next != null && head.val == head.next.val) {
+                // Skip all nodes with this value
+                while (head.next != null && head.val == head.next.val) 
+                    head = head.next;
+                prev.next = head.next; // unlink entire duplicate group
+            } else 
+                prev = prev.next; // move prev forward only if no duplicate
+            head = head.next;
+        }
+        return dummy.next;
+    }
+}

@@ -1,0 +1,33 @@
+https://www.geeksforgeeks.org/problems/deletion-and-reverse-in-linked-list/1
+
+
+class Solution {
+    Node deleteNode(Node head, int key) {
+        if (head == null) return null;
+
+        Node curr = head, prev = null;
+
+        // Special case: deleting head
+        while (curr.data != key) {
+            prev = curr;
+            curr = curr.next;
+            if (curr == head) return head; // key not found
+        }
+
+        // If only one node
+        if (curr.next == head && prev == null) 
+            return null;
+
+        // If deleting head
+        if (curr == head) {
+            prev = head;
+            while (prev.next != head) 
+                prev = prev.next;
+            head = head.next;
+            prev.next = head;
+        } else 
+            prev.next = curr.next;
+
+        return head;
+    }
+}

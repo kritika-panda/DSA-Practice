@@ -1,0 +1,46 @@
+static Node reverseList(Node head) {
+        
+        if (head == null || head.next == null)
+            return head;
+
+        // reverse the rest of linked list and put
+        // the first element at the end
+        Node rest = reverseList(head.next);
+
+        // make the current head as last node of
+        // remaining linked list
+        head.next.next = head;
+
+        // update next of current head to null
+        head.next = null;
+
+        return rest;
+    }
+
+
+Dry Run Example
+Input: 1 → 2 → 3 → null
+
+Call stack:
+
+reverseList(1) → calls reverseList(2)
+
+reverseList(2) → calls reverseList(3)
+
+reverseList(3) → base case, returns node 3
+
+Re-linking:
+
+At node 2: 2.next.next = 2 → 3 → 2, then 2.next = null
+
+At node 1: 1.next.next = 1 → 2 → 1, then 1.next = null
+
+Final result: 3 → 2 → 1 → null
+
+
+Intuition
+head.next.next = head → “Make the next node point back to me.”
+
+head.next = null → “Cut my old forward link, because I’m now at the end.”
+
+Returning rest ensures the recursion always hands back the new head (the last node of the original list).

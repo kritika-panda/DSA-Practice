@@ -1,0 +1,19 @@
+https://www.geeksforgeeks.org/problems/implement-upper-bound/1
+
+
+class Solution {
+    int upperBound(int[] arr, int target) {
+    int low = 0, high = arr.length - 1;
+    int val = arr.length; // default: beyond last index
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        if (arr[mid] > target) {
+            val = mid;       // candidate index
+            high = mid - 1;  // search left
+        } else {
+            low = mid + 1;   // search right
+        }
+    }
+    return val;
+}
+}

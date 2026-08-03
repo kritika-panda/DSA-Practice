@@ -33,3 +33,7 @@ class Solution {
         return -1;
     }
 }
+
+
+The intuition is: rotation breaks global sortedness but preserves 
+local sortedness in one half at every split. By checking which half is sorted, you can decide where to continue searching.

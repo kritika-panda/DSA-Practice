@@ -1,0 +1,42 @@
+https://www.geeksforgeeks.org/problems/number-of-occurrence2259/1
+
+class Solution {
+    int countFreq(int[] arr, int target) {
+        int first = findFirst(arr, target);
+        if (first == -1) return 0; // target not found
+        int last = findLast(arr, target);
+        return last - first + 1;
+    }
+
+    private int findFirst(int[] arr, int target) {
+        int low = 0, high = arr.length - 1, ans = -1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (arr[mid] == target) {
+                ans = mid;
+                high = mid - 1; // keep searching left
+            } else if (arr[mid] > target) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    private int findLast(int[] arr, int target) {
+        int low = 0, high = arr.length - 1, ans = -1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (arr[mid] == target) {
+                ans = mid;
+                low = mid + 1; // keep searching right
+            } else if (arr[mid] > target) {
+                high = mid - 1; // move left
+            } else {
+                low = mid + 1;
+            }
+        }
+        return ans;
+    }
+}

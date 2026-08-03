@@ -1,0 +1,23 @@
+https://www.geeksforgeeks.org/problems/implement-lower-bound/1
+
+
+
+class Solution {
+    int lowerBound(int[] arr, int target) {
+        int low=0;
+        int high=arr.length-1;
+        int val=arr.length;  //Default value if not found
+        while(low<=high)
+        {
+            int mid=(low+high)/2;
+            if(target<=arr[mid])
+            {
+                val=mid;
+                high=mid-1;
+            }
+            else
+                low=mid+1;
+        }
+        return val;
+    }
+}

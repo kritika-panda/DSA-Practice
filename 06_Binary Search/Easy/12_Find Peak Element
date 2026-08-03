@@ -18,3 +18,7 @@ class Solution {
         return low;
     }
 }
+
+
+The intuition is: treat the array like a mountain range. If the slope is rising, the peak must be ahead; 
+if the slope is falling, the peak is behind. Binary search exploits this slope property to find a peak efficiently.

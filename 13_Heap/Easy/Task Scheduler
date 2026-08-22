@@ -1,0 +1,42 @@
+https://leetcode.com/problems/task-scheduler/
+
+
+import java.util.*;
+
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        // Step 1: Count task frequencies using HashMap
+        Map<Character, Integer> taskCounts = new HashMap<>();
+        for (char task : tasks) {
+            taskCounts.put(task, taskCounts.getOrDefault(task, 0) + 1);
+        }
+
+        // Step 2: Push frequencies into Max Heap
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        maxHeap.addAll(taskCounts.values());
+
+        // Step 3: Queue holds pairs of [remaining_count, time_when_available]
+        Queue<int[]> coolDownQueue = new LinkedList<>();
+        int time = 0;
+
+        while (!maxHeap.isEmpty() || !coolDownQueue.isEmpty()) {
+            time++;
+
+            // Step 4: Run the most frequent task
+            if (!maxHeap.isEmpty()) {
+                int remainingFreq = maxHeap.poll() - 1;
+                if (remainingFreq > 0) {
+                    // Task will be ready to execute again at time + n
+                    coolDownQueue.add(new int[]{remainingFreq, time + n});
+                }
+            }
+
+            // Step 5: Re-add task to heap if cooling period has ended
+            if (!coolDownQueue.isEmpty() && coolDownQueue.peek()[1] == time) {
+                maxHeap.add(coolDownQueue.poll()[0]);
+            }
+        }
+
+        return time;
+    }
+}

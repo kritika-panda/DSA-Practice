@@ -1,0 +1,60 @@
+https://leetcode.com/problems/valid-parenthesis-string/
+
+
+public class Solution {
+    public boolean checkValidString(String s) {
+        int minOpen = 0;
+        int maxOpen = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (c == '(') {
+                minOpen++;
+                maxOpen++;
+            } else if (c == ')') {
+                minOpen--;
+                maxOpen--;
+            } else { // c == '*'
+                minOpen--; // treat '*' as ')'
+                maxOpen++; // treat '*' as '('
+            }
+
+            // More closing brackets than opening brackets can handle
+            if (maxOpen < 0) 
+                return false;
+            
+
+            // minOpen cannot drop below zero
+             if (minOpen < 0) 
+                minOpen = 0;
+        
+        }
+
+        return minOpen == 0;
+    }
+}
+
+
+
+
+
+The core intuition behind this greedy approach for Valid Parenthesis String relies on tracking a range of possible open bracket counts 
+rather than trying every combination of * (which would cause an exponential time complexity explosion).At any index, because * can act 
+as (, ), or "" (empty), we don't have just a single count of open brackets—we have a range of valid open bracket counts: [minOpen, 
+maxOpen].
+1. What minOpen and maxOpen RepresentmaxOpen: The maximum possible number of unmatched ( we could have if we treated every * 
+aggressively as an opening parenthesis (.minOpen: The minimum possible number of unmatched ( we could have if we treated every * 
+aggressively as a closing parenthesis ).
+2. How Each Character Updates the Range(: Every branch increases the open count by 1 
+$\rightarrow$ both minOpen and maxOpen increment.): Every branch decreases the open count by 1 $\rightarrow$ both minOpen and maxOpen 
+decrement.*: Since * can be (, ), or "", the possible open count range expands. The lowest bound drops by treating * as ) (minOpen--), 
+and the upper bound rises by treating * as ( (maxOpen++).
+3. The Two Key Invariants / Checksif (maxOpen < 0) return false;Even under 
+the most optimistic scenario (treating every wildcard as (), we encountered more closing brackets ) than opening ones. The string is 
+permanently invalid at this point.if (minOpen < 0) minOpen = 0;minOpen going below 0 means we treated a wildcard * as a ) when we didn't 
+actually need to (there were no open brackets to match). Since * can also act as an empty string "", we reset minOpen back to 0 instead 
+of letting it stay negative.
+4. The Final Check: return minOpen == 0;At the end of the string, a valid parenthesis sequence must end 
+with 0 unmatched open brackets. If minOpen == 0, it guarantees that there exists at least one valid combination of * choices that 
+leaves us with perfectly balanced parentheses.

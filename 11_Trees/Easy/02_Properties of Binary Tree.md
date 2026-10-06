@@ -1,111 +1,29 @@
-# Introduction to Binary Tree
+# Properties of Binary Tree
 
-## What is a Binary Tree?
+## Overview
 
-A **Binary Tree** is a hierarchical, non-linear data structure where each node can have **at most two children**:
+A Binary Tree is a hierarchical data structure where each node can have at most two children.
 
-- Left Child
-- Right Child
-
-The topmost node is called the **Root**, and nodes with no children are called **Leaf Nodes**.
+> **Note:** Height of the root node is considered **0**.
 
 ---
 
-## Binary Tree Structure
+# 1. Maximum Nodes at Level `l`
 
-Each node consists of:
-
-1. Data
-2. Reference to Left Child
-3. Reference to Right Child
-
-### Java Representation
-
-```java
-class Node {
-    int data;
-    Node left;
-    Node right;
-
-    Node(int data) {
-        this.data = data;
-        this.left = null;
-        this.right = null;
-    }
-}
-```
-
----
-
-## Basic Terminology
-
-| Term | Description |
-|--------|------------|
-| Root | Topmost node of the tree |
-| Parent Node | Direct ancestor of a node |
-| Child Node | Direct descendant of a node |
-| Sibling | Nodes having the same parent |
-| Leaf Node | Node with no children |
-| Internal Node | Node with at least one child |
-| Edge | Connection between parent and child |
-| Path | Sequence of connected nodes |
-| Ancestor | Any node on the path from root to a node |
-| Descendant | Any node in the subtree of a node |
-| Subtree | Tree formed by a node and its descendants |
-| Depth | Number of edges from root to the node |
-| Height | Longest path from root to a leaf |
-
----
-
-## Example Binary Tree
+A binary tree can have at most:
 
 ```text
-        2
-       / \
-      3   4
-     /
-    5
+2^l
 ```
 
-### Creating the Above Tree in Java
+nodes at level `l`.
 
-```java
-class Node {
-    int data;
-    Node left;
-    Node right;
+### Level Definition
 
-    Node(int data) {
-        this.data = data;
-    }
-}
+- Level = Number of edges from the root to the node.
+- Root is at level `0`.
 
-public class Main {
-    public static void main(String[] args) {
-
-        Node root = new Node(2);
-        root.left = new Node(3);
-        root.right = new Node(4);
-        root.left.left = new Node(5);
-    }
-}
-```
-
----
-
-## Properties of Binary Tree
-
-### 1. Maximum Nodes at Level L
-
-```text
-2^L
-```
-
-Where:
-
-- Root is at Level 0
-
-Example:
+### Example
 
 ```text
 Level 0 → 1 node
@@ -114,20 +32,53 @@ Level 2 → 4 nodes
 Level 3 → 8 nodes
 ```
 
----
-
-### 2. Maximum Nodes in a Binary Tree of Height H
+### Formula
 
 ```text
-2^(H + 1) - 1
+Maximum Nodes at Level l = 2^l
 ```
 
-Example:
+---
+
+# 2. Maximum Nodes in a Binary Tree of Height `h`
+
+A binary tree of height `h` can contain at most:
+
+```text
+2^(h + 1) - 1
+```
+
+nodes.
+
+### Height Definition
+
+Height = Number of edges on the longest path from root to leaf.
+
+```text
+Root Only Tree → Height = 0
+Empty Tree     → Height = -1
+```
+
+### Derivation
+
+When all levels are completely filled:
+
+```text
+1 + 2 + 4 + ... + 2^h
+```
+
+This forms a geometric progression:
+
+```text
+Total Nodes = 2^(h + 1) - 1
+```
+
+### Example
 
 ```text
 Height = 3
 
-Maximum Nodes
+Nodes
 = 2^(3 + 1) - 1
 = 16 - 1
 = 15
@@ -135,137 +86,331 @@ Maximum Nodes
 
 ---
 
-### 3. Leaf Node Relationship
+# 3. Minimum Height for `N` Nodes
 
-```text
-Number of Leaf Nodes
-=
-(Number of Nodes Having Two Children) + 1
-```
-
----
-
-### 4. Minimum Height for N Nodes
+The minimum possible height for a binary tree with `N` nodes is:
 
 ```text
 ⌊log₂(N)⌋
 ```
 
----
+### Explanation
 
-### 5. Minimum Levels for L Leaves
+Since:
 
 ```text
-⌈log₂(L)⌉ + 1
+N ≤ 2^(h + 1) - 1
+```
+
+Rearranging:
+
+```text
+2^(h + 1) ≥ N + 1
+
+h ≥ log₂(N + 1) - 1
+```
+
+Therefore:
+
+```text
+Minimum Height = ⌊log₂(N)⌋
+```
+
+### Example
+
+```text
+N = 15
+
+Minimum Height
+= ⌊log₂(15)⌋
+= 3
 ```
 
 ---
 
-## Common Operations on Binary Tree
+# 4. Minimum Levels for `L` Leaves
 
-### 1. Traversal
+A binary tree containing `L` leaf nodes requires at least:
 
-Visit all nodes in a tree.
+```text
+⌊log₂(L)⌋
+```
 
-#### Depth First Search (DFS)
+levels.
 
-- Preorder Traversal
-- Inorder Traversal
-- Postorder Traversal
+### Why?
 
-#### Breadth First Search (BFS)
+Maximum leaf nodes at level `l`:
 
-- Level Order Traversal
+```text
+L ≤ 2^l
+```
 
----
+Taking logarithm:
 
-### 2. Search
+```text
+l = ⌊log₂(L)⌋
+```
 
-Find a node containing a specific value.
+### Example
 
----
+```text
+Leaves = 8
 
-### 3. Insertion
-
-Add a new node while maintaining tree structure.
-
----
-
-### 4. Deletion
-
-Remove a node and reorganize the tree accordingly.
-
----
-
-## Advantages
-
-✅ Efficient searching in specialized forms such as BST
-
-✅ Naturally represents hierarchical data
-
-✅ Easy to understand and implement
-
-✅ Useful in recursive algorithms
+Minimum Levels
+= ⌊log₂(8)⌋
+= 3
+```
 
 ---
 
-## Disadvantages
+# 5. Relationship Between Leaf Nodes and Full Nodes
 
-❌ Limited to two children per node
+For a **Full Binary Tree**:
 
-❌ Extra memory needed for child references
+```text
+Number of Leaf Nodes = Number of Nodes with Two Children + 1
+```
 
-❌ Can become unbalanced leading to poor performance
+or
 
----
+```text
+L = T + 1
+```
 
-## Applications
+Where:
 
-### 1. Hierarchical Data Representation
+- `L` = Leaf Nodes
+- `T` = Internal Nodes having exactly two children
 
-Examples:
+### Example
 
-- File Systems
-- Organizational Structures
+```text
+Nodes with 2 children = 4
 
-### 2. Binary Search Trees (BST)
-
-Efficient searching, insertion, and deletion operations.
-
-### 3. Huffman Coding
-
-Used in data compression algorithms.
-
-### 4. Decision Trees
-
-Used in machine learning for classification and regression.
-
-### 5. Expression Trees
-
-Used in compilers and expression evaluation.
-
-### 6. Database Indexing
-
-Various indexing structures are derived from tree-based concepts.
+Leaf Nodes
+= 4 + 1
+= 5
+```
 
 ---
 
-## Key Takeaways
+# 6. Total Edges in a Binary Tree
 
-- A Binary Tree is a hierarchical structure where each node has at most two children.
-- Every node contains data, a left child reference, and a right child reference.
-- DFS and BFS are the primary traversal techniques.
-- Binary Trees are widely used in searching, compression, indexing, and machine learning.
-- Understanding Binary Trees is essential before learning:
-  - Binary Search Trees (BST)
-  - AVL Trees
-  - Red-Black Trees
-  - Heaps
-  - Segment Trees
-  - Tries
+For any non-empty binary tree:
+
+```text
+Edges = Nodes - 1
+```
+
+or
+
+```text
+Edges = n - 1
+```
+
+### Explanation
+
+Every node except the root has exactly one parent.
+
+```text
+n nodes
+⇒ n - 1 parent-child connections
+⇒ n - 1 edges
+```
+
+### Example
+
+```text
+Nodes = 10
+
+Edges = 10 - 1
+      = 9
+```
 
 ---
 
-## Reference
+# Additional Properties
 
-- [Introduction to Binary Tree - GeeksforGeeks](https://www.geeksforgeeks.org/dsa/introduction-to-binary-tree/)
+## Node Classification
+
+A node can have:
+
+### 0 Children
+
+```text
+Leaf Node
+```
+
+### 1 Child
+
+```text
+Unary Node
+```
+
+### 2 Children
+
+```text
+Binary Node
+```
+
+---
+
+# Types of Binary Trees
+
+## Full Binary Tree
+
+Every non-leaf node has exactly two children.
+
+```text
+        1
+       / \
+      2   3
+     / \
+    4   5
+```
+
+---
+
+## Complete Binary Tree
+
+- All levels completely filled except possibly the last.
+- Last level filled from left to right.
+
+```text
+        1
+      /   \
+     2     3
+    / \   /
+   4   5 6
+```
+
+---
+
+## Perfect Binary Tree
+
+- Every level is completely filled.
+- All leaves are at the same depth.
+
+```text
+        1
+      /   \
+     2     3
+    / \   / \
+   4  5  6  7
+```
+
+---
+
+## Balanced Binary Tree
+
+Height difference between left and right subtree is at most 1.
+
+```text
+| Height(Left) - Height(Right) | ≤ 1
+```
+
+---
+
+# Tree Traversal Methods
+
+Traversal is broadly divided into:
+
+## 1. Depth First Search (DFS)
+
+### Inorder Traversal (LNR)
+
+```text
+Left → Node → Right
+```
+
+Used in BST to retrieve elements in sorted order.
+
+---
+
+### Preorder Traversal (NLR)
+
+```text
+Node → Left → Right
+```
+
+Used for tree reconstruction and serialization.
+
+---
+
+### Postorder Traversal (LRN)
+
+```text
+Left → Right → Node
+```
+
+Used for:
+
+- Tree deletion
+- Expression evaluation
+
+---
+
+## 2. Breadth First Search (BFS)
+
+### Level Order Traversal
+
+```text
+Level by Level
+```
+
+Example:
+
+```text
+        1
+      /   \
+     2     3
+
+Traversal:
+1 2 3
+```
+
+---
+
+### Zig-Zag Traversal
+
+Alternate traversal direction at every level.
+
+```text
+Level 0 → Left to Right
+Level 1 → Right to Left
+Level 2 → Left to Right
+...
+```
+
+Example:
+
+```text
+        1
+      /   \
+     2     3
+    / \   / \
+   4  5  6  7
+
+Output:
+1 3 2 4 5 6 7
+```
+
+---
+
+# Quick Revision Sheet
+
+| Property | Formula |
+|-----------|---------|
+| Maximum Nodes at Level `l` | `2^l` |
+| Maximum Nodes for Height `h` | `2^(h+1) - 1` |
+| Minimum Height for `N` Nodes | `⌊log₂(N)⌋` |
+| Minimum Levels for `L` Leaves | `⌊log₂(L)⌋` |
+| Edges in Binary Tree | `n - 1` |
+| Full Binary Tree Relation | `Leaf Nodes = Two-Child Nodes + 1` |
+
+---
+
+# Reference
+
+- [Properties of Binary Tree - GeeksforGeeks](https://www.geeksforgeeks.org/dsa/properties-of-binary-tree/)

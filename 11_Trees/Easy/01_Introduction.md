@@ -118,20 +118,146 @@ Level 3 → 8 nodes
 
 ### 2. Maximum Nodes in a Binary Tree of Height H
 
+A binary tree has the maximum number of nodes when **every level is completely filled** (Perfect Binary Tree).
+
+### Pattern
+
 ```text
-2^(H + 1) - 1
+Height = 0
+
+Level 0 -> 1 node
+
+Total Nodes = 1
 ```
 
-Example:
+```text
+Height = 1
+
+Level 0 -> 1 node
+Level 1 -> 2 nodes
+
+Total Nodes = 1 + 2 = 3
+```
+
+```text
+Height = 2
+
+Level 0 -> 1 node
+Level 1 -> 2 nodes
+Level 2 -> 4 nodes
+
+Total Nodes = 1 + 2 + 4 = 7
+```
+
+```text
+Height = 3
+
+Level 0 -> 1 node
+Level 1 -> 2 nodes
+Level 2 -> 4 nodes
+Level 3 -> 8 nodes
+
+Total Nodes = 1 + 2 + 4 + 8 = 15
+```
+
+Notice that the number of nodes doubles at every level:
+
+```text
+Level 0 -> 2^0
+Level 1 -> 2^1
+Level 2 -> 2^2
+...
+Level H -> 2^H
+```
+
+Therefore:
+
+```text
+Maximum Nodes
+
+= 2^0 + 2^1 + 2^2 + ... + 2^H
+```
+
+This is a Geometric Progression (GP).
+
+### Derivation
+
+Let
+
+```text
+S = 1 + 2 + 4 + 8 + ... + 2^H
+```
+
+Multiply both sides by 2:
+
+```text
+2S = 2 + 4 + 8 + ... + 2^H + 2^(H+1)
+```
+
+Now subtract:
+
+```text
+2S = 2 + 4 + 8 + ... + 2^H + 2^(H+1)
+ S = 1 + 2 + 4 + ... + 2^H
+----------------------------------
+2S-S = 2^(H+1) - 1
+```
+
+Explanation:
+
+```text
++2     -2     = 0
++4     -4     = 0
++8     -8     = 0
+...
++2^H   -2^H   = 0
+```
+
+All middle terms cancel out.
+
+The only surviving terms are:
+
+```text
++2^(H+1)
+-1
+```
+
+Therefore:
+
+```text
+S = 2^(H+1) - 1
+```
+
+Hence,
+
+```text
+Maximum Nodes in a Binary Tree of Height H
+
+= 2^(H + 1) - 1
+```
+
+### Example
 
 ```text
 Height = 3
 
 Maximum Nodes
-= 2^(3 + 1) - 1
+= 2^(3+1) - 1
+= 2^4 - 1
 = 16 - 1
 = 15
 ```
+
+### Quick Reference
+
+| Height (H) | Maximum Nodes |
+|------------|---------------|
+| 0 | 1 |
+| 1 | 3 |
+| 2 | 7 |
+| 3 | 15 |
+| 4 | 31 |
+| 5 | 63 |
 
 ---
 

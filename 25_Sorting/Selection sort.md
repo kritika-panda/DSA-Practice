@@ -1,457 +1,740 @@
-What is Selection Sort?
-Selection Sort is a simple comparison-based sorting algorithm that repeatedly finds the smallest element from the unsorted portion and places it at the beginning.
+# Selection Sort
 
-Idea
-Find the smallest element
-↓
-Place it at the beginning of the unsorted portion
-↓
-Repeat until the entire array is sorted
-Real Life Analogy
-Imagine you have numbers:
+## What is Selection Sort?
 
-12 11 13 5 6
-Find the smallest number:
+**Selection Sort** is a simple comparison-based sorting algorithm.
 
-5
-Place it at the beginning:
+It repeatedly finds the smallest element from the unsorted portion of the array and places it at the beginning of that portion.
 
-5 11 13 12 6
-Now ignore the sorted part:
+After every pass, one element reaches its correct position.
 
-5 | 11 13 12 6
+---
+
+# Intuition
+
+Consider:
+
+[64, 25, 12, 22, 11]
+
+
+Find the smallest element:
+
+11
+
+
+Swap it with the first element:
+
+[11, 25, 12, 22, 64]
+
+
+Notice:
+
+11 has reached its final position.
+
+
+Now ignore the sorted portion:
+
+[11] | [25, 12, 22, 64]
+
+
 Find the smallest element from the remaining portion:
 
-6
-Place it next:
+12
 
-5 6 13 12 11
-Continue until everything is sorted.
 
-Key Observation
-After every iteration:
+Swap:
 
-Left Part  -> Sorted
-Right Part -> Unsorted
-Example:
+[11, 12, 25, 22, 64]
 
-[5, 6, 11] | [13, 12]
-The left side contains the elements that have already been placed in their final positions.
 
-Given Code
-public class SelectionSort {
+Continue until the entire array is sorted.
 
-    void sort(int arr[]) {
+---
 
-        int n = arr.length;
+# Why is it Called Selection Sort?
 
-        for (int i = 0; i < n - 1; i++) {
+Because during every pass, we:
 
-            int minIndex = i;
+Select the smallest element
 
-            for (int j = i + 1; j < n; j++) {
 
-                if (arr[j] < arr[minIndex]) {
-                    minIndex = j;
-                }
-            }
+from the unsorted portion and move it to its correct position.
 
-            int temp = arr[minIndex];
-            arr[minIndex] = arr[i];
-            arr[i] = temp;
-        }
-    }
-}
-Understanding the Algorithm
-Outer Loop
-for (int i = 0; i < n - 1; i++)
-The variable i represents the beginning of the unsorted portion.
+The process looks like:
 
-Example:
+Select Minimum ↓ Swap with first unsorted element ↓ Sorted portion grows ↓ Repeat
 
-[5, 11, 13, 12, 6]
- ↑
- i = 0
-After one pass:
 
-[5 | 11, 13, 12, 6]
-      ↑
-      i = 1
-The sorted portion grows from left to right.
+---
 
-Minimum Index
+# Given Code
+
+class GFG {
+
+static void selectionSort(int[] arr) {
+
+int n = arr.length;
+
+for (int i = 0; i < n - 1; i++) {
+
 int minIndex = i;
-Initially, we assume that the first element of the unsorted portion is the smallest.
+
+for (int j = i + 1; j < n; j++) {
+
+if (arr[j] < arr[minIndex]) { minIndex = j; } }
+
+int temp = arr[minIndex]; arr[minIndex] = arr[i]; arr[i] = temp; } } }
+
+
+---
+
+# Understanding the Algorithm
+
+## Outer Loop
+
+for (int i = 0; i < n - 1; i++)
+
+
+Purpose:
+
+Number of passes.
+
+
+Why `n - 1`?
+
+Because:
+
+After first pass, smallest element is fixed. After second pass, second smallest is fixed. ...
+
+
+For:
+
+n elements
+
+
+Maximum passes needed:
+
+n - 1
+
+
+---
+
+## Minimum Index
+
+int minIndex = i;
+
+
+Initially, we assume:
+
+Current first unsorted element is the minimum.
+
 
 Example:
 
-[12, 11, 13, 5, 6]
- ↑
+[64, 25, 12, 22, 11] ↑ i
+
+
+Initially:
+
 minIndex = 0
+
+
 Then we search the remaining elements.
 
-Finding the Minimum
+---
+
+## Inner Loop
+
 for (int j = i + 1; j < n; j++)
-Start searching from:
+
+
+Purpose:
+
+Search for the smallest element.
+
+
+Why:
 
 i + 1
-because arr[i] is already being considered as the minimum.
+
+
+Because:
+
+arr[i]
+
+
+is already considered as the current minimum.
 
 Example:
 
-12 11 13 5 6
-↑
-i
+64 25 12 22 11 ↑ ↑ i j
 
-   ↑
-   j
-Comparing Elements
-if (arr[j] < arr[minIndex]) {
-    minIndex = j;
-}
-If we find a smaller element, update minIndex.
+
+---
+
+# Comparison Logic
+
+if (arr[j] < arr[minIndex])
+
 
 Example:
 
-12 11 13 5 6
-↑        ↑
-min      j
+64 25
+
+
 Since:
 
-5 < 12
-we update:
+25 < 64
 
-minIndex = 3
-Swapping
-After finding the smallest element:
+
+Update:
+
+minIndex = j;
+
+
+Now:
+
+25
+
+
+is considered the smallest element found so far.
+
+---
+
+# Finding the Minimum
+
+Consider:
+
+[64, 25, 12, 22, 11]
+
+
+Start:
+
+minIndex = 0
+
+
+Compare:
+
+25 < 64 → Yes
+
+
+Update:
+
+minIndex = 1
+
+
+Compare:
+
+12 < 25 → Yes
+
+
+Update:
+
+minIndex = 2
+
+
+Compare:
+
+22 < 12 → No
+
+
+Compare:
+
+11 < 12 → Yes
+
+
+Update:
+
+minIndex = 4
+
+
+Minimum element:
+
+11
+
+
+---
+
+# Swap Logic
+
+After finding the minimum element:
 
 int temp = arr[minIndex];
+
 arr[minIndex] = arr[i];
+
 arr[i] = temp;
-We swap the smallest element with the first element of the unsorted portion.
 
-Example:
 
-12 11 13 5 6
-↑        ↑
-i     minIndex
-After swapping:
+Before:
 
-5 11 13 12 6
-Now 5 is in its final position.
+[64, 25, 12, 22, 11] ↑ ↑ i minIndex
 
-Complete Dry Run
-Input
-[12, 11, 13, 5, 6]
-Pass 1
-i = 0
-Initial:
 
-[12, 11, 13, 5, 6]
- ↑
- i
+After:
+
+[11, 25, 12, 22, 64]
+
+
+Now:
+
+11
+
+
+is in its final position.
+
+---
+
+# Complete Dry Run
+
+## Input
+
+[64, 25, 12, 22, 11]
+
+
+---
+
+# Pass 1
+
+Start:
+
+[64, 25, 12, 22, 11] ↑ i
+
+
 Assume:
 
 minIndex = 0
-Search for the minimum:
 
-12
-11  → smaller
-13
-5   → smaller
-6
-Therefore:
 
-minIndex = 3
-Swap:
+Compare:
 
-12 ↔ 5
-Array becomes:
+25 < 64 → Yes
 
-[5, 11, 13, 12, 6]
-Sorted portion:
-
-[5] | [11, 13, 12, 6]
-Pass 2
-i = 1
-Array:
-
-[5, 11, 13, 12, 6]
-    ↑
-    i
-Assume:
 
 minIndex = 1
-Search:
 
-11
-13
-12
-6  → smaller
-Therefore:
+
+Compare:
+
+12 < 25 → Yes
+
+
+minIndex = 2
+
+
+Compare:
+
+22 < 12 → No
+
+
+Compare:
+
+11 < 12 → Yes
+
 
 minIndex = 4
+
+
 Swap:
 
-11 ↔ 6
+64 ↔ 11
+
+
 Array becomes:
 
-[5, 6, 13, 12, 11]
-Sorted portion:
+[11, 25, 12, 22, 64]
 
-[5, 6] | [13, 12, 11]
-Pass 3
-i = 2
-Array:
 
-[5, 6, 13, 12, 11]
-       ↑
-       i
-Search:
-
-13
-12  → smaller
-11  → smaller
-Minimum:
+Smallest element fixed:
 
 11
-Swap:
 
-13 ↔ 11
-Array becomes:
 
-[5, 6, 11, 12, 13]
+---
+
+# Pass 2
+
+Starting:
+
+[11, 25, 12, 22, 64]
+
+
 Sorted portion:
 
-[5, 6, 11] | [12, 13]
-Pass 4
-i = 3
-Array:
+[11] | [25, 12, 22, 64]
 
-[5, 6, 11, 12, 13]
-          ↑
-          i
-Search:
+
+Find minimum:
 
 12
-13
+
+
+Swap:
+
+25 ↔ 12
+
+
+Array becomes:
+
+[11, 12, 25, 22, 64]
+
+
+Fixed:
+
+11, 12
+
+
+---
+
+# Pass 3
+
+Starting:
+
+[11, 12, 25, 22, 64]
+
+
+Sorted portion:
+
+[11, 12] | [25, 22, 64]
+
+
+Find minimum:
+
+22
+
+
+Swap:
+
+25 ↔ 22
+
+
+Array becomes:
+
+[11, 12, 22, 25, 64]
+
+
+Fixed:
+
+11, 12, 22
+
+
+---
+
+# Pass 4
+
+Starting:
+
+[11, 12, 22, 25, 64]
+
+
+Remaining portion:
+
+[25, 64]
+
+
 Minimum:
 
-12
+25
+
+
 It is already in the correct position.
 
 Array remains:
 
-[5, 6, 11, 12, 13]
-Final Output
-[5, 6, 11, 12, 13]
-Visualization
-Initial
-12 11 13 5 6
-Pass 1
-Find minimum:
+[11, 12, 22, 25, 64]
 
-12 11 13 5 6
-         ↑
-       minimum
-Swap:
 
-5 11 13 12 6
-Pass 2
-Find minimum:
+Sorted.
 
-5 | 11 13 12 6
-            ↑
-          minimum
-Swap:
+---
 
-5 6 13 12 11
-Pass 3
-Find minimum:
+# Visualization
 
-5 6 | 13 12 11
-            ↑
-          minimum
-Swap:
+Initial:
 
-5 6 11 12 13
-Pass 4
-5 6 11 | 12 13
-Already sorted.
+64 25 12 22 11
 
-Why Does Selection Sort Work?
-At every iteration:
 
-Find the smallest element
-from the unsorted portion
-Then:
+Pass 1:
 
-Place it at the beginning
-of the unsorted portion
-Therefore, after every iteration:
+11 25 12 22 64
 
-One more element
-is in its final position.
-The sorted region keeps growing:
 
-1 element sorted
-↓
-2 elements sorted
-↓
-3 elements sorted
-↓
-...
-↓
-Entire array sorted
-Number of Comparisons
-For every pass, we search the remaining unsorted elements.
+Pass 2:
 
-Comparisons:
+11 12 25 22 64
 
-(n - 1) + (n - 2) + (n - 3) + ... + 1
+
+Pass 3:
+
+11 12 22 25 64
+
+
+Pass 4:
+
+11 12 22 25 64
+
+
+---
+
+# Sorted Portion Visualization
+
+Initial:
+
+[64 25 12 22 11]
+
+
+After Pass 1:
+
+[11] | [25 12 22 64]
+
+
+After Pass 2:
+
+[11 12] | [25 22 64]
+
+
+After Pass 3:
+
+[11 12 22] | [25 64]
+
+
+After Pass 4:
+
+[11 12 22 25] | [64]
+
+
+Final:
+
+[11 12 22 25 64]
+
+
+---
+
+# Why Does Selection Sort Work?
+
+After every pass:
+
+Smallest remaining element moves to its correct position.
+
+
 Therefore:
 
-= n(n - 1) / 2
-Hence:
+Pass 1 → Smallest element fixed Pass 2 → Second smallest fixed Pass 3 → Third smallest fixed ...
 
-O(n²)
-An important point is that Selection Sort performs O(n²) comparisons even when the array is already sorted.
 
-Complexity Analysis
-Best Case
-Already Sorted:
+Eventually all elements become sorted.
+
+---
+
+# Important Observation
+
+Unlike Bubble Sort:
+
+Selection Sort does not repeatedly swap adjacent elements.
+
+
+Instead:
+
+Find minimum ↓ Remember its index ↓ Perform one swap
+
+
+Therefore, Selection Sort performs at most:
+
+n - 1 swaps
+
+
+---
+
+# Best Case
+
+Already sorted:
 
 [1, 2, 3, 4, 5]
-Selection Sort still searches for the minimum in every remaining portion.
 
-Time Complexity
+
+Selection Sort still searches for the minimum in every unsorted portion.
+
+### Time Complexity
+
 O(n²)
-Average Case
-Random Array:
+
+
+Unlike optimized Bubble Sort, Selection Sort does not become `O(n)` for an already sorted array.
+
+---
+
+# Average Case
+
+Random array:
 
 [4, 2, 5, 1, 3]
-Time Complexity
+
+
+### Time Complexity
+
 O(n²)
-Worst Case
-Reverse Sorted:
+
+
+---
+
+# Worst Case
+
+Reverse sorted:
 
 [5, 4, 3, 2, 1]
-Time Complexity
-O(n²)
-Space Complexity
-Selection Sort sorts the array in-place.
 
-Only a few variables are used:
+
+### Time Complexity
+
+O(n²)
+
+
+---
+
+# Complexity Analysis
+
+## Time Complexity
+
+Case	Complexity
+Best	O(n²)
+Average	O(n²)
+Worst	O(n²)
+Space Complexity
+O(1)
+Uses only a few extra variables:
 
 i
 j
 minIndex
 temp
+Number of Comparisons
+For n elements:
+
+(n - 1) + (n - 2) + (n - 3) + ... + 1
+Sum:
+
+n(n - 1) / 2
 Therefore:
 
-O(1)
+O(n²)
+The number of comparisons is essentially fixed regardless of whether the array is sorted or unsorted.
+
+Number of Swaps
+Selection Sort performs at most:
+
+n - 1 swaps
+For example:
+
+[64, 25, 12, 22, 11]
+There are at most:
+
+4 swaps
+for:
+
+5 elements
+This is one of the main advantages of Selection Sort.
+
 Stability
 Standard Selection Sort is Not Stable.
 
 Consider:
 
-(5,A)
-(3,B)
-(5,C)
-After selecting 3 and swapping it with the first element:
+(5,A) (3,B) (5,C)
+The minimum element is:
 
 (3,B)
-(5,C)
-(5,A)
-The two 5s changed their relative order:
+Swap it with the first element:
 
-Before:  (5,A) → (5,C)
-After:   (5,C) → (5,A)
+(3,B) (5,C) (5,A)
+Notice:
+
+Before:
+(5,A) → (5,C)
+
+After:
+(5,C) → (5,A)
+The relative order of equal elements changed.
+
 ❌ Not Stable
 
+
 In-Place Sorting
-Selection Sort modifies the original array.
+Selection Sort sorts the array within the same memory.
 
 It does not require another array.
 
-Therefore:
+Extra space:
 
-O(1) extra space
+O(1)
 ✅ In-place
 
-Number of Swaps
-One advantage of Selection Sort is that it performs at most n - 1 swaps.
+Adaptive Nature
+Selection Sort is not adaptive.
 
-For example:
+Even if the array is already sorted:
 
-[64, 25, 12, 22, 11]
-Each pass performs at most one swap.
+[1, 2, 3, 4, 5]
+it still performs all the comparisons.
 
-So:
+Therefore:
 
-Maximum swaps = n - 1
-This can make Selection Sort useful when swaps are expensive, even though its overall running time is still O(n²).
-
-Selection Sort vs Insertion Sort
-Feature	Selection Sort	Insertion Sort
-Best Case	O(n²)	O(n)
-Average Case	O(n²)	O(n²)
-Worst Case	O(n²)	O(n²)
-Space	O(1)	O(1)
-In-place	✅ Yes	✅ Yes
-Stable	❌ No	✅ Yes
-Adaptive	❌ No	✅ Yes
-Maximum Swaps	O(n)	O(n²)
-Basic Idea	Select minimum	Insert element
+Best Case = O(n²)
 Selection Sort vs Bubble Sort
 Feature	Selection Sort	Bubble Sort
+Stable	❌ No	✅ Yes
+Adaptive	❌ No	✅ Yes
+Best Case	O(n²)	O(n)
+Average Case	O(n²)	O(n²)
+Worst Case	O(n²)	O(n²)
+Swaps	Fewer	More
+In-place	✅ Yes	✅ Yes
+Selection Sort vs Insertion Sort
+Feature	Selection Sort	Insertion Sort
+Stable	❌ No	✅ Yes
+Adaptive	❌ No	✅ Yes
 Best Case	O(n²)	O(n)
 Average Case	O(n²)	O(n²)
 Worst Case	O(n²)	O(n²)
 Space	O(1)	O(1)
 In-place	✅ Yes	✅ Yes
-Stable	❌ No	✅ Yes
-Adaptive	❌ No	✅ Yes*
-Swaps	At most O(n)	Up to O(n²)
-*With the usual optimized Bubble Sort implementation.
+Advantages
+✅ Very simple to understand
+✅ Easy to implement
+✅ In-place sorting
+✅ Requires only O(1) extra space
+✅ Performs at most n - 1 swaps
+✅ Useful when swaps are expensive
+Disadvantages
+❌ O(n²) time complexity in all cases
+❌ Not stable
+❌ Not adaptive
+❌ Performs many comparisons
+❌ Not suitable for large datasets
+When to Use Selection Sort?
+Suitable for:
 
-Selection Sort in One Picture
-                 Selection Sort
-                       │
-                       ↓
-             Find minimum element
-                       │
-                       ↓
-        Swap with first unsorted element
-                       │
-                       ↓
-              Sorted portion grows
-                       │
-                       ↓
-                 Repeat until done
-Core Pattern to Remember
-for (int i = 0; i < n - 1; i++) {
+Learning sorting fundamentals
+Small datasets
+Situations where memory usage must be minimal
+Situations where the number of swaps should be minimized
+Not suitable for:
 
-    int minIndex = i;
-
-    for (int j = i + 1; j < n; j++) {
-
-        if (arr[j] < arr[minIndex]) {
-            minIndex = j;
-        }
-    }
-
-    int temp = arr[minIndex];
-    arr[minIndex] = arr[i];
-    arr[i] = temp;
-}
-The easiest way to remember Selection Sort is:
-
-SELECT → MINIMUM → SWAP
-Find minimum
-      ↓
-Put minimum at i
-      ↓
-Move i forward
-      ↓
-Repeat
+Large datasets
+Nearly sorted arrays
+Applications requiring stable sorting
+Performance-critical production systems
+Key Takeaways
+Selection Sort repeatedly searches for the minimum element.
+The minimum element is placed at the beginning of the unsorted portion.
+After every pass, one element reaches its final position.
+Best Case Time Complexity = O(n²).
+Average Case Time Complexity = O(n²).
+Worst Case Time Complexity = O(n²).
+Space Complexity = O(1).
+Selection Sort performs at most n - 1 swaps.
+Selection Sort is:
+❌ Not Stable
+✅ In-place
+❌ Not Adaptive
+❌ Inefficient for large inputs

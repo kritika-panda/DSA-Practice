@@ -1,0 +1,29 @@
+Requirements Needed to Construct a Unique Binary Tree
+
+ 
+
+To construct a unique general binary tree, you must be provided with specific combinations of tree traversal sequences. A single traversal sequence is never sufficient to determine a unique binary tree because multiple distinct tree structures can produce the same sequence.
+
+ 
+
+Valid Traversal Combinations
+
+ 
+
+• Inorder and Preorder: This combination is valid because preorder traversal identifies the root node of any current subtree (always the first element), while the corresponding inorder traversal splits the remaining elements into distinct left and right subtrees based on the root's position.
+
+• Inorder and Postorder: This combination is valid because postorder traversal identifies the root node of any current subtree (always the last element), while the inorder traversal partitions the elements into left and right subtrees around that root.
+
+• Inorder and Level Order: This combination is valid because the level-order traversal establishes the hierarchical priority of nodes, and the inorder traversal splits those nodes into left and right boundaries at each level.
+
+ 
+
+Invalid Traversal Combinations
+
+ 
+
+• Preorder and Postorder (General Binary Trees): This combination does not uniquely construct a general binary tree. If a node has only one child, it is impossible to determine whether that child belongs to the left subtree or the right subtree from preorder and postorder sequences alone.
+
+• Preorder and Postorder (Full/Strict Binary Trees): This combination is valid if and only if the tree is guaranteed to be a full binary tree (every internal node has either 0 or 2 children), because the single-child ambiguity no longer exists.
+
+• Any Single Traversal Alone: Providing only one traversal (preorder, postorder, or inorder) is insufficient to reconstruct a unique binary tree.

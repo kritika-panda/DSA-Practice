@@ -1,3 +1,376 @@
+Google-Focused DSA Roadmap
+Phase 1: Foundations
+1. Complexity Analysis
+
+Before anything else.
+
+Time Complexity
+Space Complexity
+Big O
+Amortized Analysis
+Recurrence Relations
+Master Theorem (basic)
+2. Recursion
+
+Required for:
+
+Trees
+Backtracking
+DP
+Graphs
+
+Topics:
+
+Base Cases
+Recursive Tree
+Tail Recursion
+Divide & Conquer
+
+Problems:
+
+Factorial
+Fibonacci
+Generate Subsequences
+Tower of Hanoi
+Phase 2: Trees
+Binary Trees
+DFS
+BFS
+Traversals
+Height
+Diameter
+Balanced Tree
+Maximum Path Sum
+Path Sum
+Serialize / Deserialize
+BST
+Validate BST
+Kth Smallest
+LCA
+Delete Node
+Advanced Trees
+Tree DP
+Binary Lifting (basic)
+Morris Traversal
+Segment Tree (later)
+
+Target: 30 Problems
+
+Phase 3: Graphs
+Representation
+Adjacency Matrix
+Adjacency List
+Traversal
+BFS
+DFS
+Graph Algorithms
+Topological Sort
+Cycle Detection
+Bipartite Graph
+Shortest Path
+Dijkstra
+Bellman-Ford
+Floyd-Warshall (concept)
+MST
+Kruskal
+Prim
+Advanced
+Union Find (DSU)
+Strongly Connected Components
+Tarjan (concept)
+Bridges & Articulation Points (concept)
+
+Target: 25-30 Problems
+
+Phase 4: Backtracking
+
+Topics:
+
+Decision Trees
+State Space Search
+
+Problems:
+
+Subsets
+Permutations
+Combination Sum
+N Queens
+Word Search
+Sudoku Solver
+
+Target: 15 Problems
+
+Phase 5: Dynamic Programming
+DP Foundation
+Memoization
+Tabulation
+Space Optimization
+1D DP
+Climbing Stairs
+House Robber
+Coin Change
+Decode Ways
+2D DP
+Unique Paths
+LCS
+Edit Distance
+Knapsack DP
+0/1 Knapsack
+Partition Equal Subset Sum
+Target Sum
+LIS Pattern
+LIS
+Russian Doll Envelopes
+Interval DP
+Burst Balloons
+Matrix Chain Multiplication
+Tree DP
+House Robber III
+Diameter Variations
+Bitmask DP (Advanced)
+Travelling Salesman (concept)
+State Compression
+
+Target: 30 Problems
+
+Phase 6: Sliding Window
+Fixed Size
+Maximum Sum Subarray
+Variable Size
+Longest Substring Without Repeating Characters
+Character Replacement
+Minimum Window Substring
+Advanced
+Sliding Window Maximum
+
+Target: 10-12 Problems
+
+Phase 7: Two Pointers
+Valid Palindrome
+3Sum
+4Sum
+Trapping Rain Water
+Container With Most Water
+
+Target: 10 Problems
+
+Phase 8: Binary Search
+Classic
+Binary Search
+Search Insert Position
+Search Space Problems
+
+This is heavily tested at Google.
+
+Koko Eating Bananas
+Capacity To Ship Packages
+Split Array Largest Sum
+Advanced
+Median of Two Sorted Arrays
+Binary Search on Answer
+
+Target: 15 Problems
+
+Phase 9: Heap / Priority Queue
+Basics
+Kth Largest
+Top K Frequent
+Advanced
+Merge K Sorted Lists
+Median Finder
+Task Scheduler
+Heap + Graph
+Dijkstra
+
+Target: 15 Problems
+
+Phase 10: Linked List
+Reverse List
+Merge Lists
+Reorder List
+Detect Cycle
+Copy Random Pointer
+LRU Cache
+
+Target: 10-12 Problems
+
+Phase 11: Arrays
+
+Topics:
+
+Prefix Sum
+Difference Array
+Kadane's Algorithm
+
+Problems:
+
+Product Except Self
+Maximum Subarray
+Merge Intervals
+Set Matrix Zeroes
+
+Target: 10 Problems
+
+Phase 12: Strings
+
+Topics:
+
+String Matching
+Hashing
+
+Problems:
+
+Group Anagrams
+Longest Palindrome
+String Compression
+
+Advanced:
+
+KMP
+Rabin-Karp
+Z Algorithm (concept)
+
+Target: 10 Problems
+
+Advanced Topics (Must Learn for Google)
+
+These are often skipped by candidates.
+
+13. Greedy Algorithms
+
+Topics:
+
+Exchange Argument
+Interval Scheduling
+
+Problems:
+
+Jump Game
+Gas Station
+Partition Labels
+Task Scheduler
+
+Target: 10 Problems
+
+14. Tries
+
+Topics:
+
+Trie Construction
+Prefix Search
+
+Problems:
+
+Implement Trie
+Word Dictionary
+Word Search II
+
+Target: 5-6 Problems
+
+15. Bit Manipulation
+
+Google loves bit tricks.
+
+Topics:
+
+XOR
+Bit Masks
+Bit Operations
+
+Problems:
+
+Single Number
+Counting Bits
+Reverse Bits
+Missing Number
+
+Target: 8 Problems
+
+16. Union Find (DSU)
+
+Treat this as a separate topic.
+
+Problems:
+
+Number of Provinces
+Redundant Connection
+Accounts Merge
+
+Target: 5-8 Problems
+
+17. Monotonic Stack
+
+Very common recently.
+
+Problems:
+
+Daily Temperatures
+Next Greater Element
+Largest Rectangle Histogram
+Trapping Rain Water
+
+Target: 5-8 Problems
+
+18. Monotonic Queue
+
+Problems:
+
+Sliding Window Maximum
+Constrained Subsequence Sum
+19. Segment Tree
+
+Important at Google.
+
+Topics:
+
+Range Sum Query
+Range Minimum Query
+Lazy Propagation (concept)
+
+Target: 3-5 Problems**
+
+20. Fenwick Tree (BIT)
+
+Topics:
+
+Prefix Sum Updates
+Range Queries
+
+Target: 2-3 Problems**
+
+21. Sweep Line
+
+Very common in Google-style problems.
+
+Problems:
+
+Meeting Rooms
+Skyline Problem (concept)
+22. Computational Geometry (Conceptual)
+
+Only basic understanding:
+
+Line Intersection
+Orientation
+Convex Hull (concept)
+23. Advanced Graphs
+
+Learn concepts even if you don't solve many:
+
+Tarjan Algorithm
+SCC
+Bridges
+Articulation Points
+24. Advanced DP
+
+Learn concepts:
+
+Digit DP
+Bitmask DP
+Interval DP
+Tree DP
+Priority Ranking for Google
+Plain Text
 Tier 1 (Must Master)
 ✅ Trees
 ✅ Graphs
@@ -5,20 +378,20 @@ Tier 1 (Must Master)
 ✅ Recursion
 ✅ Binary Search
 ✅ Sliding Window
-
+ 
 Tier 2 (Strong Command)
 ✅ Backtracking
 ✅ Heap
 ✅ Linked List
 ✅ Greedy
 ✅ Arrays
-
+ 
 Tier 3 (Need Exposure)
 ✅ Trie
 ✅ Union Find
 ✅ Bit Manipulation
 ✅ Monotonic Stack
-
+ 
 Tier 4 (Advanced)
 ✅ Segment Tree
 ✅ Fenwick Tree
@@ -26,3 +399,9 @@ Tier 4 (Advanced)
 ✅ Advanced DP
 ✅ Sweep Line
 ✅ Computational Geometry
+
+For your Feb 15 target, I'd aim for:
+
+Plain Text
+150-180 core problems
+20-30 advanced problems

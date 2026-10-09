@@ -345,6 +345,8 @@ O(log n)
 
 ---
 
+
+
 # Inorder Traversal in Binary Search Tree (BST)
 
 One of the most important properties of Inorder Traversal is:

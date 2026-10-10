@@ -228,6 +228,6 @@ class RedBlackTree {
 ### Complexity Analysis
 
 * **Time Complexity:** 
-  * **Search, Insertion, Deletion:** O(log N). Because the tree rules tightly restrict height limits (H <= 2 \log_2(N + 1)), operations preserve logarithmic search paths.
+  * **Search, Insertion, Deletion:** O(log N). Because the tree rules tightly restrict height limits (H <= 2*log_2(N + 1)), operations preserve logarithmic search paths.
   * **Rotations:** O(1) amortized. While fixing an item path, we perform at most 2 structural rotations during an insertion cycle.
 * **Space Complexity:** O(1) for iterative data insertions. The iterative repair path bypasses the function call stack allocations seen in standard recursive trees.

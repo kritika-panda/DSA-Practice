@@ -309,3 +309,11 @@ Where `n` is the length of string `s`. Populating character tracking elements ru
 O(1)
 ```
 
+The frequency array blocks, Max-Heap structures, and cooldown queues are structurally restricted to handle at most 26 elements at any given point during execution.
+
+## Key Insight
+
+Using a FIFO queue to delay heap insertions by exactly k positions guarantees that identical characters maintain the required separation distance, converting a complex arrangement problem into a simple sliding-window scheduling pipeline.
+```text
+Time : O(n) execution timeline Space : O(1) auxiliary buffer memory footprint
+```

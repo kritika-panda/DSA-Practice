@@ -221,7 +221,7 @@ class Solution {
 
 | Operation | Time Complexity | Space Complexity | Reason |
 | :--- | :--- | :--- | :--- |
-| **TreeMap Greedy Assembly** | **O(n * log(n))** | **O(n)** | Inserting `n` elements into a `TreeMap` costs \(O(n \log n)\). In each while loop iteration, fetching the first key and updating or removing elements from the tree costs \(O(\log n)\). The map stores up to `n` unique elements. |
+| **TreeMap Greedy Assembly** | **O(n * log(n))** | **O(n)** | Inserting `n` elements into a `TreeMap` costs (O(n log n)). In each while loop iteration, fetching the first key and updating or removing elements from the tree costs (O(log n)). The map stores up to `n` unique elements. |
 
 ---
 

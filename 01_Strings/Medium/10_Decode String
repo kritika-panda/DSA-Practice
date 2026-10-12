@@ -1,0 +1,268 @@
+# Decode String
+
+## Problem Statement
+
+Given an encoded string `s`, return *its decoded string*.
+
+The encoding rule is: `k[encoded_string]`, where the `encoded_string` inside the square brackets is being repeated exactly `k` times. Note that `k` is guaranteed to be a positive integer.
+
+You may assume that the input string is always valid; there are no extra white spaces, square brackets are well-formed, etc. Furthermore, the original data does not contain any digits and that digits are only for those repeat counts, `k`. For example, there will not be input like `3a` or `2[4]`.
+
+The overall runtime complexity must be:
+
+```text
+O(n)
+```
+
+*(where n is the length of the decoded string)*
+
+---
+
+## Examples
+
+### Example 1
+
+**Input**
+
+```java
+s = "3[a]2[bc]"
+```
+
+**Output**
+
+```java
+"aaabcbc"
+```
+
+---
+
+### Example 2
+
+**Input**
+
+```java
+s = "3[a2[c]]"
+```
+
+**Output**
+
+```java
+"accaccacc"
+```
+
+**Explanation**
+
+The inner bracket resolves first: `"2[c]" -> "cc"`. The outer expression becomes `"3[acc]" -> "accaccacc"`.
+
+---
+
+### Example 3
+
+**Input**
+
+```java
+s = "2[abc]3[cd]ef"
+```
+
+**Output**
+
+```java
+"abcabccdcdcdef"
+```
+
+---
+
+## Brute Force Approach
+
+Repeatedly locate the innermost well-formed bracket pairs using a linear scanning loop, extract the multiplier digit and string fragment, perform string expansion, and slice the new segment back into the original string.
+
+### Steps
+
+1. Find the first occurrence of a closing bracket `']'`.
+2. Scan backward from that position to locate its matching opening bracket `'['`.
+3. Extract the integer digits preceding `'['`.
+4. Replicate the substring enclosed within the brackets `k` times.
+5. Replace the encoded chunk `k[sub]` with the expanded text block.
+6. Repeat the entire process until no brackets remain in the string.
+
+### Complexity
+
+```text
+Time Complexity: O(n^2) // due to repeatedly scanning and allocating fresh string slices
+Space Complexity: O(n) to store the mutated string buffers
+```
+
+Repeatedly copying and shifting string spans across the heap space introduces a severe performance penalty for deeply nested inputs. We can optimize this process to a single linear pass by tracking structural hierarchies using **Stacks**.
+
+---
+
+# Optimal Approach: Dual Stack Simulation
+
+## Key Idea
+
+Because bracket layers open and collapse in a strict Last-In, First-Out (LIFO) pattern, we can decode the entire sequence in **linear time** by utilizing **two parallel Stacks**:
+1. `countStack`: Holds the multiplier integers `k`.
+2. `stringStack`: Holds the previous string context frames that were compiled before entering the current bracket layer.
+
+We traverse the string from left to right using a single loop, maintaining a running multiplier register `currK` and a mutable `StringBuilder currStr`:
+- **Case 1 (Digit):** If the character is a digit (`'0'` to `'9'`), accumulate it into `currK` via `currK = currK * 10 + (c - '0')` to handle multi-digit counts (e.g., `12[...]`).
+- **Case 2 (Opening Bracket `'['`):** We are entering a new nested layer. Push our current accumulated `currK` onto `countStack` and our active `currStr` onto `stringStack`. Reset both `currK = 0` and `currStr` to an empty state to start fresh for the inner segment.
+- **Case 3 (Closing Bracket `']'`):** An encoded segment is complete! Pop the multiplier `k` from `countStack` and the outer text framework from `stringStack`. Build the repeated chunk from `currStr`, prepend the outer framework onto it, and update `currStr` to this merged sequence.
+- **Case 4 (Letter):** Append the character directly to `currStr`.
+
+---
+
+## Visual Understanding
+
+Suppose `s = "3[a2[c]]"`:
+
+- **Initial State:** `currK = 0`, `currStr = ""`, `countStack = []`, `stringStack = []`.
+- **Character '3':** Accumulate `currK = 3`.
+- **Character '[':** Push `3` to `countStack`. Push `""` to `stringStack`. Reset `currK = 0`, `currStr = ""`.
+- **Character 'a':** Append to `currStr` \(\implies\) `"a"`.
+- **Character '2':** Accumulate `currK = 2`.
+- **Character '[':** Push `2` to `countStack`. Push `"a"` to `stringStack`. Reset `currK = 0`, `currStr = ""`.
+- **Character 'c':** Append to `currStr` \(\implies\) `"c"`.
+- **Character ']' (Inner):** 
+  - Pop count `k = 2`. Pop base context = `"a"`.
+  - Replicate: `"c"` repeated 2 times \(\implies\) `"cc"`.
+  - Prepend base: `currStr = "a" + "cc" = "acc"`.
+- **Character ']' (Outer):**
+  - Pop count `k = 3`. Pop base context = `""`.
+  - Replicate: `"acc"` repeated 3 times \(\implies\) `"accaccacc"`.
+  - Prepend base: `currStr = "" + "accaccacc" = "accaccacc"`.
+
+---
+
+## Partition Variables
+
+Let:
+
+```java
+Deque<Integer> countStack = new ArrayDeque<>();
+Deque<StringBuilder> stringStack = new ArrayDeque<>();
+StringBuilder currStr = new StringBuilder();
+int currK = 0;
+```
+
+---
+
+### Border Elements
+
+Using `StringBuilder` stacks instead of standard `String` objects completely avoids unnecessary string reference generations during stack transitions:
+
+```java
+stringStack.push(currStr);
+currStr = new StringBuilder(); // Reset to clear scope safely
+```
+
+---
+
+## Correct Partition Condition
+
+The repetition reconstruction loop decodes text blocks inside a single synchronized step upon striking a closing token:
+
+```java
+int repeatTimes = countStack.pop();
+StringBuilder decodedSegment = stringStack.pop();
+while (repeatTimes > 0) {
+    decodedSegment.append(currStr);
+    repeatTimes--;
+}
+currStr = decodedSegment;
+```
+
+---
+
+## Java Solution
+
+```java
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+class Solution {
+
+    public String decodeString(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+
+        // Deque is highly optimized and preferred over the legacy Stack class
+        Deque<Integer> countStack = new ArrayDeque<>();
+        Deque<StringBuilder> stringStack = new ArrayDeque<>();
+        
+        StringBuilder currStr = new StringBuilder();
+        int currK = 0;
+
+        // Linear single-pass sweep across the encoded string
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            // Condition A: Character is a digit
+            if (Character.isDigit(c)) {
+                currK = currK * 10 + (c - '0'); // Accumulate for multi-digit counts
+            } 
+            // Condition B: Character is an opening bracket
+            else if (c == '[') {
+                countStack.push(currK);        // Save multiplier context
+                stringStack.push(currStr);    // Save outer string context
+                
+                // Reset registries to clear the scope for the nested layer
+                currK = 0;
+                currStr = new StringBuilder();
+            } 
+            // Condition C: Character is a closing bracket
+            else if (c == ']') {
+                int repeatTimes = countStack.pop();
+                StringBuilder decodedSegment = stringStack.pop();
+
+                // Multiply and append the active inner segment string
+                while (repeatTimes > 0) {
+                    decodedSegment.append(currStr);
+                    repeatTimes--;
+                }
+
+                // Update active context frame
+                currStr = decodedSegment;
+            } 
+            // Condition D: Character is a regular letter
+            else {
+                currStr.append(c);
+            }
+        }
+
+        return currStr.toString();
+    }
+}
+```
+
+---
+
+## Complexity Analysis
+
+### Complexity Metrics
+
+| Operation | Time Complexity | Space Complexity | Reason |
+| :--- | :--- | :--- | :--- |
+| **Dual Stack Processing** | **O(n)** | **O(n)** | Where `n` is the length of the fully decoded string output. The algorithm reads each input character once and builds the expanded string segment iteratively via direct buffer modifications. |
+
+---
+
+## Key Insight
+
+Pushing outer string buffers along with numeric multipliers onto dual stacks matches nested bracket limits dynamically, resolving complex multi-tier dependencies in optimal linear time.
+
+```text
+Time  : O(n) linear complexity relative to the decoded string length
+Space : O(n) memory allocation footprint for stack buffers
+```
+
+---
+
+## Similar Problems
+
+1. Valid Parentheses (20)
+2. String Compression (443)
+3. Number of Atoms (726)
+4. Basic Calculator (224)
+5. Mini Parser (385)

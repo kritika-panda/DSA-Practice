@@ -1,204 +1,855 @@
-# Introduction to Dynamic Programming (DP)
-
-## What is Dynamic Programming?
-
-**Dynamic Programming (DP)** is an algorithmic paradigm used to solve complex optimization problems by breaking them down into simpler, overlapping subproblems. Its core philosophy revolves around a simple rule: **Never calculate the same thing twice.**
-
-The name "Dynamic Programming" was coined by Richard Bellman in the 1950s. In this context, "programming" does not refer to writing computer code; it refers to a mathematical method of optimization using a multi-stage decision schedule.
+# Dynamic Programming (DP) - Complete Introduction
 
 ---
 
-## Why Do We Need DP?
+# What is Dynamic Programming?
 
-When using standard recursion to solve a problem that breaks down into identical subproblems, the execution paths branch out uncontrollably, causing identical inputs to be re-evaluated repeatedly.
+Dynamic Programming (DP) is an optimization technique used to solve problems that have:
 
-### The Exponential Penalty (Fibonacci Example)
-Consider calculating the 5th Fibonacci number using a naive recursive definition: F(n) = F(n-1) + F(n-2).
+1. **Overlapping Subproblems**
+2. **Optimal Substructure**
+
+Instead of solving the same subproblem multiple times, we solve it once and store the answer for future use.
+
+---
+
+## Simple Definition
+
+DP = Recursion + Memoization
+
+or
+
+DP = Storing previously computed results to avoid repeated work.
+
+---
+
+# Why Do We Need DP?
+
+Consider finding:
 
 ```text
-Naive Recursive Call Tree:
-                 F(5)
+fib(5)
+```
+
+Recursive definition:
+
+```text
+fib(n) = fib(n-1) + fib(n-2)
+```
+
+Recursion Tree:
+
+```text
+                fib(5)
               /        \
-           F(4)        F(3)
-          /    \       /    \
-       F(3)    F(2)  F(2)   F(1)
-       /  \
-     F(2) F(1)
+         fib(4)       fib(3)
+        /     \       /     \
+   fib(3) fib(2) fib(2) fib(1)
+     /  \
+fib(2) fib(1)
 ```
 
-Notice that F(3) is calculated twice, and F(2) is calculated three times. For larger values of n, this recursive branching explodes, driving the overall runtime complexity to an absolute nightmare:
+Notice:
+
 ```text
-Time Complexity: O(2^n)
+fib(3)
+fib(2)
+fib(1)
 ```
 
-Dynamic Programming bypasses this constraint completely. By storing the results of these intermediate subproblems in memory, we flatten the exponential branching tree into a straight linear line, securing a lightning-fast performance profile:
+are calculated multiple times.
+
+This causes enormous repetition.
+
+---
+
+## Repeated Calculations
+
 ```text
-Time Complexity: O(n)
+fib(2) calculated 3 times
+fib(1) calculated 5 times
+fib(0) calculated 3 times
+```
+
+As input grows:
+
+```text
+fib(40)
+fib(50)
+fib(100)
+```
+
+the computation becomes extremely expensive.
+
+---
+
+## DP Solution
+
+Store answers:
+
+```text
+fib(2) = 1
+fib(3) = 2
+fib(4) = 3
+```
+
+The next time we need them:
+
+```text
+Use stored value
+instead of recomputing.
 ```
 
 ---
 
-## Core Characteristics of a DP Problem
-
-A problem can only be solved using Dynamic Programming if it exhibits two fundamental properties:
-
-### 1. Overlapping Subproblems
-The problem must break down into smaller subproblems that are reused repeatedly. If the subproblems are entirely unique at each step (like in Merge Sort), a standard Divide-and-Conquer strategy is used instead of DP.
-
-### 2. Optimal Substructure
-The global optimal solution to the problem can be constructed efficiently by combining the optimal solutions of its localized subproblems. For example, the shortest path from City A to City C via City B can be found by adding the shortest path from A to B to the shortest path from B to C.
+# Two Essential Conditions for DP
 
 ---
 
-## The Two Layout Strategies of DP
+## 1. Overlapping Subproblems
 
-There are two distinct tactical approaches to implementing a Dynamic Programming framework:
+A problem has overlapping subproblems if the same subproblem appears again and again.
 
-| Feature | Top-Down (Memoization) | Bottom-Up (Tabulation) |
-| :--- | :--- | :--- |
-| **Strategy** | **Cache-enhanced Recursion** | **Iterative Matrix/Array Filling** |
-| **Direction** | Solves from the root N down to base cases | Solves from base cases up to the target N |
-| **Execution** | Recursive method frames | Standard iterative `for` loops |
-| **Memory Hazard**| Incurs risk of `StackOverflowError` for deep stacks | Highly safe; no call stack overhead |
-| **Computation** | Computes *only* the subproblems that are required | Computes *all* sequential cells in the matrix/array |
+Example:
+
+```text
+fib(5)
+
+fib(3)
+appears multiple times.
+```
+
+Visualization:
+
+```text
+fib(5)
+ ├─ fib(4)
+ │   ├─ fib(3)
+ │   └─ fib(2)
+ │
+ └─ fib(3)
+```
+
+Same problem:
+
+```text
+fib(3)
+```
+
+is solved twice.
 
 ---
 
-# Core DP Implementations (Fibonacci Simulation)
+## 2. Optimal Substructure
 
-## 1. Top-Down Approach (Memoization)
+The optimal solution can be built from optimal solutions of smaller subproblems.
 
-This strategy keeps the natural structural layout of recursion intact but wraps it with a lookup table (like a primitive array or a `HashMap`) to intercept and record states on the fly.
+Example:
+
+```text
+fib(5)
+
+=
+fib(4) + fib(3)
+```
+
+If:
+
+```text
+fib(4)
+fib(3)
+```
+
+are optimal,
+
+then:
+
+```text
+fib(5)
+```
+
+is also optimal.
+
+---
+
+# DP Approaches
+
+There are two major approaches.
+
+---
+
+# 1. Memoization (Top-Down DP)
+
+Start with recursion.
+
+Store answers.
+
+---
+
+## Flow
+
+```text
+Problem
+   ↓
+Recursion
+   ↓
+Store Result
+   ↓
+Reuse Result
+```
+
+---
+
+## Example
 
 ```java
-public class FibonacciMemoization {
-    public int fib(int n) {
-        // Initialize a lookup array to cache computed states
-        int[] memo = new int[n + 1];
-        return helper(n, memo);
+int solve(int n, int[] dp) {
+
+    if (n <= 1) {
+        return n;
     }
 
-    private int helper(int n, int[] memo) {
-        // Base Cases
-        if (n == 0) return 0;
-        if (n == 1) return 1;
-
-        // Intercept Check: Return cached state instantly if previously solved
-        if (memo[n] != 0) {
-            return memo[n];
-        }
-
-        // Compute and cache the result before returning
-        memo[n] = helper(n - 1, memo) + helper(n - 2, memo);
-        return memo[n];
-    }
-}
-```
-
----
-
-## 2. Bottom-Up Approach (Tabulation)
-
-This strategy ditches recursion entirely. It instantiates a flat state table array, populates the base cases right at index 0 and 1, and runs a linear iteration pass forward to fill up the remaining cells up to the target index.
-
-```java
-public class FibonacciTabulation {
-    public int fib(int n) {
-        if (n == 0) return 0;
-        if (n == 1) return 1;
-
-        // Step 1: Pre-allocate a dynamic state table array
-        int[] dp = new int[n + 1];
-
-        // Step 2: Initialize explicit base case constants
-        dp[0] = 0;
-        dp[1] = 1;
-
-        // Step 3: Run a forward loop to fill the table sequentially
-        for (int i = 2; i <= n; i++) {
-            dp[i] = dp[i - 1] + dp[i - 2];
-        }
-
+    if (dp[n] != -1) {
         return dp[n];
     }
+
+    return dp[n] =
+            solve(n - 1, dp)
+            + solve(n - 2, dp);
 }
 ```
 
 ---
 
-## Advanced Optimization: Space Optimization (Rolling Variables)
+## Why Called Top-Down?
 
-Notice that to calculate `dp[i]`, the tabulation approach only looks at the immediate two preceding cells (`dp[i-1]` and `dp[i-2]`). The older historical cells sitting further back are completely useless. 
+Because we start from:
 
-We can optimize the space complexity down from O(n) to an absolute constant **O(1) space footprint** by substituting the array with two primitive rolling variable registers:
+```text
+n
+```
+
+and move toward:
+
+```text
+0
+```
+
+---
+
+# 2. Tabulation (Bottom-Up DP)
+
+Start from base cases.
+
+Build answers iteratively.
+
+---
+
+## Flow
+
+```text
+Base Cases
+    ↓
+Small Answers
+    ↓
+Bigger Answers
+    ↓
+Final Answer
+```
+
+---
+
+## Example
 
 ```java
-public class FibonacciOptimized {
-    public int fib(int n) {
-        if (n == 0) return 0;
-        if (n == 1) return 1;
+int[] dp = new int[n + 1];
 
-        int prev2 = 0; // Represents dp[i - 2]
-        int prev1 = 1; // Represents dp[i - 1]
+dp[0] = 0;
+dp[1] = 1;
 
-        for (int i = 2; i <= n; i++) {
-            int curr = prev1 + prev2;
-            // Roll the variables forward to prepare for the next step
-            prev2 = prev1;
-            prev1 = curr;
-        }
-
-        return prev1;
-    }
+for (int i = 2; i <= n; i++) {
+    dp[i] = dp[i - 1] + dp[i - 2];
 }
 ```
 
 ---
 
-# Classical Categories of DP Interview Problems
+## Why Called Bottom-Up?
 
-Dynamic Programming is incredibly versatile. Most coding interview questions map straight into one of these standardized prototypical problem blueprints:
+Because we start from:
 
 ```text
-1. 0/1 Knapsack & Unbounded Knapsack Track Configurations
-   - Coin Change (322)
-   - Partition Equal Subset Sum (416)
+0
+1
+```
 
-2. Longest Common Subsequence (LCS) Grid Frameworks
-   - Edit Distance (72)
-   - Interleaving String (97)
+and grow toward:
 
-3. On-Path Interval & Slicing Subproblems
-   - Word Break (139)
-   - Palindrome Partitioning II (132)
-
-4. Grid State Exponents & Path Matrix Sweeps
-   - Unique Paths (62)
-   - Minimum Path Sum (64)
-
-5. State Machine Trading Matrix Tracks
-   - Best Time to Buy and Sell Stock series (121, 122)
+```text
+n
 ```
 
 ---
 
-# Key Interview Takeaways
+# DP Workflow
+
+Whenever you see a DP problem, follow this exact process.
+
+---
+
+# Step 1: Find the State
+
+The most important step.
+
+Ask:
 
 ```text
-Identify the Clues -> Look for trigger keywords like "maximum output", "minimum cost", "total unique ways", or "is it possible to subset". These optimization tags heavily hint at a DP model.
-
-Define the State Clearly -> Always clarify what your state represents (e.g., "dp[i] represents the minimum coin count needed to form exactly i amount of change"). If your state definition is fuzzy, your transitions will break.
-
-Bypass Call Stack Limits -> Always prefer Bottom-Up Tabulation over Top-Down Memoization in production-level tests. Deep recursive paths carry stack allocation overhead that risks runtime crashes.
-
-Look for Rolling Triggers -> Once your tabulation model works perfectly, look at the transition line. If it only references the current row and the row right above it, you can instantly optimize your space allocation down to a single 1D rolling array.
+What uniquely represents the problem?
 ```
 
-<FollowUp>
-If you want to continue structuring these vital algorithmic paradigms, let me know:
-* Would you like to map out the raw markdown code for the **0/1 Knapsack Problem** using a 2D matrix layout?
-* Should we prepare a template explaining **Longest Common Subsequence (LCS)**?
-* Or should we move on to another interview domain entirely?
+Examples:
 
-Tell me which **key terms** or design rules you want to target next!
-</FollowUp>
+### Fibonacci
+
+```text
+f(i)
+
+=
+Fibonacci at index i
+```
+
+---
+
+### Climbing Stairs
+
+```text
+f(i)
+
+=
+Ways to reach step i
+```
+
+---
+
+### Frog Jump
+
+```text
+f(i)
+
+=
+Minimum energy required
+to reach stone i
+```
+
+---
+
+### House Robber
+
+```text
+f(i)
+
+=
+Maximum money obtainable
+up to house i
+```
+
+---
+
+# Step 2: Find Choices
+
+Ask:
+
+```text
+How did I reach this state?
+```
+
+Examples:
+
+### Frog Jump
+
+```text
+Come from:
+
+i-1
+i-2
+```
+
+---
+
+### Climbing Stairs
+
+```text
+Move:
+
+1 step
+2 steps
+```
+
+---
+
+### Decode Ways
+
+```text
+Take:
+
+1 digit
+2 digits
+```
+
+---
+
+# Step 3: Write Recurrence
+
+Create mathematical relation.
+
+Example:
+
+### Fibonacci
+
+```text
+f(i)
+=
+f(i-1)
++
+f(i-2)
+```
+
+---
+
+### Frog Jump
+
+```text
+f(i)
+=
+min(
+    f(i-1)+cost1,
+    f(i-2)+cost2
+)
+```
+
+---
+
+### House Robber
+
+```text
+f(i)
+=
+max(
+    skip,
+    take
+)
+```
+
+---
+
+# Step 4: Identify Base Cases
+
+Smallest solvable inputs.
+
+Example:
+
+### Fibonacci
+
+```text
+f(0)=0
+f(1)=1
+```
+
+---
+
+### Climbing Stairs
+
+```text
+f(0)=1
+f(1)=1
+```
+
+---
+
+### Frog Jump
+
+```text
+f(0)=0
+```
+
+---
+
+# Step 5: Memoization
+
+Convert recurrence into recursion.
+
+Store computed answers.
+
+---
+
+# Step 6: Tabulation
+
+Convert recursion into iterative solution.
+
+---
+
+# Step 7: Space Optimization
+
+Ask:
+
+```text
+Do I really need
+the entire DP array?
+```
+
+Example:
+
+```text
+dp[i]
+depends only on
+
+dp[i-1]
+dp[i-2]
+```
+
+Then:
+
+```text
+Array can be removed.
+```
+
+---
+
+# Categories of DP Problems
+
+---
+
+# 1. Fibonacci Pattern
+
+State depends on previous states.
+
+Examples:
+
+- Fibonacci Number
+- Climbing Stairs
+- Min Cost Climbing Stairs
+- House Robber
+- Delete and Earn
+
+Recurrence:
+
+```text
+dp[i]
+depends on
+dp[i-1]
+dp[i-2]
+```
+
+---
+
+# 2. Subsequence DP
+
+Choose or don't choose.
+
+Examples:
+
+- Subset Sum
+- Partition Equal Subset Sum
+- Target Sum
+- Knapsack
+
+Pattern:
+
+```text
+Take
+or
+Not Take
+```
+
+---
+
+# 3. String DP
+
+Operate on indices of strings.
+
+Examples:
+
+- LCS
+- Edit Distance
+- Distinct Subsequences
+- Decode Ways
+- Word Break
+
+State:
+
+```text
+dp[i][j]
+```
+
+often represents:
+
+```text
+answer using
+first i and j characters
+```
+
+---
+
+# 4. Grid DP
+
+Move in matrix.
+
+Examples:
+
+- Unique Paths
+- Minimum Path Sum
+- Cherry Pickup
+
+State:
+
+```text
+dp[row][col]
+```
+
+---
+
+# 5. Interval DP
+
+Solve ranges.
+
+Examples:
+
+- Burst Balloons
+- Matrix Chain Multiplication
+
+State:
+
+```text
+dp[i][j]
+```
+
+Meaning:
+
+```text
+answer for interval
+i to j
+```
+
+---
+
+# 6. DP on Trees
+
+State attached to nodes.
+
+Examples:
+
+- House Robber III
+- Diameter Variations
+- Tree Matching
+
+State:
+
+```text
+DP(node)
+```
+
+---
+
+# 7. Bitmask DP
+
+State compressed into bits.
+
+Examples:
+
+- Travelling Salesman
+- Assignment Problems
+
+State:
+
+```text
+DP(mask)
+```
+
+---
+
+# Common DP Patterns
+
+---
+
+## Count Ways
+
+Examples:
+
+```text
+Climbing Stairs
+Decode Ways
+Coin Change II
+```
+
+Recurrence:
+
+```text
+ways += recursive answer
+```
+
+---
+
+## Minimum
+
+Examples:
+
+```text
+Frog Jump
+Min Cost Climbing Stairs
+Minimum Path Sum
+```
+
+Recurrence:
+
+```text
+ans = min(...)
+```
+
+---
+
+## Maximum
+
+Examples:
+
+```text
+House Robber
+Delete and Earn
+Maximum Profit
+```
+
+Recurrence:
+
+```text
+ans = max(...)
+```
+
+---
+
+## Take / Not Take
+
+Examples:
+
+```text
+Knapsack
+Subset Sum
+Target Sum
+```
+
+Recurrence:
+
+```text
+take
+notTake
+```
+
+---
+
+# Memoization vs Tabulation
+
+| Feature | Memoization | Tabulation |
+|----------|------------|------------|
+| Approach | Top Down | Bottom Up |
+| Uses Recursion | Yes | No |
+| Stack Space | Yes | No |
+| Easier to Write | Yes | Sometimes |
+| Faster in Practice | Slightly Slower | Faster |
+| Interview Preference | Both | Usually Preferred |
+
+---
+
+# Signs a Problem Might Be DP
+
+Ask yourself:
+
+### Question 1
+
+```text
+Can the problem be solved recursively?
+```
+
+---
+
+### Question 2
+
+```text
+Are the same states
+being solved repeatedly?
+```
+
+---
+
+### Question 3
+
+```text
+Can answer be built
+from smaller answers?
+```
+
+---
+
+If all three are YES:
+
+```text
+It's likely a DP problem.
+```
+
+---
+
+# Most Important DP Problems (Foundation)
+
+## Beginner
+
+1. Fibonacci Number
+2. Climbing Stairs
+3. Min Cost Climbing Stairs
+4. Frog Jump
+5. House Robber
+6. Delete and Earn
+7. Decode Ways
+
+---
+
+## Intermediate
+
+8. Coin Change
+9. Coin Change II
+10. Target Sum
+11. Partition Equal Subset Sum
+12. Unique Paths
+13. Longest Common Subsequence
+14. Edit Distance
+15. Longest Increasing Subsequence
+
+---
+
+## Advanced
+
+16. Burst Balloons
+17. Matrix Chain Multiplication
+18. House Robber III
+19. Digit DP
+20. Bitmask DP
+
+---
+
+# Golden Rule for DP
+
+Whenever solving a DP problem, always follow:
+
+```text
+1. Find State
+
+2. Find Choices
+
+3. Write Recurrence
+
+4. Define Base Cases
+
+5. Memoization
+
+6. Tabulation
+
+7. Space Optimization
+```
+
+Mastering these 7 steps will allow you to solve almost every DP problem asked in FAANG interviews.

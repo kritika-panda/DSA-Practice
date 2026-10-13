@@ -303,3 +303,9 @@ Extract minimum vectors via a Priority Queue structure. Lower global node limits
 
 ✅ Standard core foundational template for directed weighted graph shortest paths.
 
+✅ The Propagation Limit Rules: The system delay threshold is determined by the maximum value among the shortest paths, not the summation of all paths. Nodes inside alternative parallel paths receive signals concurrently.
+
+✅ Directly maps to real-world system frameworks like packet routing protocols (OSPF/IS-IS mapping network latencies), broadcasting message relays inside mesh networks, or calculating global currency exchange limits.
+
+✅ Common Graph Design Pattern:
+text Single-Source Shortest Path Mapping via Min-Heap Priority Queue Relaxation

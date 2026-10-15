@@ -15,15 +15,15 @@ The **lower bound** of a target is defined as the index of the **first element**
 ### Example 1
 
 ```text
-Input: arr =, target = 5
-Output: 2
+Input: arr =[2,3,7,10,11,11,25], target = 9
+Output: 3
 ```
 
 ### Explanation
 
 ```text
-The elements greater than or equal to 5 are 8, 10, 11, 12, 19.
-The first element among these is 8, which is located at index 2.
+The elements greater than or equal to 9 are 10, 11, 25.
+The first element among these is 8, which is located at index 3.
 ```
 
 ---
@@ -31,7 +31,7 @@ The first element among these is 8, which is located at index 2.
 ### Example 2
 
 ```text
-Input: arr =, target = 0
+Input: arr =[1,2,3,4,5], target = 0
 Output: 0
 ```
 
@@ -46,15 +46,15 @@ The first element greater than or equal to 0 is 1, located at index 0.
 ### Example 3
 
 ```text
-Input: arr =, target = 25
-Output: 7
+Input: arr =[21,22,24,25,25,27], target = 28
+Output: 6
 ```
 
 ### Explanation
 
 ```text
-All elements in the array are strictly smaller than 25. 
-Therefore, the function returns the size of the array, which is 7.
+All elements in the array are strictly smaller than 28. 
+Therefore, the function returns the size of the array, which is 6.
 ```
 
 ---

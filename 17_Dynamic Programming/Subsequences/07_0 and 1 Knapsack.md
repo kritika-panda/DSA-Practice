@@ -1,4 +1,4 @@
-# 0/1 Knapsack
+# 0 or 1 Knapsack
 
 ## Problem Statement
 

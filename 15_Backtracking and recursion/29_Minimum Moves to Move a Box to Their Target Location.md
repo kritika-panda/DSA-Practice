@@ -227,3 +227,13 @@ Time Complexity: O(M² × N²)
 ```text
 Space Complexity: O(M² × N²)
 ```
+
+```text
+Explanation: Auxiliary storage space scales proportionally to accommodate the 4D boolean tracking cache matrix grid visited and the memory allocations needed to hold active state tuples concurrently inside the search Deque workspace buffer.
+
+Key Takeaways
+
+✅ Advanced graph search problem representing the golden standard for 0-1 Shortest Path state architectures.
+✅ The 0-1 BFS Deque Invariant: When a graph problem features varying edge weights restricted to 0 and 1, standard queue-based BFS fails, and full Dijkstra's algorithm adds unnecessary sorting latency. Using a Deque to prioritize cost-0 updates at the front and cost-1 updates at the back maintains strict queue monotonicity using efficient constant time modifications.
+✅ Directly drives real-world microarchitectures like industrial warehouse automated guided vehicles (AGVs) navigating obstacles to push containers, robotic path routers, and game physics solvers.
+```

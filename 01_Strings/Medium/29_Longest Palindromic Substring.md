@@ -143,7 +143,7 @@ class Solution {
 ```java
 O(N²)
 ```
-There are 2N - 1 possible center points across a string of length N. For each center point, the algorithm expands outward, doing at most O(N) operations in the worst case (e.g., a string consisting entirely of the same characters like `"aaaaa"`). This gives a tight upper bound of \(O(N \cdot N) = O(N^2)\).
+There are 2N - 1 possible center points across a string of length N. For each center point, the algorithm expands outward, doing at most O(N) operations in the worst case (e.g., a string consisting entirely of the same characters like `"aaaaa"`). This gives a tight upper bound of (O(N cdot N) = O(N^2)).
 
 ### Space Complexity
 
@@ -165,12 +165,162 @@ Unlike Dynamic Programming versions of this solution that create an O(N²) track
 
 ---
 
+# Intuition
+
+The "Expand Around Center" approach takes (O(N^2)) because it treats every center independently, completely discarding information gained from previously discovered palindromes. 
+
+To achieve (O(N)) time, we use **Manacher's Algorithm**. The core idea is to mirror symmetry. If a large palindrome is centered at index `C`, the property of any substring inside its left wing is mirrored exactly on its right wing. If we already know the palindrome radius at a left-wing index `i_mirror`, we can use it to instantly compute or bound the palindrome radius at the corresponding right-wing index `i`.
+
+To bypass the edge cases caused by odd and even lengths, we transform the string first by interleaving it with a special delimiter character (e.g., `#`). For example, `"aba"` becomes `"#a#b#a#"`. Every palindrome in this modified string has an odd length, allowing us to evaluate all centers uniformly.
+
+---
+
+# Approach: Manacher's Algorithm
+
+## Data Structures
+
+```java
+int[] P
+```
+An array where `P[i]` stores the radius of the longest palindrome centered at index `i` in the modified string.
+
+```java
+int C, int R
+```
+Trackers for the **Center** (`C`) and the **Right Boundary** (`R`) of the furthest-reaching palindrome found so far (`R = C + P[C]`).
+
+---
+
+## Algorithm Steps
+
+1. **Preprocess String:** Insert `#` between characters and pad with special boundary markers `^` and `$` to avoid manual bounds checking (e.g., `"aba"` → `"^#a#b#a#$"`).
+2. Initialize `P` array, `C = 0`, and `R = 0`.
+3. Iterate through each index `i` from `1` to `N - 2`:
+   - Find the mirror of `i` relative to `C`: `i_mirror = 2*C - i`.
+   - If `i < R` (inside the current boundary), initialize `P[i] = Math.min(R - i, P[i_mirror])`.
+   - Else, initialize `P[i] = 0`.
+   - Attempt to expand the palindrome centered at `i` further outward.
+   - If the newly expanded palindrome extends past `R`, update our trackers: `C = i` and `R = i + P[i]`.
+4. Find the maximum value in `P`. Map its index back to the original string coordinates and extract the substring.
+
+---
+
+# Dry Run
+
+### Input
+Original: `"aba"` → Transformed: `"^#a#b#a#$"`
+
+### Execution Trace (Key Iterations)
+
+- **Initial State:** `C = 0`, `R = 0`, `P = [0, 0, 0, ...]`
+
+| Index `i` | Char | `i < R`? | Initial `P[i]` | Expansion Loop Result (`P[i]`) | Boundary Check / Update |
+|---|---|---|---|---|---|
+| `1` | `#` | No | `0` | `0` (`^ != a`) | No update |
+| `2` | `a` | No | `0` | `1` (`# == #`) | `R` extends to `3`. `C = 2`, `R = 3` |
+| `3` | `#` | Yes | `min(3-3, P[1]) = 0` | `0` (`a != b`) | No update |
+| `4` | `b` | No | `0` | `3` (`#==#, a==a, #==#`) | `R` extends to `7`. `C = 4`, `R = 7` |
+| `5` | `#` | Yes | `min(7-5, P[3]) = 0` | `0` (`b != a`) | No update |
+| `6` | `a` | Yes | `min(7-6, P[2]) = 1` | `1` (stops at boundary) | No update |
+
+### Result
+Max radius found is `3` at index `4` (`b`). Max length in original string = `3`. Substring extracted: `"aba"`.
+
+---
+
+# Java Solution
+
+```java
+class Solution {
+    public String longestPalindrome(String s) {
+        if (s == null || s.length() == 0) return "";
+
+        // Step 1: Preprocess string to handle odd/even lengths uniformly
+        StringBuilder sb = new StringBuilder();
+        sb.append("^");
+        for (int i = 0; i < s.length(); i++) {
+            sb.append("#").append(s.charAt(i));
+        }
+        sb.append("#$");
+        String T = sb.toString();
+
+        int n = T.length();
+        int[] P = new int[n];
+        int C = 0, R = 0;
+
+        for (int i = 1; i < n - 1; i++) {
+            int iMirror = 2 * C - i; // Mirror of i relative to Center C
+
+            // If within right boundary, mirror radius can be reused
+            if (R > i) {
+                P[i] = Math.min(R - i, P[iMirror]);
+            } else {
+                P[i] = 0;
+            }
+
+            // Attempt to expand palindrome centered at i
+            while (T.charAt(i + 1 + P[i]) == T.charAt(i - 1 - P[i])) {
+                P[i]++;
+            }
+
+            // If expanded past R, adjust center and right boundary
+            if (i + P[i] > R) {
+                C = i;
+                R = i + P[i];
+            }
+        }
+
+        // Step 2: Find the maximum radius and its center index
+        int maxLen = 0;
+        int centerIndex = 0;
+        for (int i = 1; i < n - 1; i++) {
+            if (P[i] > maxLen) {
+                maxLen = P[i];
+                centerIndex = i;
+            }
+        }
+
+        // Step 3: Map back to the original string coordinates
+        int start = (centerIndex - 1 - maxLen) / 2;
+        return s.substring(start, start + maxLen);
+    }
+}
+```
+
+---
+
+# Complexity Analysis
+
+### Time Complexity
+
+```java
+O(N)
+```
+Although there is a nested loop execution, the inner `while` loop only increments when a palindrome expands beyond the current right boundary `R`. Because `R` moves monotonically from `0` to `2N` and never decreases, the total number of expanding checks across the entire runtime is strictly bounded by 2N. This results in a guaranteed linear time analysis.
+
+### Space Complexity
+
+```java
+O(N)
+```
+Auxiliary space is required to store the modified string array configuration and the integer radius tracker array `P`, both of which scale linearly with the length of the string input.
+
+---
+
+# Comparison of Approaches
+
+| Approach | Time Complexity | Space Complexity | Pros / Cons |
+|---|---|---|---|
+| **Expand Around Center** | (O(N^2)) | (O(1)) | Simple to write, but hits performance barriers on very large strings. |
+| **Manacher's Algorithm** | (O(N)) | (O(N)) | **Strictly optimal linear runtime**, but conceptually advanced and hard to debug under stress. |
+
+---
+
 # Key Takeaways
 
-- **Dual-Center Exploration:** Never forget to run center checks for **both** `(i, i)` and `(i, i + 1)` combinations to handle alternating parity constraints seamlessly.
-- **Post-Loop Arithmetic:** After a symmetric expansion loop ends, the pointers reside exactly one step outside the structural match boundary. The valid window length formula translates directly to `right - left - 1`.
+- **Symmetric Repurposing:** Manacher's Algorithm is the ultimate example of skipping computations by tracking mirrored coordinates inside validated dynamic programming bounds.
+- **Unified String Padding:** Inserting interleaving delimiters transforms complex dual-parity conditions into a single odd-length structural sequence problem.
 - Core concepts:
-  - Symmetric String Inversion
-  - Center Expansion Strategy
-  - Window Slice Index Arithmetic
-- Expected interview preference: **Expand Around Center Approach** (or Manacher's Algorithm for hard-level target positions).
+  - String Interleaving Transformations
+  - Boundary-Guided Mirroring
+  - Monotonic Pointer Bounds Checking

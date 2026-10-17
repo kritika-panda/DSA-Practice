@@ -1159,6 +1159,16 @@ A **radix** (also called the base) is the number of unique digits used to repres
 | **Decimal** | 10 | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 | 10 (Our everyday system) |
 | **Hexadecimal** | 16 | 0-9 and A-F (where A=10, F=15) | A (Decimal 10) |
 
+
+### Radix Parsing Examples in Java
+
+| Java Statement | Radix (Base) | Calculation | Result (Decimal) |
+| :--- | :--- | :--- | :--- |
+| `Integer.parseInt("1010", 2)` | Binary (2) | \(1\times2^3 + 0\times2^2 + 1\times2^1 + 0\times2^0\) | 10 |
+| `Integer.parseInt("1010", 8)` | Octal (8) | \(1\times8^3 + 0\times8^2 + 1\times8^1 + 0\times8^0\) | 520 |
+| `Integer.parseInt("1010", 10)` | Decimal (10) | \(1\times10^3 + 0\times10^2 + 1\times10^1 + 0\times10^0\) | 1010 |
+| `Integer.parseInt("1010", 16)` | Hexadecimal (16) | \(1\times16^3 + 0\times16^2 + 1\times16^1 + 0\times16^0\) | 4112 |
+
 ---
 
 # Frequently Used Interview Tricks

@@ -45,7 +45,17 @@ String s4 = s3.intern();
 
 System.out.println(s1 == s3); // false (Different memory locations)
 System.out.println(s1 == s4); // true  (s4 references the pool instance)
+System.out.println(s1 == s3); // false
 ```
+
+The final print statement `System.out.println(s1 == s3);` will output **false**.
+
+### 💡 Why is it false?
+
+Calling `s3.intern()` finds the canonical string in the pool and returns its reference (which is assigned to `s4`), but it **does not alter the original reference** stored in the `s3` variable.
+* `s1` still points to the literal "hello" inside the **String Constant Pool**.
+* `s3` still points to the distinct object created on the **Heap** via the `new` keyword.
+
 
 ---
 

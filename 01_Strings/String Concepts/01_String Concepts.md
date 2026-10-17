@@ -293,7 +293,17 @@ for (int i = 0; i < s.length(); i++) {
 
 Think of `length()` as reading the **page count printed on the cover of a book**. You don't flip through every page and count them — the answer is already written there. The JVM pre-computes and stores this value at birth.
 
----
+## Best Practice: The "Cache the Length" Habit
+
+Because it is easy to accidentally transition a piece of code from a fast (O(1)) property to a slow (O(N)) property, many developers practice caching the length as a habit:
+
+```java
+// Safest habit: Evaluate once, store it, loop over the constant
+int n = s.length(); 
+for (int i = 0; i < n; i++) {
+    // n never changes, completely safe regardless of data structure
+}
+```
 
 ---
 

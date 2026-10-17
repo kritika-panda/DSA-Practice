@@ -1148,6 +1148,17 @@ Output:
 10
 ```
 
+A **radix** (also called the base) is the number of unique digits used to represent numbers in a positional numeral system. It dictates the value of each digit position and tells the system when to "roll over" to the next place value.
+
+### Common Radix Systems
+
+| System | Radix (Base) | Allowed Digits | Example |
+| :--- | :--- | :--- | :--- |
+| **Binary** | 2 | 0, 1 | 1010 (Decimal 10) |
+| **Octal** | 8 | 0, 1, 2, 3, 4, 5, 6, 7 | 12 (Decimal 10) |
+| **Decimal** | 10 | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 | 10 (Our everyday system) |
+| **Hexadecimal** | 16 | 0-9 and A-F (where A=10, F=15) | A (Decimal 10) |
+
 ---
 
 # Frequently Used Interview Tricks

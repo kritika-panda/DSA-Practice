@@ -508,6 +508,116 @@ for (String word : words) {
 String result = sb.toString(); // O(N) one-time copy
 ```
 
+# String Concatenation vs StringBuilder — Time Complexity Proof
+
+> **Variable Legend:**
+> - `N` = number of words in the array
+> - `M` = average length of each word (number of characters)
+
+---
+
+## 1. The Bad Code: String Concatenation Loop
+
+```java
+String result = "";               // Line 1
+for (String word : words) {       // Line 2: Runs N times
+    result = result + word;        // Line 3
+}
+```
+
+- **Line 1** (`String result = "";`): Takes `O(1)` time. It just initializes an empty string reference.
+
+- **Line 2** (`for (String word : words)`): This loop executes exactly `N` times (once for each word in the array).
+
+- **Line 3** (`result = result + word;`): This is where the trap lies. Strings are **immutable**, so Java cannot modify `result`. Instead, under the hood, this single line compiles into hidden operations equivalent to:
+  1. Allocate a brand-new array of size `(length of result + length of word)`.
+  2. Copy all current characters from `result` into it.
+  3. Copy all characters from `word` into it.
+
+### Line-by-Line Execution Breakdown
+
+- **Iteration 1:** `result` is empty. Java copies `0` characters from `result` + `M` characters from the 1st word.
+  - Time spent: `1 · M` operations.
+
+- **Iteration 2:** `result` now holds 1 word. Java copies `M` characters from `result` + `M` characters from the 2nd word.
+  - Time spent: `2 · M` operations.
+
+- **Iteration 3:** `result` holds 2 words. Java copies `2M` characters from `result` + `M` characters from the 3rd word.
+  - Time spent: `3 · M` operations.
+
+- **Iteration N:** `result` holds `(N - 1)` words. Java copies `(N-1)M` characters from `result` + `M` characters from the N-th word.
+  - Time spent: `N · M` operations.
+
+### Summing the Total Code TC
+
+Adding up the work done inside Line 3 across all loop cycles:
+
+$$\text{Total Operations} = (1M) + (2M) + (3M) + \dots + (NM)$$
+
+$$\text{Total Operations} = M \times (1 + 2 + 3 + \dots + N) = M \times \frac{N(N+1)}{2} = \frac{M \cdot N^{2} + M \cdot N}{2}$$
+
+Dropping constants and lower-order terms gives the final code-wise time complexity:
+
+$$\boxed{\text{Total TC} = \mathbf{O(N^{2} \cdot M)}}$$
+
+---
+
+## 2. The Good Code: StringBuilder Loop
+
+```java
+StringBuilder sb = new StringBuilder();  // Line 1
+for (String word : words) {              // Line 2: Runs N times
+    sb.append(word);                      // Line 3
+}
+String result = sb.toString();           // Line 4
+```
+
+- **Line 1** (`StringBuilder sb = new StringBuilder();`): Takes `O(1)` time. It allocates a default buffer space (usually room for 16 characters).
+
+- **Line 2** (`for (String word : words)`): This loop executes exactly `N` times.
+
+- **Line 3** (`sb.append(word);`): Unlike a `String`, a `StringBuilder` has a **mutable array**. When you append, Java simply drops the characters of `word` directly into the existing empty slots at the end of the buffer.
+  - **Normal Iteration:** The buffer has space. Characters are copied directly. Time taken = `O(M)` to copy the word's characters.
+  - **Rare Iteration:** The buffer fills up. `StringBuilder` allocates a new array **double the size**, copies the old characters over once, and then inserts the new word.
+  - **Amortized Time:** When you average the cost of those rare resize operations across the entire loop, the cost to append each character is `O(1)`. Therefore, appending a word of length `M` takes an **amortized `O(M)`** time per loop iteration.
+
+- **Line 4** (`String result = sb.toString();`): Runs exactly **once** outside the loop. It creates a final `String` object and copies all accumulated characters into it. The total characters accumulated is `(N · M)`.
+  - Time spent: `O(N · M)` operations.
+
+### Summing the Total Code TC
+
+- **Loop Body (Lines 2–3):** Runs `N` times, doing `O(M)` work each time:
+
+$$N \times O(M) = O(N \cdot M)$$
+
+- **Final Conversion (Line 4):** Runs `1` time, doing `O(N · M)` work:
+
+$$1 \times O(N \cdot M) = O(N \cdot M)$$
+
+Adding them together:
+
+$$\text{Total Operations} = O(N \cdot M)\ \text{(Loop)} + O(N \cdot M)\ \text{(Conversion)}$$
+
+$$\boxed{\text{Total TC} = \mathbf{O(N \cdot M)}}$$
+
+---
+
+## Head-to-Head Comparison
+
+| | Bad Code (`String +`) | Good Code (`StringBuilder`) |
+|---|---|---|
+| **Per-iteration cost** | `O(i · M)` — grows with each iteration | `O(M)` amortized — constant per iteration |
+| **Loop total** | `O(N² · M)` — arithmetic series | `O(N · M)` — flat linear |
+| **Final conversion** | None (String already created inline) | `O(N · M)` — one-time `toString()` |
+| **Overall TC** | **`O(N² · M)`** | **`O(N · M)`** |
+| **Speedup** | — | **N× faster** |
+
+> For `N = 10,000` words of `M = 5` characters each:
+> - Bad Code:  `10,000² × 5 = 500,000,000` operations
+> - Good Code: `10,000  × 5 = 50,000` operations
+>
+> The `StringBuilder` approach is **10,000× faster** in this case.
+
 ## Analogy
 
 `String + String` is like **merging two printed documents into one**. You must photocopy every page of Document 1 (O(n) pages) and every page of Document 2 (O(m) pages) into a new combined document (O(n+m) pages total). Doing this once is fine. Doing it inside a loop of N iterations means re-photocopying a growing document on every step — quadratic work.

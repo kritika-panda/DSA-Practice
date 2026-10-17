@@ -224,6 +224,15 @@ char c3 = s.charAt(3); // 'A' — reads address: base + 6
 
 Think of the string's character array as a **row of numbered mailboxes** in an apartment building. To reach mailbox #42, you don't walk past boxes 1 through 41 — you go directly to the 42nd slot. The index *is* the address. That's O(1).
 
+## Best Practice: The "Cache the Length" Habit
+
+Because it is easy to accidentally transition a piece of code from a fast \(O(1)\) property to a slow \(O(N)\) property, many developers practice caching the length as a habit:
+java
+// Safest habit: Evaluate once, store it, loop over the constant
+int n = s.length(); 
+for (int i = 0; i < n; i++) {
+    // n never changes, completely safe regardless of data structure
+}
 ---
 
 ---

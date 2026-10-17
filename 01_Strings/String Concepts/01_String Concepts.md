@@ -306,9 +306,11 @@ for (int i = 0; i < n; i++) {
 
 ## Internal Memory Layout
 
-In **Java 7u6 and earlier**, `substring` was O(1) — it reused the original backing array and just stored a new offset + count. This caused a **memory leak** (the full original array stayed alive even when the substring was tiny), so this was removed.
+In **Java 7u6 and earlier**, `substring` was O(1) because it didn't copy any text; it simply pointed to the original string's internal array with a new start and end marker. However, this caused a major memory leak: if you grabbed a tiny 3-character substring from a massive 1-million-character text, that entire giant text was forced to stay alive in memory. 
 
-From **Java 7u6 onwards**, `substring` always allocates a **brand-new array** and copies exactly the `k` requested characters into it.
+From **Java 7u6 onwards**, `substring` always allocates a **brand-new array** and copies exactly the `k` requested characters into it. While this safely allows the giant original string to be deleted from memory, the time it takes is no longer instant—it scales linearly (O(K)) with the length of the substring you are copying.
+
+In Java 7u6 and earlier, 
 
 ```
 Original String s = "Hello World"   (length = 11)

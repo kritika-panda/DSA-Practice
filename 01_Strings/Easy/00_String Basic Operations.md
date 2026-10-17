@@ -705,7 +705,7 @@ false
 
 ```java
 System.out.println(Character.isWhitespace(' '));
-System.out.println(Character.isWhitespace('\n'));
+System.out.println(Character.isWhitespace('n'));
 ```
 
 Output:
@@ -1164,10 +1164,10 @@ A **radix** (also called the base) is the number of unique digits used to repres
 
 | Java Statement | Radix (Base) | Calculation | Result (Decimal) |
 | :--- | :--- | :--- | :--- |
-| `Integer.parseInt("1010", 2)` | Binary (2) | \(1*2^3 + 0*2^2 + 1\times2^1 + 0\times2^0\) | 10 |
-| `Integer.parseInt("1010", 8)` | Octal (8) | \(1\times8^3 + 0\times8^2 + 1\times8^1 + 0\times8^0\) | 520 |
-| `Integer.parseInt("1010", 10)` | Decimal (10) | \(1\times10^3 + 0\times10^2 + 1\times10^1 + 0\times10^0\) | 1010 |
-| `Integer.parseInt("1010", 16)` | Hexadecimal (16) | \(1\times16^3 + 0\times16^2 + 1\times16^1 + 0\times16^0\) | 4112 |
+| `Integer.parseInt("1010", 2)` | Binary (2) | (1*2^3 + 0*2^2 + 1*2^1 + 0*2^0) | 10 |
+| `Integer.parseInt("1010", 8)` | Octal (8) | (1*8^3 + 0*8^2 + 1*8^1 + 0*8^0) | 520 |
+| `Integer.parseInt("1010", 10)` | Decimal (10) | (1*10^3 + 0*10^2 + 1*10^1 + 0*10^0) | 1010 |
+| `Integer.parseInt("1010", 16)` | Hexadecimal (16) | (1*16^3 + 0*16^2 + 1*16^1 + 0*16^0) | 4112 |
 
 ---
 

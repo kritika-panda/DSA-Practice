@@ -119,6 +119,595 @@ System.out.println(sb); // Problems
 | **`sb.reverse()`** | **O(n)** | **O(1)** | Swaps elements in-place from both ends using a two-pointer linear strategy. |
 | **`sb.toString()`** | **O(n)** | **O(n)** | Allocates and copies the internal array payload into a new immutable `String` object. |
 
+# 1. `sb.append(str)`
+
+## Complexity
+
+- **Time:** Amortized **O(k)**
+- **Space:** **O(k)**
+
+Where `k = str.length()`.
+
+---
+
+## Normal Case
+
+```java
+StringBuilder sb = new StringBuilder("abc");
+sb.append("xyz");
+```
+
+### Before
+
+```text
+[a][b][c][_][_][_]
+length = 3
+```
+
+### After
+
+```text
+[a][b][c][x][y][z]
+length = 6
+```
+
+Appending simply copies `k` characters to the end.
+
+### Copy Cost
+
+```text
+x
+y
+z
+```
+
+Total work = `k`
+
+Therefore:
+
+```text
+Time = O(k)
+```
+
+---
+
+## Why Not O(1)?
+
+Because Java must copy every character of the appended string.
+
+Example:
+
+```java
+sb.append("hello");
+```
+
+Needs 5 writes.
+
+```text
+h e l l o
+```
+
+So:
+
+```text
+O(5)
+```
+
+Generalized:
+
+```text
+O(k)
+```
+
+---
+
+## Capacity Expansion Case
+
+Suppose the buffer is full:
+
+```text
+[a][b][c]
+capacity = 3
+```
+
+Append:
+
+```java
+sb.append("d");
+```
+
+Java creates a larger array.
+
+```text
+Old:
+[a][b][c]
+
+↓
+
+New:
+[a][b][c][d][_][_][_]
+```
+
+### Steps
+
+1. Allocate bigger array
+2. Copy old characters (`n`)
+3. Copy new string (`k`)
+
+### Cost
+
+```text
+O(n + k)
+```
+
+---
+
+## Why "Amortized O(k)"?
+
+Resizing doesn't happen every append.
+
+Example capacities:
+
+```text
+16 → 34 → 70 → 142 ...
+```
+
+Many appends occur between resizes.
+
+The occasional expensive copy is spread across many cheap operations.
+
+Therefore:
+
+```text
+Amortized Time = O(k)
+```
+
+---
+
+## Space Complexity
+
+Appending `"hello"`:
+
+```text
+5 new characters added
+```
+
+Additional storage:
+
+```text
+O(k)
+```
+
+---
+
+# 2. `sb.insert(idx, str)`
+
+## Complexity
+
+```text
+Time = O(n)
+Space = O(k)
+```
+
+Where:
+
+```text
+n = current StringBuilder length
+k = inserted string length
+```
+
+---
+
+## Example
+
+```java
+StringBuilder sb = new StringBuilder("abcdef");
+sb.insert(2, "XYZ");
+```
+
+### Before
+
+```text
+0 1 2 3 4 5
+a b c d e f
+```
+
+---
+
+### Need Space at Index 2
+
+Characters from index 2 onward move right.
+
+```text
+c d e f
+```
+
+Shift:
+
+```text
+a b _ _ _ c d e f
+```
+
+Then insert:
+
+```text
+a b X Y Z c d e f
+```
+
+---
+
+## How Much Work?
+
+### Shift Elements
+
+```text
+c d e f
+```
+
+4 elements moved.
+
+Worst case:
+
+```java
+sb.insert(0, str);
+```
+
+Everything shifts.
+
+```text
+n elements move
+```
+
+Cost:
+
+```text
+O(n)
+```
+
+---
+
+### Insert New String
+
+Need to write:
+
+```text
+k characters
+```
+
+Cost:
+
+```text
+O(k)
+```
+
+Total:
+
+```text
+O(n + k)
+```
+
+Since usually:
+
+```text
+k ≤ n
+```
+
+We simplify to:
+
+```text
+O(n)
+```
+
+---
+
+## Space Complexity
+
+Need space for inserted characters:
+
+```text
+XYZ
+```
+
+Extra storage:
+
+```text
+O(k)
+```
+
+---
+
+# 3. `sb.delete(i, j)`
+
+## Complexity
+
+```text
+Time = O(n)
+Space = O(1)
+```
+
+---
+
+## Example
+
+```java
+StringBuilder sb = new StringBuilder("abcdefgh");
+sb.delete(2, 5);
+```
+
+Delete:
+
+```text
+c d e
+```
+
+---
+
+### Before
+
+```text
+a b c d e f g h
+```
+
+### After Removal
+
+Need to close the gap.
+
+Move:
+
+```text
+f g h
+```
+
+Left:
+
+```text
+a b f g h
+```
+
+---
+
+## Work Done
+
+Trailing characters are shifted.
+
+Worst case:
+
+```java
+sb.delete(0, 1);
+```
+
+Move:
+
+```text
+n - 1 characters
+```
+
+Cost:
+
+```text
+O(n)
+```
+
+---
+
+## Why O(1) Space?
+
+No extra array is created.
+
+Java merely overwrites positions and updates length.
+
+```text
+same char[]
+```
+
+Thus:
+
+```text
+Space = O(1)
+```
+
+---
+
+# 4. `sb.reverse()`
+
+## Complexity
+
+```text
+Time = O(n)
+Space = O(1)
+```
+
+---
+
+## Example
+
+```java
+abcdef
+```
+
+---
+
+### Two-Pointer Approach
+
+```text
+L       R
+a b c d e f
+```
+
+Swap:
+
+```text
+f b c d e a
+```
+
+Move pointers:
+
+```text
+  L   R
+f b c d e a
+```
+
+Swap:
+
+```text
+f e c d b a
+```
+
+Move:
+
+```text
+    L R
+f e c d b a
+```
+
+Swap:
+
+```text
+f e d c b a
+```
+
+Done.
+
+---
+
+## Number of Swaps
+
+Only:
+
+```text
+n / 2 swaps
+```
+
+Which equals:
+
+```text
+O(n)
+```
+
+---
+
+## Why O(1) Space?
+
+Only two indexes:
+
+```java
+int left;
+int right;
+```
+
+No new array.
+
+Everything happens inside the same buffer.
+
+Therefore:
+
+```text
+Space = O(1)
+```
+
+---
+
+# 5. `sb.toString()`
+
+## Complexity
+
+```text
+Time = O(n)
+Space = O(n)
+```
+
+---
+
+## Example
+
+```java
+StringBuilder sb = new StringBuilder("hello");
+String s = sb.toString();
+```
+
+---
+
+## Important Point
+
+`StringBuilder` is mutable.
+
+```text
+Can change
+```
+
+`String` is immutable.
+
+```text
+Cannot change
+```
+
+Therefore Java **cannot share the same buffer**.
+
+A brand-new `String` object must be created.
+
+---
+
+### Step 1: Allocate New Memory
+
+```text
+StringBuilder:
+[h][e][l][l][o]
+```
+
+Create:
+
+```text
+String:
+[_][_][_][_][_]
+```
+
+Cost:
+
+```text
+O(n) space
+```
+
+---
+
+### Step 2: Copy Characters
+
+```text
+h -> h
+e -> e
+l -> l
+l -> l
+o -> o
+```
+
+Need to copy all `n` characters.
+
+Cost:
+
+```text
+O(n)
+```
+
+---
+
+# Quick Interview Summary
+
+| Operation | Time | Space | Why? |
+|------------|--------|--------|--------|
+| `append(str)` | Amortized O(k) | O(k) | Copy k characters; occasional resize copies old array |
+| `insert(idx, str)` | O(n) | O(k) | Shift suffix right + copy inserted string |
+| `delete(i, j)` | O(n) | O(1) | Shift trailing characters left |
+| `reverse()` | O(n) | O(1) | In-place two-pointer swaps |
+| `toString()` | O(n) | O(n) | Create new immutable `String` and copy all characters |
+
+# Easy Memory Trick
+
+Think of `StringBuilder` as an **array**:
+
+- **Append at end** → usually cheap → **Amortized O(k)**
+- **Insert in middle** → shift right → **O(n)**
+- **Delete in middle** → shift left → **O(n)**
+- **Reverse** → swap ends → **O(n)**
+- **Convert to String** → deep copy → **O(n)** time and space.
 ---
 
 # Key Interview Takeaways

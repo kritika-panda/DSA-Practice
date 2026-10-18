@@ -238,6 +238,438 @@ System.out.println("apple".compareTo("app"));    // 2 (length diff: 5 - 3)
 
 **Signature:** `int compareTo(String anotherString)`
 
+# Java String `compareTo()` Deep Dive
+
+The `compareTo()` method compares two strings **lexicographically** (dictionary order) based on the Unicode value of each character, proceeding from left to right.
+
+---
+
+# Example 1
+
+## Code
+
+```java
+System.out.println("Apple".compareTo("apple"));
+```
+
+## Output
+
+```java
+-32
+```
+
+---
+
+## Step-by-Step Explanation
+
+Java compares both strings character by character.
+
+### Comparison
+
+```java
+"Apple"
+"apple"
+```
+
+Compare first characters:
+
+```java
+'A' vs 'a'
+```
+
+ASCII/Unicode values:
+
+```java
+'A' = 65
+'a' = 97
+```
+
+Calculation:
+
+```java
+65 - 97 = -32
+```
+
+Since the first characters are different, Java immediately stops the comparison and returns:
+
+```java
+-32
+```
+
+---
+
+## Visualization
+
+```text
+Apple
+^
+
+apple
+^
+
+'A' = 65
+'a' = 97
+
+65 - 97 = -32
+```
+
+---
+
+## Key Takeaway
+
+```java
+"Apple".compareTo("apple")
+```
+
+returns:
+
+```java
+-32
+```
+
+because uppercase letters have smaller ASCII values than lowercase letters.
+
+---
+
+# Example 2
+
+## Code
+
+```java
+System.out.println("Apple".compareTo("App"));
+```
+
+## Output
+
+```java
+2
+```
+
+---
+
+## Step-by-Step Explanation
+
+Java compares characters one by one.
+
+### Matching Characters
+
+```java
+A == A
+p == p
+p == p
+```
+
+At this point:
+
+```java
+"App"
+```
+
+has ended.
+
+No mismatching character was found.
+
+---
+
+## What Happens Next?
+
+When one string is a complete prefix of the other:
+
+```java
+"App"
+```
+
+is a prefix of
+
+```java
+"Apple"
+```
+
+Java returns:
+
+```java
+Length of First String - Length of Second String
+```
+
+Calculation:
+
+```java
+"Apple".length() - "App".length()
+```
+
+```java
+5 - 3 = 2
+```
+
+Hence:
+
+```java
+"Apple".compareTo("App")
+```
+
+returns:
+
+```java
+2
+```
+
+---
+
+## Visualization
+
+```text
+Apple
+|||
+App
+
+All compared characters are equal.
+
+Lengths:
+
+Apple = 5
+App   = 3
+
+5 - 3 = 2
+```
+
+---
+
+# Reverse Comparison
+
+## Code
+
+```java
+System.out.println("App".compareTo("Apple"));
+```
+
+## Output
+
+```java
+-2
+```
+
+### Why?
+
+```java
+3 - 5 = -2
+```
+
+Since the first string is shorter:
+
+```java
+"App".compareTo("Apple") = -2
+```
+
+---
+
+# General Rules of `compareTo()`
+
+## Rule 1: First Different Character Wins
+
+```java
+"Cat".compareTo("Bat")
+```
+
+Comparison:
+
+```java
+'C' = 67
+'B' = 66
+```
+
+Result:
+
+```java
+67 - 66 = 1
+```
+
+Output:
+
+```java
+1
+```
+
+---
+
+## Rule 2: Prefix Case
+
+```java
+"Java".compareTo("Ja")
+```
+
+Result:
+
+```java
+4 - 2 = 2
+```
+
+Output:
+
+```java
+2
+```
+
+---
+
+## Rule 3: Equal Strings
+
+```java
+"Hello".compareTo("Hello")
+```
+
+Output:
+
+```java
+0
+```
+
+because every character matches and lengths are equal.
+
+---
+
+# compareToIgnoreCase()
+
+## Code
+
+```java
+System.out.println("Apple".compareToIgnoreCase("apple"));
+```
+
+## Output
+
+```java
+0
+```
+
+### Why?
+
+`compareToIgnoreCase()` converts both characters to the same case during comparison.
+
+```java
+Apple
+apple
+```
+
+becomes effectively:
+
+```java
+apple
+apple
+```
+
+Therefore:
+
+```java
+0
+```
+
+is returned.
+
+---
+
+# Common Interview Examples
+
+```java
+"A".compareTo("a")          // -32
+```
+
+```java
+"a".compareTo("A")          // 32
+```
+
+```java
+"abc".compareTo("abd")      // -1
+```
+
+```java
+"abd".compareTo("abc")      // 1
+```
+
+```java
+"abc".compareTo("abc")      // 0
+```
+
+```java
+"abc".compareTo("ab")       // 1
+```
+
+```java
+"ab".compareTo("abc")       // -1
+```
+
+---
+
+# How Sorting Uses `compareTo()`
+
+Consider:
+
+```java
+List<String> list =
+    Arrays.asList("apple", "Apple", "banana");
+
+Collections.sort(list);
+
+System.out.println(list);
+```
+
+Output:
+
+```java
+[Apple, apple, banana]
+```
+
+Why?
+
+```java
+'A' = 65
+'a' = 97
+```
+
+Since:
+
+```java
+65 < 97
+```
+
+`"Apple"` comes before `"apple"` when sorted.
+
+---
+
+# Key Takeaways
+
+- `compareTo()` compares strings character by character.
+- The comparison stops at the first mismatching character.
+- It returns:
+
+```java
+ASCII(Character1) - ASCII(Character2)
+```
+
+for the first mismatch.
+
+- If one string is a prefix of another:
+
+```java
+return length1 - length2;
+```
+
+- Examples:
+
+```java
+"Apple".compareTo("apple") = -32
+```
+
+```java
+"Apple".compareTo("App") = 2
+```
+
+```java
+"App".compareTo("Apple") = -2
+```
+
+- `compareToIgnoreCase()` ignores uppercase/lowercase differences.
+- Java's default string sorting relies on `compareTo()`.
+
 ---
 
 ## `compareToIgnoreCase(String other)`

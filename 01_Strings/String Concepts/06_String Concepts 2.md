@@ -870,6 +870,10 @@ String[] limited = s.split(",", 3);
 String sentence = "Hello   World  Java";
 String[] words = sentence.split("\\s+"); // ["Hello", "World", "Java"]
 
+// Split on whitespace 0 or more times
+String sentence = "Hello   World  Java";
+String[] words = sentence.split("\\s*"); // ["H", "e", "l", "l", "o", "W", "o", "r", "l", "d", "J", "a", "v", "a"]
+
 // Split on literal dot (must escape in regex)
 String path = "a.b.c";
 String[] segments = path.split("\\."); // ["a", "b", "c"]

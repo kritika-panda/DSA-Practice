@@ -261,6 +261,224 @@ Each numeric string requires:
 ```text
 O(log n)
 ```
+
+# Why is `String.valueOf(i + 1)` O(log n) Space?
+
+The reason is tied to the **number of digits required to represent a number**.
+
+---
+
+## Number of Digits in a Number
+
+For a positive integer `n`, the number of digits is:
+
+```text
+⌊log₁₀(n)⌋ + 1
+```
+
+Examples:
+
+| n | Digits | log₁₀(n) |
+|---|---|---|
+| 9 | 1 | 0.95 |
+| 99 | 2 | 1.99 |
+| 999 | 3 | 2.99 |
+| 9999 | 4 | 3.99 |
+| 99999 | 5 | 4.99 |
+
+As `n` grows, the number of digits grows proportionally to:
+
+```text
+log₁₀(n)
+```
+
+In Big-O notation, the logarithm base is ignored:
+
+```text
+O(log n)
+```
+
+---
+
+## Example
+
+```java
+String.valueOf(1234567)
+```
+
+Java creates a string containing:
+
+```text
+['1', '2', '3', '4', '5', '6', '7']
+```
+
+Number of characters:
+
+```text
+7
+```
+
+Since:
+
+```text
+1234567 ≈ 10⁷
+```
+
+the amount of memory required is proportional to:
+
+```text
+log n
+```
+
+Therefore:
+
+```text
+Space Complexity = O(log n)
+```
+
+---
+
+## Why Not O(1)?
+
+The string size is not constant.
+
+Examples:
+
+```java
+String.valueOf(9);        // 1 character
+String.valueOf(99);       // 2 characters
+String.valueOf(999);      // 3 characters
+String.valueOf(999999);   // 6 characters
+```
+
+As the value of `n` increases, more digits are needed.
+
+Therefore:
+
+```text
+Space(String.valueOf(n)) = O(log n)
+```
+
+and
+
+```text
+Time(String.valueOf(n)) = O(log n)
+```
+
+because Java must process each digit.
+
+---
+
+## Applying This to FizzBuzz
+
+Consider:
+
+```java
+for (int i = 0; i < n; i++) {
+    res.add(String.valueOf(i + 1));
+}
+```
+
+During any single iteration:
+
+```java
+String.valueOf(i + 1)
+```
+
+creates at most one temporary string.
+
+The largest temporary string can contain:
+
+```text
+O(log n)
+```
+
+characters.
+
+Since only one temporary string exists at a time:
+
+```text
+Auxiliary Space = O(log n)
+```
+
+---
+
+## Important Observation
+
+Many developers mistakenly think:
+
+```text
+n iterations × O(log n) space
+= O(n log n) auxiliary space
+```
+
+This is incorrect because the temporary string created in one iteration is discarded before the next iteration.
+
+Only one temporary string exists at a time.
+
+Therefore:
+
+```text
+Auxiliary Space = O(log n)
+```
+
+not
+
+```text
+O(n log n)
+```
+
+---
+
+## Interview Perspective
+
+Most interviewers would simply write:
+
+```text
+Auxiliary Space = O(1)
+```
+
+because:
+
+- The loop variable `i` uses constant space.
+- Temporary strings are short-lived.
+- Output space is typically excluded from complexity analysis.
+
+However, a mathematically precise analysis is:
+
+```text
+Temporary numeric string = O(log n)
+Auxiliary Space = O(log n)
+```
+
+---
+
+## Final Takeaway
+
+```text
+Number of Digits in n = O(log n)
+```
+
+Therefore:
+
+```text
+String.valueOf(n)
+```
+
+requires:
+
+```text
+Time Complexity  = O(log n)
+Space Complexity = O(log n)
+```
+
+And in the FizzBuzz solution:
+
+```text
+Auxiliary Space = O(log n)
+```
+
+because only one such temporary string exists at any moment.
  
 characters.
  

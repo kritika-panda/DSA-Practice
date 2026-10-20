@@ -170,7 +170,7 @@ class Solution {
         }
 
         // Fixed-size frequency bucket array for lowercase English letters
-        int[] counts = new int;
+        int[] counts = new int[26];
         int n = s.length();
 
         // Step 1: First pass - Tally character frequencies

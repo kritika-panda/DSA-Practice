@@ -2,431 +2,355 @@
 
 ## Problem Statement
 
-Write a function to find the **longest common prefix** string amongst an array of strings.
+Write a function to find the **longest common prefix string** amongst an array of strings.
 
 If there is no common prefix, return an empty string `""`.
 
-The overall runtime complexity must be:
+### Example 1
 
 ```text
-O(S)
+Input:
+["flower","flow","flight"]
+
+Output:
+"fl"
 ```
 
-*(where S is the sum of all characters in all strings inside the input array)*
+### Example 2
+
+```text
+Input:
+["dog","racecar","car"]
+
+Output:
+""
+```
 
 ---
 
-## Examples
+# Optimal Approach: Vertical Scanning
 
-### Example 1
+## Intuition
 
-**Input**
+Instead of repeatedly shrinking a prefix candidate, we compare characters **column by column**.
 
-```java
-strs = ["flower", "flow", "flight"]
+Think of each string as being arranged vertically:
+
+```text
+Index →   0   1   2   3   4   5
+
+flower    f   l   o   w   e   r
+flow      f   l   o   w
+flight    f   l   i   g   h   t
 ```
 
-**Output**
+### Compare Column-by-Column
 
-```java
+```text
+Index 0
+
+flower -> f
+flow   -> f
+flight -> f
+
+All match ✅
+```
+
+```text
+Index 1
+
+flower -> l
+flow   -> l
+flight -> l
+
+All match ✅
+```
+
+```text
+Index 2
+
+flower -> o
+flow   -> o
+flight -> i
+
+Mismatch ❌
+```
+
+The common prefix is:
+
+```text
 "fl"
 ```
 
 ---
 
-### Example 2
+# Algorithm
 
-**Input**
+### Step 1
+
+Use the first string as the reference string.
 
 ```java
-strs = ["dog", "racecar", "car"]
+strs[0]
 ```
 
-**Output**
+### Step 2
+
+Traverse every character position of the first string.
 
 ```java
-""
-```
-
-**Explanation**
-
-There is no common prefix among the input strings.
-
----
-
-### Example 3
-
-**Input**
-
-```java
-strs = ["interspecies", "interstellar", "interstate"]
-```
-
-**Output**
-
-```java
-"inters"
+for (int i = 0; i < strs[0].length(); i++)
 ```
 
 ---
 
-## Brute Force Approach
+### Step 3
 
-Compare characters horizontally at index `0`, then index `1`, index `2`, and so on across all strings until a mismatch or out-of-bounds index is hit.
+Store the current character.
 
-### Steps
+```java
+char currentChar = strs[0].charAt(i);
+```
 
-1. Pick the first string as a reference window.
-2. Run an outer loop tracking index `i` from `0` to the length of the reference string.
-3. Run an inner loop from index `1` to `strs.length - 1` to check if `strs[j].charAt(i)` matches the reference character.
-4. If `i` reaches the end of *any* string or a character mismatch is hit, slice the reference string from index `0` up to `i` and return it.
+---
 
-### Complexity
+### Step 4
+
+Check this character against all remaining strings.
+
+```java
+for (int j = 1; j < strs.length; j++)
+```
+
+---
+
+### Step 5
+
+Stop if:
+
+#### Condition 1
+
+Current string ends before reaching index `i`.
+
+```java
+i == strs[j].length()
+```
+
+Example:
 
 ```text
-Time Complexity: O(S) // where S is the sum of characters across all strings
-Space Complexity: O(1) auxiliary space
+flow
+fl
+flower
 ```
 
-While horizontal scanning is functionally correct, it forces multiple string checks per index layer. We can simplify this dramatically by using a **vertical scanning prefix-reduction technique**.
+At:
+
+```text
+i = 2
+```
+
+String `"fl"` has ended.
+
+Return:
+
+```text
+"fl"
+```
 
 ---
 
-# Optimal Approach: Vertical Prefix Reduction
+#### Condition 2
 
-## Key Idea
-
-We can find the common prefix by starting with the **entire first string** as our initial prefix candidate. We then greedily shorten this prefix candidate as we compare it against each subsequent string in the array.
-
-1. Initialize `prefix = strs[0]`.
-2. Iterate through the remaining strings from index `1` to `strs.length - 1`.
-3. Check if the current string starts with our active `prefix` using `.indexOf(prefix) == 0`.
-4. If it doesn't match, chop off the very last character of the `prefix` candidate string using `prefix = prefix.substring(0, prefix.length() - 1)`.
-5. Repeat the chopping step until the current string matches our prefix. If the prefix shrinks to an empty string `""`, it means there is no shared prefix, and we can exit early.
-
----
-
-## Visual Understanding
-
-Suppose `strs = ["flower", "flow", "flight"]`:
-
-- **Initialize:** `prefix = "flower"`.
-- **Compare with "flow":**
-  - `"flow".indexOf("flower")` is not 0. Chop! `prefix = "flowe"`.
-  - `"flow".indexOf("flowe")` is not 0. Chop! `prefix = "flow"`.
-  - `"flow".indexOf("flow") == 0`. Match confirmed. Move to the next string.
-- **Compare with "flight":**
-  - `"flight".indexOf("flow")` is not 0. Chop! `prefix = "flo"`.
-  - `"flight".indexOf("flo")` is not 0. Chop! `prefix = "fl"`.
-  - `"flight".indexOf("fl") == 0`. Match confirmed. Loop completes.
-
-The final calculated common prefix is `"fl"`.
-
----
-
-## Partition Variables
-
-Let:
+Characters do not match.
 
 ```java
-String prefix = strs[0];
+strs[j].charAt(i) != currentChar
+```
+
+Example:
+
+```text
+flower
+flow
+flight
+```
+
+At:
+
+```text
+i = 2
+
+o != i
+```
+
+Return:
+
+```text
+"fl"
 ```
 
 ---
 
-### Border Elements
-
-The boundary verification cuts loops short instantly if the prefix state shrinks down to an empty string `""`:
-
-```java
-if (prefix.isEmpty()) {
-    return "";
-}
-```
-
----
-
-## Correct Partition Condition
-
-The shrinking mechanism continuously strips characters from the tail of the string block until a matching prefix match path is established:
-
-```java
-while (strs[i].indexOf(prefix) != 0) {
-    prefix = prefix.substring(0, prefix.length() - 1);
-    if (prefix.isEmpty()) return "";
-}
-```
-
----
-
-## Java Solution
+# Java Solution
 
 ```java
 class Solution {
 
     public String longestCommonPrefix(String[] strs) {
-        if (strs == null || strs.length == 0) {     // O(1)
-            return "";   // O(1)
+
+        if (strs == null || strs.length == 0) {
+            return "";
         }
 
-        // Step 1: Start with the first string as our base prefix candidate
-        String prefix = strs[0]; // O(1)
+        for (int i = 0; i < strs[0].length(); i++) {
 
-        // Step 2: Compare and reduce the prefix across the remaining strings
-        for (int i = 1; i < strs.length; i++) {    // O(n)
-            
-            // Chop off the trailing character until strs[i] starts with the prefix
-            while (strs[i].indexOf(prefix) != 0) {    // O(k)
-                prefix = prefix.substring(0, prefix.length() - 1);   // O(k)
-                
-                // Fast-fail: If the prefix shrinks to empty, no common match exists
-                if (prefix.isEmpty()) { // O(1)
-                    return ""; // O(1)
+            char currentChar = strs[0].charAt(i);
+
+            for (int j = 1; j < strs.length; j++) {
+
+                if (i == strs[j].length() ||
+                    strs[j].charAt(i) != currentChar) {
+
+                    return strs[0].substring(0, i);
                 }
             }
         }
 
-        return prefix;  // O(1)
+        return strs[0];
     }
 }
 ```
 
 ---
 
-# Why Doesn't `indexOf()` Make This O(n × m³)?
+# Dry Run
 
-You're absolutely right that **general substring search** is often analyzed as:
+## Input
+
+```java
+["flower", "flow", "flight"]
+```
+
+Initial:
 
 ```text
-indexOf(pattern)
-O(N × M)
-```
-
-where:
-
-- `N` = text length
-- `M` = pattern length
-
-But in **this specific code**, we're doing:
-
-```java
-strs[i].indexOf(prefix) != 0
-```
-
-not:
-
-```java
-strs[i].contains(prefix)
-```
-
-or searching for the pattern anywhere within the string.
-
----
-
-## What Are We Really Checking?
-
-Suppose:
-
-```java
-strs[i] = "flight";
-prefix  = "flower";
-```
-
-When Java evaluates:
-
-```java
-"flight".indexOf("flower")
-```
-
-it compares:
-
-```text
-position 0:
-f == f ✓
-l == l ✓
-i != o ✗
-```
-
-The mismatch occurs very quickly.
-
-Effectively, this usage behaves like:
-
-```java
-strs[i].startsWith(prefix)
-```
-
-whose cost is:
-
-```text
-O(prefix.length())
+Reference String = "flower"
 ```
 
 ---
 
-## LeetCode / Interview Analysis
+### Iteration 1
 
-Let:
+```text
+i = 0
+currentChar = 'f'
+```
 
-- `n` = number of strings
-- `m` = maximum string length
+Compare:
 
-For each iteration of the `while` loop:
+```text
+flow   -> f ✅
+flight -> f ✅
+```
+
+Continue.
+
+---
+
+### Iteration 2
+
+```text
+i = 1
+currentChar = 'l'
+```
+
+Compare:
+
+```text
+flow   -> l ✅
+flight -> l ✅
+```
+
+Continue.
+
+---
+
+### Iteration 3
+
+```text
+i = 2
+currentChar = 'o'
+```
+
+Compare:
+
+```text
+flow   -> o ✅
+flight -> i ❌
+```
+
+Mismatch found.
+
+Return:
 
 ```java
-strs[i].indexOf(prefix)
+strs[0].substring(0, 2)
 ```
 
-is treated as:
+Result:
 
 ```text
-O(m)
-```
-
-and:
-
-```java
-prefix = prefix.substring(...)
-```
-
-is also:
-
-```text
-O(m)
-```
-
-The prefix can shrink at most:
-
-```text
-m times
-```
-
-So:
-
-```text
-O(m + (m-1) + (m-2) + ... + 1)
-= O(m²)
-```
-
-For all strings:
-
-```text
-O(n × m²)
-```
-
-Therefore:
-
-```text
-Time Complexity: O(n × m²)
-Space Complexity: O(1)
+"fl"
 ```
 
 ---
 
-## Strict Library-Method Analysis
+# Why Is This Optimal?
 
-If we treat:
-
-```java
-indexOf(prefix)
-```
-
-as a general substring search, then:
+The inefficient approach repeatedly shrinks prefixes:
 
 ```text
-indexOf(prefix) = O(textLength × prefixLength)
+flower
+flowe
+flow
+flo
+fl
 ```
 
-Let:
-
-- text length = m
-- prefix length = m
-
-Then:
-
-```text
-indexOf(prefix) = O(m²)
-```
-
-Each `while` iteration becomes:
-
-```text
-O(m²) + O(m)
-≈ O(m²)
-```
-
-Since the prefix may shrink from:
-
-```text
-m → m-1 → m-2 → ... → 1
-```
-
-we perform approximately:
-
-```text
-m iterations
-```
-
-Thus:
-
-```text
-O(m × m²)
-= O(m³)
-```
-
-Across all strings:
-
-```text
-O(n × m³)
-```
+Many characters get examined multiple times.
 
 ---
 
-## Which Complexity Should You Mention in an Interview?
-
-Most interviewers and LeetCode editorials assume:
-
-```java
-strs[i].indexOf(prefix) != 0
-```
-
-is effectively being used as:
-
-```java
-strs[i].startsWith(prefix)
-```
-
-Therefore, the accepted complexity is:
+This solution compares each character position only once:
 
 ```text
-Time Complexity: O(n × m²)
-Space Complexity: O(1)
+f ✅
+l ✅
+o ❌
 ```
 
-If you're performing a strict low-level analysis of the library method implementation, you could argue:
+No repeated work.
 
-```text
-Time Complexity: O(n × m³)
-```
+---
 
-However, for interviews and coding platforms, **O(n × m²)** is the expected answer.
-
-## Complexity Analysis
-
-### Complexity Metrics
 # Complexity Analysis
 
 ## Variable Definitions
 
 Let:
 
-- `n` = number of strings in the array
-- `m` = length of the longest string (or the initial prefix length)
+```text
+n = number of strings
+m = length of shortest string
+S = total number of characters across all strings
+```
 
 ---
 
 ## Line-by-Line Complexity
 
-### Null / Empty Check
+### Empty Check
 
 ```java
 if (strs == null || strs.length == 0)
@@ -438,31 +362,10 @@ Time Complexity:
 O(1)
 ```
 
-Reason:
-
-```text
-Constant-time null and length checks.
-```
-
----
-
-### Initialize Prefix
-
-```java
-String prefix = strs[0];
-```
-
-Time Complexity:
+Space Complexity:
 
 ```text
 O(1)
-```
-
-Reason:
-
-```text
-Only assigns a reference.
-No character copying occurs.
 ```
 
 ---
@@ -470,79 +373,27 @@ No character copying occurs.
 ### Outer Loop
 
 ```java
-for (int i = 1; i < strs.length; i++)
+for (int i = 0; i < strs[0].length(); i++)
+```
+
+Runs at most:
+
+```text
+m times
 ```
 
 Time Complexity:
 
 ```text
-O(n)
-```
-
-Reason:
-
-```text
-Runs once for each remaining string.
+O(m)
 ```
 
 ---
 
-### Prefix Check
+### Character Access
 
 ```java
-strs[i].indexOf(prefix) != 0
-```
-
-Time Complexity:
-
-```text
-O(k)
-```
-
-where:
-
-```text
-k = current prefix length
-```
-
-Reason:
-
-```text
-Used as a prefix comparison.
-
-Equivalent to:
-
-strs[i].startsWith(prefix)
-```
-
-Java compares characters until a mismatch is found.
-
----
-
-### Shrink Prefix
-
-```java
-prefix = prefix.substring(0, prefix.length() - 1);
-```
-
-Time Complexity:
-
-```text
-O(k)
-```
-
-Reason:
-
-```text
-Creates a new String and copies k−1 characters.
-```
-
----
-
-### Empty Check
-
-```java
-prefix.isEmpty()
+char currentChar = strs[0].charAt(i);
 ```
 
 Time Complexity:
@@ -551,202 +402,117 @@ Time Complexity:
 O(1)
 ```
 
-Reason:
-
-```text
-Checks whether string length equals zero.
-```
-
 ---
 
-## Cost of the While Loop
+### Inner Loop
 
 ```java
-while (strs[i].indexOf(prefix) != 0)
+for (int j = 1; j < strs.length; j++)
 ```
 
-Each iteration performs:
+Runs through all strings.
+
+Time Complexity:
 
 ```text
-indexOf(prefix)  → O(k)
-substring(...)   → O(k)
-```
-
-Therefore:
-
-```text
-Per iteration = O(k)
+O(n)
 ```
 
 ---
 
-## Why Does the Prefix Shrink Only m Times?
-
-Suppose:
-
-```text
-prefix = "flower"
-```
-
-The reductions are:
-
-```text
-flower
-flowe
-flow
-flo
-fl
-f
-""
-```
-
-The prefix length decreases by one each time.
-
-Therefore:
-
-```text
-Maximum reductions = m
-```
-
----
-
-## Total Work Done by Prefix Reductions
-
-The costs become:
-
-```text
-m + (m - 1) + (m - 2) + ... + 1
-```
-
-Using the arithmetic series formula:
-
-```text
-m(m + 1) / 2
-```
-
-which simplifies to:
-
-```text
-O(m²)
-```
-
----
-
-## Overall Time Complexity
-
-The outer loop processes:
-
-```text
-n strings
-```
-
-For each string, prefix reduction can cost:
-
-```text
-O(m²)
-```
-
-Therefore:
-
-```text
-Time Complexity = O(n × m²)
-```
-
----
-
-## Space Complexity
-
-Extra space used:
+### Character Comparison
 
 ```java
-String prefix
-int i
+strs[j].charAt(i) != currentChar
 ```
 
-Only a few variables are maintained.
+Time Complexity:
 
 ```text
-Auxiliary Space = O(1)
+O(1)
 ```
 
-If temporary strings created by `substring()` are counted:
+---
+
+### String-End Check
+
+```java
+i == strs[j].length()
+```
+
+Time Complexity:
 
 ```text
-Space Complexity = O(m)
+O(1)
 ```
+
+---
+
+## Total Time Complexity
+
+Every valid character position from every string is inspected at most once.
+
+Thus:
+
+```text
+O(S)
+```
+
+where:
+
+```text
+S = total number of characters across all strings
+```
+
+Equivalent representation:
+
+```text
+O(n × m)
+```
+
+---
+
+## Total Space Complexity
+
+Only a few variables are used:
+
+```java
+i
+j
+currentChar
+```
+
+No extra data structures are created.
+
+```text
+O(1)
+```
+
+---
+
+# Complexity Table
+
+| Operation | Time Complexity | Space Complexity | Reason |
+| :--- | :--- | :--- | :--- |
+| Empty Check | O(1) | O(1) | Constant-time validation. |
+| Character Access (`charAt`) | O(1) | O(1) | Direct index lookup. |
+| Character Comparison | O(1) | O(1) | Single-character comparison. |
+| Vertical Scanning | O(S) | O(1) | Each character across all strings is examined at most once. |
 
 ---
 
 # Final Complexity
 
 ```text
-Time Complexity  : O(n × m²)
+Time Complexity  : O(S)
 
 Space Complexity : O(1)
 ```
 
-### Alternative Strict Analysis
-
-If `indexOf(prefix)` is treated as a general substring search:
+Where:
 
 ```text
-indexOf(prefix) = O(m²)
-substring()     = O(m)
+S = Total number of characters across all strings.
 ```
 
-Then:
-
-```text
-Each while iteration = O(m²)
-```
-
-and there can be:
-
-```text
-m reductions
-```
-
-giving:
-
-```text
-O(m³) per string
-```
-
-and:
-
-```text
-O(n × m³)
-```
-
-overall.
-
-However, for interviews and LeetCode discussions, the accepted complexity is:
-
-```text
-Time Complexity : O(n × m²)
-Space Complexity: O(1)
-```
-| Operation | Time Complexity | Space Complexity | Reason |
-| :--- | :--- | :--- | :--- |
-| **Prefix Filtering** | **O(S)** | **O(1)** | Where `S` is the total character payload across all strings. In the worst-case scenario, the algorithm inspects all string components. |
-
----
-
-## Key Insight
-
-Treating the first element as a global prefix window and slicing characters backward based on instant index boundaries prevents complex character matrix indexing loops.
-
-```text
-Time  : O(S) linear character lookup
-Space : O(1) constant in-place reference tracking
-```
-
----
-
-## Similar Problems
-
-1. Longest Common Subsequence (1143)
-2. String to Integer / atoi (8)
-3. Count and Say (38)
-4. Valid Parentheses (20)
-5. Find the Index of the First Occurrence in a String / KMP (28)
+This is the optimal interview-preferred solution for **LeetCode 14: Longest Common Prefix**.

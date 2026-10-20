@@ -1602,8 +1602,8 @@ int myAtoi(String s) {
 | `length()` | \(O(1)\) | Cached field lookup |
 | `charAt(i)` | \(O(1)\) | Direct array index |
 | `indexOf(char)` | \(O(N)\) | Linear scan |
-| `indexOf(String)` | \(O(N \cdot M)\) | N = text length, M = pattern length |
-| `contains(str)` | \(O(N \cdot M)\) | Delegates to `indexOf` |
+| `indexOf(String)` | \(O(N \* M)\) | N = text length, M = pattern length |
+| `contains(str)` | \(O(N \* M)\) | Delegates to `indexOf` |
 | `startsWith` / `endsWith` | \(O(M)\) | M = prefix/suffix length |
 | `substring(i, j)` | \(O(j - i)\) | Copies characters |
 | `equals(str)` | \(O(N)\) | Character-by-character comparison |
@@ -1611,7 +1611,7 @@ int myAtoi(String s) {
 | `toLowerCase` / `toUpperCase` | \(O(N)\) | New string created |
 | `trim` / `strip` | \(O(N)\) | New string created |
 | `replace(char, char)` | \(O(N)\) | Single pass |
-| `replace(String, String)` | \(O(N \cdot M)\) | Pattern scan |
+| `replace(String, String)` | \(O(N \* M)\) | Pattern scan |
 | `replaceAll(regex)` | \(O(N)\) amortized | Regex compilation overhead |
 | `split(regex)` | \(O(N)\) | Single scan |
 | `toCharArray()` | \(O(N)\) | Full copy |

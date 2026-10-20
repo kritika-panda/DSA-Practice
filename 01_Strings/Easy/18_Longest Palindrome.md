@@ -177,9 +177,8 @@ import java.util.Set;
 class Solution {
 
     public int longestPalindrome(String s) {
-        if (s == null || s.length() == 0) {
+        if (s == null || s.length() == 0) 
             return 0;
-        }
 
         Set<Character> unmatchedChars = new HashSet<>();
         int length = 0;
@@ -189,20 +188,15 @@ class Solution {
             char c = s.charAt(i);
 
             // If we find a matching character partner, add 2 to our length
-            if (unmatchedChars.contains(c)) {
+            if (!unmatchedChars.add(c)) {
                 length += 2;
                 unmatchedChars.remove(c); // Clear the pair from our tracker
             } 
-            // Otherwise, hold onto this character until its twin is found
-            else {
-                unmatchedChars.add(c);
-            }
         }
 
         // Step 2: If any unmatched characters remain, one can sit in the center
-        if (!unmatchedChars.isEmpty()) {
+        if (!unmatchedChars.isEmpty()) 
             length += 1;
-        }
 
         return length;
     }

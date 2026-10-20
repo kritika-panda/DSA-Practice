@@ -165,33 +165,250 @@ while (strs[i].indexOf(prefix) != 0) {
 class Solution {
 
     public String longestCommonPrefix(String[] strs) {
-        if (strs == null || strs.length == 0) {
-            return "";
+        if (strs == null || strs.length == 0) {     // O(1)
+            return "";   // O(1)
         }
 
         // Step 1: Start with the first string as our base prefix candidate
-        String prefix = strs[0];
+        String prefix = strs[0]; // O(1)
 
         // Step 2: Compare and reduce the prefix across the remaining strings
-        for (int i = 1; i < strs.length; i++) {
+        for (int i = 1; i < strs.length; i++) {    // O(n)
             
             // Chop off the trailing character until strs[i] starts with the prefix
-            while (strs[i].indexOf(prefix) != 0) {
-                prefix = prefix.substring(0, prefix.length() - 1);
+            while (strs[i].indexOf(prefix) != 0) {    // O(k)
+                prefix = prefix.substring(0, prefix.length() - 1);   // O(k)
                 
                 // Fast-fail: If the prefix shrinks to empty, no common match exists
-                if (prefix.isEmpty()) {
-                    return "";
+                if (prefix.isEmpty()) { // O(1)
+                    return ""; // O(1)
                 }
             }
         }
 
-        return prefix;
+        return prefix;  // O(1)
     }
 }
 ```
 
 ---
+
+# Why Doesn't `indexOf()` Make This O(n × m³)?
+
+You're absolutely right that **general substring search** is often analyzed as:
+
+```text
+indexOf(pattern)
+O(N × M)
+```
+
+where:
+
+- `N` = text length
+- `M` = pattern length
+
+But in **this specific code**, we're doing:
+
+```java
+strs[i].indexOf(prefix) != 0
+```
+
+not:
+
+```java
+strs[i].contains(prefix)
+```
+
+or searching for the pattern anywhere within the string.
+
+---
+
+## What Are We Really Checking?
+
+Suppose:
+
+```java
+strs[i] = "flight";
+prefix  = "flower";
+```
+
+When Java evaluates:
+
+```java
+"flight".indexOf("flower")
+```
+
+it compares:
+
+```text
+position 0:
+f == f ✓
+l == l ✓
+i != o ✗
+```
+
+The mismatch occurs very quickly.
+
+Effectively, this usage behaves like:
+
+```java
+strs[i].startsWith(prefix)
+```
+
+whose cost is:
+
+```text
+O(prefix.length())
+```
+
+---
+
+## LeetCode / Interview Analysis
+
+Let:
+
+- `n` = number of strings
+- `m` = maximum string length
+
+For each iteration of the `while` loop:
+
+```java
+strs[i].indexOf(prefix)
+```
+
+is treated as:
+
+```text
+O(m)
+```
+
+and:
+
+```java
+prefix = prefix.substring(...)
+```
+
+is also:
+
+```text
+O(m)
+```
+
+The prefix can shrink at most:
+
+```text
+m times
+```
+
+So:
+
+```text
+O(m + (m-1) + (m-2) + ... + 1)
+= O(m²)
+```
+
+For all strings:
+
+```text
+O(n × m²)
+```
+
+Therefore:
+
+```text
+Time Complexity: O(n × m²)
+Space Complexity: O(1)
+```
+
+---
+
+## Strict Library-Method Analysis
+
+If we treat:
+
+```java
+indexOf(prefix)
+```
+
+as a general substring search, then:
+
+```text
+indexOf(prefix) = O(textLength × prefixLength)
+```
+
+Let:
+
+- text length = m
+- prefix length = m
+
+Then:
+
+```text
+indexOf(prefix) = O(m²)
+```
+
+Each `while` iteration becomes:
+
+```text
+O(m²) + O(m)
+≈ O(m²)
+```
+
+Since the prefix may shrink from:
+
+```text
+m → m-1 → m-2 → ... → 1
+```
+
+we perform approximately:
+
+```text
+m iterations
+```
+
+Thus:
+
+```text
+O(m × m²)
+= O(m³)
+```
+
+Across all strings:
+
+```text
+O(n × m³)
+```
+
+---
+
+## Which Complexity Should You Mention in an Interview?
+
+Most interviewers and LeetCode editorials assume:
+
+```java
+strs[i].indexOf(prefix) != 0
+```
+
+is effectively being used as:
+
+```java
+strs[i].startsWith(prefix)
+```
+
+Therefore, the accepted complexity is:
+
+```text
+Time Complexity: O(n × m²)
+Space Complexity: O(1)
+```
+
+If you're performing a strict low-level analysis of the library method implementation, you could argue:
+
+```text
+Time Complexity: O(n × m³)
+```
+
+However, for interviews and coding platforms, **O(n × m²)** is the expected answer.
 
 ## Complexity Analysis
 

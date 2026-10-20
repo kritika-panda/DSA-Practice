@@ -163,32 +163,21 @@ if (counts[ransomNote.charAt(i) - 'a'] < 0) {
 
 ```java
 class Solution {
-
     public boolean canConstruct(String ransomNote, String magazine) {
-        // Fast-fail: If the note requires more total letters than the magazine has, it's impossible
         if (ransomNote == null || magazine == null || ransomNote.length() > magazine.length()) {
             return false;
         }
-
-        // Fixed-size frequency bucket array for lowercase English letters
-        int[] counts = new int;
-
-        // Step 1: Supply Pass - Record available character counts from magazine
-        for (int i = 0; i < magazine.length(); i++) {
-            counts[magazine.charAt(i) - 'a']++;
+        int[] freq=new int[26];
+        for(char c:magazine.toCharArray())
+        {
+            freq[c-'a']++;
         }
-
-        // Step 2: Demand Pass - Consume characters for ransomNote
-        for (int i = 0; i < ransomNote.length(); i++) {
-            int charIdx = ransomNote.charAt(i) - 'a';
-            counts[charIdx]--;
-
-            // If a character count drops below zero, magazine lacks sufficient supply
-            if (counts[charIdx] < 0) {
+        for(char c:ransomNote.toCharArray())
+        {
+            freq[c-'a']--;
+            if(freq[c-'a'] < 0)
                 return false;
-            }
         }
-
         return true;
     }
 }

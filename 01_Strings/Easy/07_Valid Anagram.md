@@ -184,6 +184,34 @@ class Solution {
 }
 ```
 
+If we consider 128 size of array:
+``` java
+class Solution {
+
+    public boolean isAnagram(String s, String t) {
+
+        if (s == null || t == null || s.length() != t.length()) {
+            return false;
+        }
+
+        int[] counts = new int[128];
+
+        for (int i = 0; i < s.length(); i++) {
+            counts[s.charAt(i)]++;
+            counts[t.charAt(i)]--;
+        }
+
+        for (int count : counts) {
+            if (count != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
 ---
 
 ## Complexity Analysis

@@ -159,38 +159,21 @@ ans.add(numStr);
 ## Java Solution
 
 ```java
-import java.util.ArrayList;
-import java.util.List;
-
 class Solution {
-
     public List<String> fizzBuzz(int n) {
-        // Pre-size the array list to avoid intermediate internal array reallocations
-        List<String> ans = new ArrayList<>(n);
-
-        // Linear sweep from 1 up to n
-        for (int i = 1; i <= n; i++) {
-            StringBuilder sb = new StringBuilder();
-
-            // Step 1: If divisible by 3, append Fizz
-            if (i % 3 == 0) {
-                sb.append("Fizz");
-            }
-            
-            // Step 2: If divisible by 5, append Buzz
-            if (i % 5 == 0) {
-                sb.append("Buzz");
-            }
-
-            // Step 3: If no conditions match, fall back to the integer string value
-            if (sb.length() == 0) {
-                sb.append(i);
-            }
-
-            ans.add(sb.toString());
+        List<String> res=new ArrayList<>();
+        for(int i=0;i<n;i++)
+        {
+            if((i+1) % 3 == 0 && (i+1) % 5 == 0)
+                res.add("FizzBuzz");
+            else if((i+1) % 3 == 0)
+                res.add("Fizz");
+            else if((i+1) % 5 == 0)
+                res.add("Buzz");
+            else
+                res.add(String.valueOf(i+1));
         }
-
-        return ans;
+        return res;
     }
 }
 ```
@@ -206,6 +189,153 @@ class Solution {
 | **Linear Evaluation Pass** | **O(n)** | **O(1)** | Loops through `n` numbers exactly once. The auxiliary space complexity is constant O(1) excluding the required memory to allocate the output string collection list. |
 
 ---
+
+# Auxiliary Space (Excluding Output)
+ 
+Inside the loop, the only temporary object created is:
+ 
+```java
+String.valueOf(i + 1)
+```
+ 
+For the largest number `n`, the generated string contains:
+ 
+```text
+O(log n)
+```
+ 
+digits.
+ 
+Since only one such temporary string exists at a time, the extra space required is:
+ 
+```text
+O(log n)
+```
+ 
+---
+ 
+## Space Used by the Result List
+ 
+```java
+List<String> res = new ArrayList<>();
+```
+ 
+The list stores `n` string references.
+ 
+### Constant-Size Strings
+ 
+The following string literals are reused from the String Pool:
+ 
+```java
+"Fizz"
+"Buzz"
+"FizzBuzz"
+```
+ 
+They have constant size and do not create new string objects each time.
+ 
+Contribution:
+ 
+```text
+O(1)
+```
+ 
+per entry.
+ 
+### Numeric Strings
+ 
+For numbers that are not divisible by 3 or 5:
+ 
+```java
+String.valueOf(i + 1)
+```
+ 
+creates strings such as:
+ 
+```text
+"1", "2", "3", ..., "n"
+```
+ 
+Each numeric string requires:
+ 
+```text
+O(log n)
+```
+ 
+characters.
+ 
+Across all generated numeric strings, the total number of stored characters is:
+ 
+```text
+Θ(n log n)
+```
+ 
+---
+ 
+## Interview / LeetCode Convention
+ 
+When discussing space complexity, the returned output is usually excluded.
+ 
+Therefore:
+ 
+```text
+Auxiliary Space = O(log n)
+```
+ 
+Some interviewers may simplify this to:
+ 
+```text
+O(1)
+```
+ 
+since the temporary string exists only for a single iteration.
+ 
+---
+ 
+## Total Space Complexity (Including Output)
+ 
+The result list stores:
+ 
+- `n` references → `O(n)`
+- String contents → `Θ(n log n)`
+ 
+Therefore:
+ 
+```text
+Total Space = O(n log n)
+```
+ 
+---
+ 
+## Complexity Summary
+ 
+| Metric | Complexity |
+|----------|----------|
+| Time Complexity | O(n log n) |
+| Auxiliary Space (excluding output) | O(log n) |
+| Space Complexity (including output) | O(n log n) |
+ 
+---
+ 
+## Final Answer
+ 
+### Interviewer's Answer
+ 
+```text
+Time Complexity: O(n log n)
+Auxiliary Space: O(1) (or O(log n) if counting the temporary numeric string)
+```
+ 
+### Strict Total Memory Usage
+ 
+```text
+Time Complexity: O(n log n)
+Space Complexity: O(n log n)
+```
+ 
+The dominant memory usage comes from storing the generated strings in the returned `List<String>`.
+Provide your feedback on BizChat
+Make it more concise
 
 ## Key Insight
 

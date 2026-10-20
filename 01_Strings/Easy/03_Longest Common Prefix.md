@@ -413,7 +413,319 @@ However, for interviews and coding platforms, **O(n × m²)** is the expected an
 ## Complexity Analysis
 
 ### Complexity Metrics
+# Complexity Analysis
 
+## Variable Definitions
+
+Let:
+
+- `n` = number of strings in the array
+- `m` = length of the longest string (or the initial prefix length)
+
+---
+
+## Line-by-Line Complexity
+
+### Null / Empty Check
+
+```java
+if (strs == null || strs.length == 0)
+```
+
+Time Complexity:
+
+```text
+O(1)
+```
+
+Reason:
+
+```text
+Constant-time null and length checks.
+```
+
+---
+
+### Initialize Prefix
+
+```java
+String prefix = strs[0];
+```
+
+Time Complexity:
+
+```text
+O(1)
+```
+
+Reason:
+
+```text
+Only assigns a reference.
+No character copying occurs.
+```
+
+---
+
+### Outer Loop
+
+```java
+for (int i = 1; i < strs.length; i++)
+```
+
+Time Complexity:
+
+```text
+O(n)
+```
+
+Reason:
+
+```text
+Runs once for each remaining string.
+```
+
+---
+
+### Prefix Check
+
+```java
+strs[i].indexOf(prefix) != 0
+```
+
+Time Complexity:
+
+```text
+O(k)
+```
+
+where:
+
+```text
+k = current prefix length
+```
+
+Reason:
+
+```text
+Used as a prefix comparison.
+
+Equivalent to:
+
+strs[i].startsWith(prefix)
+```
+
+Java compares characters until a mismatch is found.
+
+---
+
+### Shrink Prefix
+
+```java
+prefix = prefix.substring(0, prefix.length() - 1);
+```
+
+Time Complexity:
+
+```text
+O(k)
+```
+
+Reason:
+
+```text
+Creates a new String and copies k−1 characters.
+```
+
+---
+
+### Empty Check
+
+```java
+prefix.isEmpty()
+```
+
+Time Complexity:
+
+```text
+O(1)
+```
+
+Reason:
+
+```text
+Checks whether string length equals zero.
+```
+
+---
+
+## Cost of the While Loop
+
+```java
+while (strs[i].indexOf(prefix) != 0)
+```
+
+Each iteration performs:
+
+```text
+indexOf(prefix)  → O(k)
+substring(...)   → O(k)
+```
+
+Therefore:
+
+```text
+Per iteration = O(k)
+```
+
+---
+
+## Why Does the Prefix Shrink Only m Times?
+
+Suppose:
+
+```text
+prefix = "flower"
+```
+
+The reductions are:
+
+```text
+flower
+flowe
+flow
+flo
+fl
+f
+""
+```
+
+The prefix length decreases by one each time.
+
+Therefore:
+
+```text
+Maximum reductions = m
+```
+
+---
+
+## Total Work Done by Prefix Reductions
+
+The costs become:
+
+```text
+m + (m - 1) + (m - 2) + ... + 1
+```
+
+Using the arithmetic series formula:
+
+```text
+m(m + 1) / 2
+```
+
+which simplifies to:
+
+```text
+O(m²)
+```
+
+---
+
+## Overall Time Complexity
+
+The outer loop processes:
+
+```text
+n strings
+```
+
+For each string, prefix reduction can cost:
+
+```text
+O(m²)
+```
+
+Therefore:
+
+```text
+Time Complexity = O(n × m²)
+```
+
+---
+
+## Space Complexity
+
+Extra space used:
+
+```java
+String prefix
+int i
+```
+
+Only a few variables are maintained.
+
+```text
+Auxiliary Space = O(1)
+```
+
+If temporary strings created by `substring()` are counted:
+
+```text
+Space Complexity = O(m)
+```
+
+---
+
+# Final Complexity
+
+```text
+Time Complexity  : O(n × m²)
+
+Space Complexity : O(1)
+```
+
+### Alternative Strict Analysis
+
+If `indexOf(prefix)` is treated as a general substring search:
+
+```text
+indexOf(prefix) = O(m²)
+substring()     = O(m)
+```
+
+Then:
+
+```text
+Each while iteration = O(m²)
+```
+
+and there can be:
+
+```text
+m reductions
+```
+
+giving:
+
+```text
+O(m³) per string
+```
+
+and:
+
+```text
+O(n × m³)
+```
+
+overall.
+
+However, for interviews and LeetCode discussions, the accepted complexity is:
+
+```text
+Time Complexity : O(n × m²)
+Space Complexity: O(1)
+```
 | Operation | Time Complexity | Space Complexity | Reason |
 | :--- | :--- | :--- | :--- |
 | **Prefix Filtering** | **O(S)** | **O(1)** | Where `S` is the total character payload across all strings. In the worst-case scenario, the algorithm inspects all string components. |

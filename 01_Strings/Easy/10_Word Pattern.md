@@ -180,44 +180,30 @@ if (!Objects.equals(map.put(pattern.charAt(i), i), map.put(words[i], i))) {
 ## Java Solution
 
 ```java
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 class Solution {
-
     public boolean wordPattern(String pattern, String s) {
-        if (pattern == null || s == null) {
-            return false;
-        }
-
-        // Step 1: Parse the string into individual word tokens
         String[] words = s.split(" ");
-
-        // Fast-fail: If tokens counts do not match, a bijection is impossible
-        if (pattern.length() != words.length) {
-            return false;
-        }
-
-        // Initialize a unified map capable of tracking both Character and String keys
-        Map<Object, Integer> seenPositions = new HashMap<>();
-        int n = pattern.length();
-
-        // Step 2: Traverse and log tracking positions in a single pass
-        for (int i = 0; i < n; i++) {
-            char c = pattern.charAt(i);
-            String word = words[i];
-
-            // .put() returns the PREVIOUS value associated with the key
-            Object prevCharPos = seenPositions.put(c, i + 1);
-            Object prevWordPos = seenPositions.put(word, i + 1);
-
-            // If their historical positions mismatch, the pattern is broken
-            if (!Objects.equals(prevCharPos, prevWordPos)) {
+        if (words.length != pattern.length()) 
                 return false;
+        Map<Character, String> map = new HashMap<>();
+        Set<String> usedWords = new HashSet<>();
+        for (int i = 0; i < pattern.length(); i++) 
+        {
+            char c = pattern.charAt(i);
+            String w = words[i];
+            if (!map.containsKey(c)) 
+            {
+                if (usedWords.contains(w)) 
+                    return false; 
+                map.put(c, w);
+                usedWords.add(w);
+            } 
+            else 
+            {
+                if (!map.get(c).equals(w)) 
+                    return false; 
             }
         }
-
         return true;
     }
 }
@@ -227,24 +213,113 @@ class Solution {
 
 ## Complexity Analysis
 
-### Complexity Metrics
+### Time Complexity: O(m)
 
-| Operation | Time Complexity | Space Complexity | Reason |
-| :--- | :--- | :--- | :--- |
-| **Unified Position Scan** | **O(n + m)** | **O(n + m)** | Splitting the string takes O(m) time, and the tracking loop runs `n` times. The map stores unique entries bounded by the total unique tokens. |
+Where:
+- `m` = total number of characters in the input string `s`
 
----
+#### Breakdown
 
-## Key Insight
+##### 1. Splitting the String
+```java
+String[] words = s.split(" ");
+```
+- Scans the entire input string.
+- Time Complexity: **O(m)**
 
-Using a single Map to log the historical indices of both characters and words leverages Java's `.put()` return values to detect structural variations in a single, clean pass.
+##### 2. Iterating Through Pattern and Words
+```java
+for (int i = 0; i < pattern.length(); i++)
+```
+For each iteration:
 
-```text
-Time  : O(n + m) linear tracking path
-Space : O(n + m) auxiliary map allocation capacity
+```java
+map.containsKey(c);      // O(1)
+usedWords.contains(w);  // O(1)
+map.put(c, w);          // O(1)
+usedWords.add(w);       // O(1)
+map.get(c);             // O(1)
 ```
 
+String comparison:
+
+```java
+map.get(c).equals(w);
+```
+
+- Worst case: **O(k)**, where `k` is the word length.
+
+Across all iterations, the total number of characters involved in comparisons is bounded by `m`.
+
+#### Overall Time Complexity
+
+```text
+O(m) + O(m) = O(m)
+```
+
+**Time Complexity = O(m)**
+
+> If `n` represents the number of words, interviewers often simplify this to **O(n)** assuming average O(1) hash operations.
+
 ---
+
+### Space Complexity: O(n)
+
+Where:
+- `n` = number of words in `s`
+
+#### 1. Word Array
+```java
+String[] words = s.split(" ");
+```
+Stores all word references.
+
+```text
+Space = O(n)
+```
+
+#### 2. HashMap
+```java
+Map<Character, String> map
+```
+
+Stores at most one mapping per pattern character.
+
+```text
+Space = O(n)
+```
+
+#### 3. HashSet
+```java
+Set<String> usedWords
+```
+
+Stores all unique words.
+
+```text
+Space = O(n)
+```
+
+#### Overall Space Complexity
+
+```text
+O(n) + O(n) + O(n) = O(n)
+```
+
+**Space Complexity = O(n)**
+
+---
+
+## Final Complexity
+
+```text
+Time Complexity  : O(m)
+Space Complexity : O(n)
+```
+
+Where:
+- `m` = total number of characters in the input string `s`
+- `n` = total number of words (or `pattern.length()`)
 
 ## Similar Problems
 

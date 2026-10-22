@@ -15,8 +15,23 @@ You must write an algorithm with **O(log n)** runtime complexity.
 ### Example 1
 
 ```text
-Input: nums =, target = 8
+Input: nums = [5,7,7,8,8,10], target = 8
 Output: [3, 4]
+```
+
+### Explanation
+
+```text
+The target value 8 appears at indices 3 and 4.
+
+nums = [5,7,7,8,8,10]
+             ^ ^
+             3 4
+
+First occurrence of 8 = 3
+Last occurrence of 8  = 4
+
+Therefore, the answer is [3, 4].
 ```
 
 ---
@@ -24,14 +39,20 @@ Output: [3, 4]
 ### Example 2
 
 ```text
-Input: nums =, target = 6
+Input: nums = [5,7,7,8,8,10], target = 6
 Output: [-1, -1]
 ```
 
 ### Explanation
 
 ```text
-6 does not exist in the array, so its first and last positions are returned as -1.
+The value 6 does not exist in the array.
+
+nums = [5,7,7,8,8,10]
+
+Since the target is not found, there is no first or last occurrence.
+
+Therefore, return [-1, -1].
 ```
 
 ---
@@ -41,6 +62,16 @@ Output: [-1, -1]
 ```text
 Input: nums = [], target = 0
 Output: [-1, -1]
+```
+
+### Explanation
+
+```text
+The array is empty.
+
+Since there are no elements, the target value 0 cannot exist in the array.
+
+Therefore, return [-1, -1].
 ```
 
 ---

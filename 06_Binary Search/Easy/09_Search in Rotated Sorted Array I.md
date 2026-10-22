@@ -17,8 +17,21 @@ You must write an algorithm with **O(log n)** runtime complexity.
 ### Example 1
 
 ```text
-Input: nums =, target = 0
+Input: nums = [4,5,6,7,0,1,2], target = 0
 Output: 4
+```
+
+### Explanation
+
+```text
+The target value 0 exists in the rotated sorted array.
+
+nums = [4,5,6,7,0,1,2]
+               ^
+
+0 is located at index 4.
+
+Therefore, the answer is 4.
 ```
 
 ---
@@ -26,8 +39,18 @@ Output: 4
 ### Example 2
 
 ```text
-Input: nums =, target = 3
+Input: nums = [4,5,6,7,0,1,2], target = 3
 Output: -1
+```
+
+### Explanation
+
+```text
+The target value 3 does not exist in the array.
+
+nums = [4,5,6,7,0,1,2]
+
+Since the target is not present, return -1.
 ```
 
 ---
@@ -35,8 +58,18 @@ Output: -1
 ### Example 3
 
 ```text
-Input: nums =, target = 0
+Input: nums = [1], target = 0
 Output: -1
+```
+
+### Explanation
+
+```text
+The array contains only one element:
+
+[1]
+
+Since 0 is not present in the array, return -1.
 ```
 
 ---

@@ -11,14 +11,25 @@ Given an array `arr` of positive integers sorted in a **strictly increasing orde
 ### Example 1
 
 ```text
-Input: arr =, k = 5
+Input: arr = [2,3,4,7,11], k = 5
 Output: 9
 ```
 
 ### Explanation
 
 ```text
-The missing positive integers are [1, 5, 6, 8, 9, 10, 12, 13, ...].
+The positive integers are:
+
+[1,2,3,4,5,6,7,8,9,10,11,...]
+
+Numbers present in the array:
+
+[2,3,4,7,11]
+
+Missing positive integers:
+
+[1,5,6,8,9,10,12,13,...]
+
 The 5th missing positive integer is 9.
 ```
 
@@ -27,15 +38,29 @@ The 5th missing positive integer is 9.
 ### Example 2
 
 ```text
-Input: nums =, k = 2
+Input: arr = [1,2,3,4], k = 2
 Output: 6
 ```
 
 ### Explanation
 
 ```text
-The missing positive integers are [5, 6, 7, ...].
+The positive integers are:
+
+[1,2,3,4,5,6,7,8,...]
+
+Numbers present in the array:
+
+[1,2,3,4]
+
+Missing positive integers:
+
+[5,6,7,8,...]
+
+The 1st missing positive integer is 5.
 The 2nd missing positive integer is 6.
+
+Therefore, the answer is 6.
 ```
 
 ---

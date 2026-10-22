@@ -14,43 +14,101 @@ Return the **minimum integer speed `k`** such that she can eat all the bananas w
 
 ## Examples
 
+<br>
+
 ### Example 1
 
+<br>
+
 ```text
-Input: piles =, h = 8
+Input: piles = [3,6,7,11], h = 8
 Output: 4
 ```
 
+<br>
+
 ### Explanation
 
+<br>
+
 ```text
-If eating speed k = 3: total hours = ceil(3/3) + ceil(6/3) + ceil(7/3) + ceil(11/3) = 1 + 2 + 3 + 4 = 10 hours (> 8)
-If eating speed k = 4: total hours = ceil(3/4) + ceil(6/4) + ceil(7/4) + ceil(11/4) = 1 + 2 + 2 + 3 = 8 hours (<= 8)
+If eating speed k = 3:
+total hours = ceil(3/3) + ceil(6/3) + ceil(7/3) + ceil(11/3)
+            = 1 + 2 + 3 + 4
+            = 10 hours (> 8)
+
+If eating speed k = 4:
+total hours = ceil(3/4) + ceil(6/4) + ceil(7/4) + ceil(11/4)
+            = 1 + 2 + 2 + 3
+            = 8 hours (<= 8)
+
 Therefore, the minimum integer eating speed is 4.
 ```
 
+<br>
+
 ---
+
+<br>
 
 ### Example 2
 
+<br>
+
 ```text
-Input: piles =, h = 5
+Input: piles = [30,11,23,4,20], h = 5
 Output: 30
 ```
 
+<br>
+
 ### Explanation
+
+<br>
 
 ```text
 Since h equals the number of piles, Koko must eat at least the size of the largest pile each hour to finish on time.
+
+Largest pile = 30
+
+If k < 30, the pile with 30 bananas would require more than 1 hour, causing the total time to exceed 5 hours.
+
+Therefore, the minimum eating speed is 30.
 ```
+
+<br>
 
 ---
 
+<br>
+
 ### Example 3
 
+<br>
+
 ```text
-Input: piles =, h = 6
+Input: piles = [30,11,23,4,20], h = 6
 Output: 23
+```
+
+<br>
+
+### Explanation
+
+<br>
+
+```text
+If eating speed k = 22:
+total hours = ceil(30/22) + ceil(11/22) + ceil(23/22) + ceil(4/22) + ceil(20/22)
+            = 2 + 1 + 2 + 1 + 1
+            = 7 hours (> 6)
+
+If eating speed k = 23:
+total hours = ceil(30/23) + ceil(11/23) + ceil(23/23) + ceil(4/23) + ceil(20/23)
+            = 2 + 1 + 1 + 1 + 1
+            = 6 hours (<= 6)
+
+Therefore, the minimum integer eating speed is 23.
 ```
 
 ---

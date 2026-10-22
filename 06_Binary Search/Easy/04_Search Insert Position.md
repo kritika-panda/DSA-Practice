@@ -13,8 +13,18 @@ You must write an algorithm with **O(log n)** runtime complexity.
 ### Example 1
 
 ```text
-Input: nums =, target = 5
+Input: nums = [1,3,5,6], target = 5
 Output: 2
+```
+
+### Explanation
+
+```text
+The target value 5 exists in the array.
+
+nums[2] = 5
+
+Therefore, return index 2.
 ```
 
 ---
@@ -22,15 +32,22 @@ Output: 2
 ### Example 2
 
 ```text
-Input: nums =, target = 2
+Input: nums = [1,3,5,6], target = 2
 Output: 1
 ```
 
 ### Explanation
 
 ```text
-2 is not found in the array. If it were inserted in order, it would be placed 
-at index 1, shifting the remaining elements to the right.
+2 is not found in the array.
+
+If it were inserted while maintaining sorted order:
+
+[1, 2, 3, 5, 6]
+
+2 would be placed at index 1, shifting the remaining elements to the right.
+
+Therefore, return 1.
 ```
 
 ---
@@ -38,15 +55,25 @@ at index 1, shifting the remaining elements to the right.
 ### Example 3
 
 ```text
-Input: nums =, target = 7
+Input: nums = [1,3,5,6], target = 7
 Output: 4
 ```
 
 ### Explanation
 
 ```text
-7 is larger than all elements in the array. 
-Therefore, it would be appended at the very end of the array at index 4.
+7 is larger than all elements in the array.
+
+Current array:
+[1,3,5,6]
+
+If inserted while maintaining sorted order:
+
+[1,3,5,6,7]
+
+7 would be placed at index 4.
+
+Therefore, return 4.
 ```
 
 ---

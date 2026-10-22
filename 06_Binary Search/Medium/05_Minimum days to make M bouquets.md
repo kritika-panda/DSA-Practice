@@ -17,7 +17,7 @@ Return the **minimum number of days** you need to wait to be able to make `m` bo
 ### Example 1
 
 ```text
-Input: bloomDay =, m = 3, k = 1
+Input: bloomDay = [1,10,3,10,2], m = 3, k = 1
 Output: 3
 ```
 
@@ -25,9 +25,19 @@ Output: 3
 
 ```text
 We need 3 bouquets of 1 flower each.
-- Day 1: [1, _, _, _, _] -> 1 bouquet
-- Day 2: [1, _, _, _, 2] -> 2 bouquets
-- Day 3: [1, _, 3, _, 2] -> 3 bouquets
+
+Day 1:
+Bloomed flowers = [1, _, _, _, _]
+Bouquets formed = 1
+
+Day 2:
+Bloomed flowers = [1, _, _, _, 2]
+Bouquets formed = 2
+
+Day 3:
+Bloomed flowers = [1, _, 3, _, 2]
+Bouquets formed = 3
+
 Therefore, the minimum number of days is 3.
 ```
 
@@ -36,15 +46,24 @@ Therefore, the minimum number of days is 3.
 ### Example 2
 
 ```text
-Input: bloomDay =, m = 3, k = 2
+Input: bloomDay = [1,10,3,10,2], m = 3, k = 2
 Output: -1
 ```
 
 ### Explanation
 
 ```text
-We need 3 bouquets of 2 flowers each, meaning we need 3 * 2 = 6 flowers in total. 
-Since the garden only has 5 flowers, it is impossible. Return -1.
+We need 3 bouquets of 2 adjacent flowers each.
+
+Total flowers required = m × k
+                       = 3 × 2
+                       = 6
+
+The garden contains only 5 flowers.
+
+Since 6 > 5, it is impossible to make 3 bouquets.
+
+Therefore, return -1.
 ```
 
 ---
@@ -52,17 +71,38 @@ Since the garden only has 5 flowers, it is impossible. Return -1.
 ### Example 3
 
 ```text
-Input: bloomDay =, m = 2, k = 3
+Input: bloomDay = [7,7,7,7,12,7,7], m = 2, k = 3
 Output: 12
 ```
 
 ### Explanation
 
 ```text
-We need 2 bouquets of 3 flowers each.
-- Day 7: [7, 7, 7, 7, _, 7, 7] -> 1 bouquet formed from the first 3 flowers. The last 2 cannot form a bouquet of size 3.
-- Day 12: [7, 7, 7, 7, 12, 7, 7] -> All flowers bloomed. We can pick indices [0,1,2] for the 1st bouquet and indices [4,5,6] or [3,4,5] for the 2nd.
-Minimum days required = 12.
+We need 2 bouquets of 3 adjacent flowers each.
+
+Day 7:
+Bloomed flowers = [7,7,7,7,_,7,7]
+
+Possible bouquets:
+- Flowers at indices [0,1,2] form 1 bouquet.
+
+The remaining bloomed flowers cannot form another group of 3 adjacent flowers.
+
+Total bouquets = 1
+
+Day 12:
+Bloomed flowers = [7,7,7,7,12,7,7]
+
+All flowers have bloomed.
+
+Possible bouquets:
+- First bouquet: indices [0,1,2]
+- Second bouquet: indices [4,5,6]
+  (or indices [3,4,5])
+
+Total bouquets = 2
+
+Therefore, the minimum number of days required is 12.
 ```
 
 ---

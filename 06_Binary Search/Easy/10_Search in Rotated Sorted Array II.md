@@ -17,8 +17,19 @@ You must reduce the overall execution steps as much as possible compared to a li
 ### Example 1
 
 ```text
-Input: nums =, target = 0
+Input: nums = [2,5,6,0,0,1,2], target = 0
 Output: true
+```
+
+### Explanation
+
+```text
+The target value 0 exists in the rotated sorted array.
+
+nums = [2,5,6,0,0,1,2]
+             ^ ^
+
+Since at least one occurrence of 0 is present, the result is true.
 ```
 
 ---
@@ -26,9 +37,18 @@ Output: true
 ### Example 2
 
 ```text
-Input: nums =, target = 3
+Input: nums = [2,5,6,0,0,1,2], target = 3
 Output: false
 ```
+
+### Explanation
+
+```text
+The target value 3 does not exist in the array.
+
+nums = [2,5,6,0,0,1,2]
+
+After searching the entire rotated array, no occurrence of 3 is found.
 
 ---
 

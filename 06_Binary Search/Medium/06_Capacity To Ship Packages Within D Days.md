@@ -13,22 +13,28 @@ Return the **least weight capacity** of the ship that will result in all the pac
 ### Example 1
 
 ```text
-Input: weights =, days = 5
-Output: 15
+Input: bloomDay = [1,10,3,10,2], m = 3, k = 1
+Output: 3
 ```
 
 ### Explanation
 
 ```text
-A ship capacity of 15 is the minimum to ship all packages in 5 days like this:
-- Day 1: 1, 2, 3, 4, 5 (total weight = 15)
-- Day 2: 6, 7 (total weight = 13)
-- Day 3: 8 (total weight = 8)
-- Day 4: 9 (total weight = 9)
-- Day 5: 10 (total weight = 10)
+We need 3 bouquets of 1 flower each.
 
-Note that the packages must be shipped in the given order. 
-A lower capacity would force packages onto subsequent days, breaching the 5-day limit.
+Day 1:
+Bloomed flowers = [1, _, _, _, _]
+Bouquets formed = 1
+
+Day 2:
+Bloomed flowers = [1, _, _, _, 2]
+Bouquets formed = 2
+
+Day 3:
+Bloomed flowers = [1, _, 3, _, 2]
+Bouquets formed = 3
+
+Therefore, the minimum number of days is 3.
 ```
 
 ---
@@ -36,17 +42,24 @@ A lower capacity would force packages onto subsequent days, breaching the 5-day 
 ### Example 2
 
 ```text
-Input: weights =, days = 3
-Output: 6
+Input: bloomDay = [1,10,3,10,2], m = 3, k = 2
+Output: -1
 ```
 
 ### Explanation
 
 ```text
-A ship capacity of 6 allows shipping in 3 days:
-- Day 1: 3, 2 (weight = 5)
-- Day 2: 2, 4 (weight = 6)
-- Day 3: 1, 4 (weight = 5)
+We need 3 bouquets of 2 adjacent flowers each.
+
+Total flowers required = m × k
+                       = 3 × 2
+                       = 6
+
+The garden contains only 5 flowers.
+
+Since 6 > 5, it is impossible to make 3 bouquets.
+
+Therefore, return -1.
 ```
 
 ---
@@ -54,11 +67,39 @@ A ship capacity of 6 allows shipping in 3 days:
 ### Example 3
 
 ```text
-Input: weights =, days = 4
-Output: 3
+Input: bloomDay = [7,7,7,7,12,7,7], m = 2, k = 3
+Output: 12
 ```
 
----
+### Explanation
+
+```text
+We need 2 bouquets of 3 adjacent flowers each.
+
+Day 7:
+Bloomed flowers = [7,7,7,7,_,7,7]
+
+Possible bouquets:
+- Flowers at indices [0,1,2] form 1 bouquet.
+
+The remaining bloomed flowers cannot form another group of 3 adjacent flowers.
+
+Total bouquets = 1
+
+Day 12:
+Bloomed flowers = [7,7,7,7,12,7,7]
+
+All flowers have bloomed.
+
+Possible bouquets:
+- First bouquet: indices [0,1,2]
+- Second bouquet: indices [4,5,6]
+  (or indices [3,4,5])
+
+Total bouquets = 2
+
+Therefore, the minimum number of days required is 12.
+```
 
 # Key Property: Monotonicity of Shipping Duration
 

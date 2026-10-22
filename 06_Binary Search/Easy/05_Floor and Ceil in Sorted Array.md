@@ -16,15 +16,22 @@ You are given a sorted array `arr` of `n` integers and an integer `x`. Find the 
 ### Example 1
 
 ```text
-Input: arr =, x = 5
+Input: arr = [3, 4, 4, 7, 8, 10], x = 5
 Result: 4 7
 ```
 
 ### Explanation
 
 ```text
-The largest element in the array smaller than or equal to 5 is 4 (Floor = 4).
-The smallest element in the array greater than or equal to 5 is 7 (Ceiling = 7).
+The largest element in the array smaller than or equal to 5 is 4.
+
+Therefore:
+Floor(5) = 4
+
+The smallest element in the array greater than or equal to 5 is 7.
+
+Therefore:
+Ceil(5) = 7
 ```
 
 ---
@@ -32,15 +39,23 @@ The smallest element in the array greater than or equal to 5 is 7 (Ceiling = 7).
 ### Example 2
 
 ```text
-Input: arr =, x = 8
+Input: arr = [3, 4, 4, 7, 8, 10], x = 8
 Result: 8 8
 ```
 
 ### Explanation
 
 ```text
-The element 8 exists in the array, making it both the floor and the ceiling of 8.
-```
+The element 8 exists in the array.
+
+Since:
+8 <= 8 and no larger value is needed for the floor,
+8 >= 8 and no smaller value is needed for the ceiling,
+
+Floor(8) = 8
+Ceil(8) = 8
+
+Therefore, the result is 8 
 
 ---
 

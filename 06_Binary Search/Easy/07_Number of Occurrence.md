@@ -13,14 +13,22 @@ If the `target` is not present in the array, return `0`.
 ### Example 1
 
 ```text
-Input: arr =, target = 2
+Input: arr = [1, 1, 2, 2, 2, 2, 3], target = 2
 Output: 4
 ```
 
 ### Explanation
 
 ```text
-The target 2 occurs 4 times in the given array at indices 2, 3, 4, and 5.
+The target value 2 appears at the following indices:
+
+arr = [1, 1, 2, 2, 2, 2, 3]
+          ^  ^  ^  ^
+          2  3  4  5
+
+Number of occurrences = 4
+
+Therefore, the answer is 4.
 ```
 
 ---
@@ -28,14 +36,20 @@ The target 2 occurs 4 times in the given array at indices 2, 3, 4, and 5.
 ### Example 2
 
 ```text
-Input: arr =, target = 4
+Input: arr = [1, 1, 2, 2, 2, 2, 3], target = 4
 Output: 0
 ```
 
 ### Explanation
 
 ```text
-The target 4 does not exist in the array, so it occurs 0 times.
+The target value 4 does not exist in the array.
+
+arr = [1, 1, 2, 2, 2, 2, 3]
+
+Since there are no occurrences of 4, the count is 0.
+
+Therefore, the answer is 0.
 ```
 
 ---

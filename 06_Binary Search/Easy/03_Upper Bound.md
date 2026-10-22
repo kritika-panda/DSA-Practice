@@ -15,15 +15,21 @@ The **upper bound** of a target is defined as the index of the **first element**
 ### Example 1
 
 ```text
-Input: arr =, target = 5
+Input: arr = [1,3,8,10,11,12,19], target = 5
 Output: 2
 ```
 
 ### Explanation
 
 ```text
-The elements strictly greater than 5 are 8, 10, 11, 12, 19.
-The first element among these is 8, which is located at index 2.
+The elements strictly greater than 5 are:
+
+[8,10,11,12,19]
+
+The first element among these is 8,
+which is located at index 2.
+
+Therefore, the answer is 2.
 ```
 
 ---
@@ -31,15 +37,21 @@ The first element among these is 8, which is located at index 2.
 ### Example 2
 
 ```text
-Input: arr =, target = 5
+Input: arr = [1,2,4,5,8,12,19], target = 5
 Output: 4
 ```
 
 ### Explanation
 
 ```text
-The elements strictly greater than 5 are 8, 12, 19.
-The first element among these is 8, located at index 4.
+The elements strictly greater than 5 are:
+
+[8,12,19]
+
+The first element among these is 8,
+which is located at index 4.
+
+Therefore, the answer is 4.
 ```
 
 ---
@@ -47,16 +59,19 @@ The first element among these is 8, located at index 4.
 ### Example 3
 
 ```text
-Input: arr =, target = 25
+Input: arr = [1,3,8,10,11,12,19], target = 25
 Output: 7
 ```
 
 ### Explanation
 
 ```text
-There are no elements in the array strictly greater than 25. 
-Therefore, the function returns the size of the array, which is 7.
-```
+There are no elements in the array strictly greater than 25.
+
+Since the array size is 7, the insertion position
+for a value greater than all existing elements is index 7.
+
+Therefore, the function returns
 
 ---
 

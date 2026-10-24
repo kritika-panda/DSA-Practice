@@ -1,326 +1,216 @@
-# Design Ride Sharing System
-
-**LeetCode 3829 - Design Ride Sharing System**
+# 3829. Design Ride Sharing System
 
 ## Problem Statement
 
-A ride-sharing system manages:
+A ride sharing system manages ride requests from riders and availability from drivers.
 
-- Waiting riders
-- Available drivers
+The system should match riders and drivers in the order they arrive (FIFO order).
 
-The system should always match:
+Implement the `RideSharingSystem` class:
 
 ```java
-Earliest Driver  ↔  Earliest Rider
+RideSharingSystem()
 ```
 
-and support rider cancellation before matching.
+Initializes the system.
+
+```java
+void addRider(int riderId)
+```
+
+Adds a new rider with the given `riderId`.
+
+```java
+void addDriver(int driverId)
+```
+
+Adds a new driver with the given `driverId`.
+
+```java
+int[] matchDriverWithRider()
+```
+
+Matches the earliest available driver with the earliest waiting rider and removes both from the system.
+
+Returns:
+
+```java
+[driverId, riderId]
+```
+
+if a match is made.
+
+Returns:
+
+```java
+[-1, -1]
+```
+
+if no match is available.
+
+```java
+void cancelRider(int riderId)
+```
+
+Cancels the ride request of the rider with the given `riderId` if the rider exists and has not yet been matched.
 
 ---
 
-# Key Observation
+## Example 1
 
-This is essentially a **FIFO matching problem**.
+### Input
 
-For example:
+```text
+["RideSharingSystem","addRider","addDriver","addRider",
+"matchDriverWithRider","addDriver","cancelRider",
+"matchDriverWithRider","matchDriverWithRider"]
 
-```java
-Riders  : [3, 1, 7]
-Drivers : [2, 5]
+[[],[3],[2],[1],[],[5],[3],[],[]]
 ```
 
-First match should be:
+### Output
 
-```java
-[2, 3]
+```text
+[null,null,null,null,[2,3],null,null,[5,1],[-1,-1]]
 ```
 
-Then:
+### Explanation
 
 ```java
-[5, 1]
-```
+RideSharingSystem rideSharingSystem = new RideSharingSystem();
 
-which naturally suggests using **queues**.
+rideSharingSystem.addRider(3);          // rider 3 joins queue
+rideSharingSystem.addDriver(2);         // driver 2 available
+rideSharingSystem.addRider(1);          // rider 1 joins queue
+
+rideSharingSystem.matchDriverWithRider();
+// returns [2, 3]
+
+rideSharingSystem.addDriver(5);
+
+rideSharingSystem.cancelRider(3);
+// already matched -> no effect
+
+rideSharingSystem.matchDriverWithRider();
+// returns [5, 1]
+
+rideSharingSystem.matchDriverWithRider();
+// returns [-1, -1]
+```
 
 ---
 
-# Challenge: Rider Cancellation
+# Intuition
 
-Suppose:
+The requirements indicate:
 
-```java
-Riders = [3, 1, 7]
+```text
+Earliest rider  -> First served
+Earliest driver -> First assigned
 ```
 
-Then:
+This is a classic FIFO problem.
 
-```java
-cancelRider(1)
+Therefore:
+
+```text
+Riders  -> Queue
+Drivers -> Queue
 ```
 
-Removing a rider directly from the middle of a queue would cost:
+For rider cancellation, removing an arbitrary rider from the middle of a queue is expensive.
 
-```java
-O(n)
+Instead, use:
+
+```text
+HashSet<Integer> cancelled
 ```
 
-Instead, use **lazy deletion**:
-
-```java
-cancelled = {1}
-```
-
-Keep rider `1` in the queue and skip him when matching.
+and perform **lazy deletion** during matching.
 
 ---
 
 # Data Structures
 
 ```java
-Queue<Integer> riders
-Queue<Integer> drivers
-Set<Integer> cancelledRiders
+Queue<Integer> riders;
+Queue<Integer> drivers;
+Set<Integer> cancelled;
 ```
 
-### Riders Queue
+### Purpose
 
-Stores waiting riders in arrival order.
-
-```java
-[3,1,7]
-```
-
-### Drivers Queue
-
-Stores available drivers in arrival order.
-
-```java
-[2,5]
-```
-
-### Cancelled Set
-
-Stores riders that canceled before being matched.
-
-```java
-{1}
+```text
+riders      -> waiting riders
+drivers     -> available drivers
+cancelled   -> riders who cancelled request
 ```
 
 ---
 
-# Approach
+# Algorithm
 
 ## addRider(riderId)
 
-Add rider to waiting queue.
+```text
+1. Add rider to rider queue.
+```
 
-```java
-riders.offer(riderId);
+### Complexity
+
+```text
+Time  : O(1)
+Space : O(1)
 ```
 
 ---
 
 ## addDriver(driverId)
 
-Add driver to available queue.
+```text
+1. Add driver to driver queue.
+```
 
-```java
-drivers.offer(driverId);
+### Complexity
+
+```text
+Time  : O(1)
+Space : O(1)
 ```
 
 ---
 
 ## cancelRider(riderId)
 
-Mark rider as cancelled.
-
-```java
-cancelled.add(riderId);
+```text
+1. Add riderId to cancelled set.
 ```
 
-No immediate removal.
+### Complexity
+
+```text
+Time  : O(1)
+Space : O(1)
+```
 
 ---
 
 ## matchDriverWithRider()
 
-### Step 1
-
-Remove invalid riders from front.
-
-```java
-while front rider is cancelled
-    remove rider
+```text
+1. Remove cancelled riders from front.
+2. If either queue is empty:
+      return [-1, -1]
+3. Remove earliest driver.
+4. Remove earliest rider.
+5. Return [driverId, riderId].
 ```
 
-### Step 2
+### Complexity
 
-If either queue is empty:
-
-```java
-return [-1, -1]
-```
-
-### Step 3
-
-Match:
-
-```java
-driver = drivers.poll()
-rider  = riders.poll()
-```
-
-Return:
-
-```java
-[driver, rider]
-```
-
----
-
-# Dry Run
-
-## Example 1
-
-```java
-addRider(3)
-```
-
-```java
-Riders = [3]
-```
-
----
-
-```java
-addDriver(2)
-```
-
-```java
-Drivers = [2]
-```
-
----
-
-```java
-addRider(1)
-```
-
-```java
-Riders = [3,1]
-```
-
----
-
-```java
-matchDriverWithRider()
-```
-
-Match:
-
-```java
-Driver = 2
-Rider  = 3
-```
-
-Return:
-
-```java
-[2,3]
-```
-
----
-
-```java
-addDriver(5)
-```
-
-```java
-Drivers = [5]
-```
-
----
-
-```java
-cancelRider(3)
-```
-
-Rider 3 already matched.
-
-No effect.
-
----
-
-```java
-matchDriverWithRider()
-```
-
-Return:
-
-```java
-[5,1]
-```
-
----
-
-## Example 2
-
-```java
-addRider(8)
-addDriver(8)
-addDriver(6)
-```
-
-Queues:
-
-```java
-Riders  = [8]
-Drivers = [8,6]
-```
-
----
-
-```java
-matchDriverWithRider()
-```
-
-Return:
-
-```java
-[8,8]
-```
-
----
-
-```java
-addRider(2)
-cancelRider(2)
-```
-
-```java
-cancelled = {2}
-```
-
----
-
-```java
-matchDriverWithRider()
-```
-
-Before matching:
-
-```java
-remove cancelled rider 2
-```
-
-No rider remains.
-
-Return:
-
-```java
-[-1,-1]
+```text
+Time  : O(1) Amortized
+Space : O(1)
 ```
 
 ---
@@ -332,147 +222,214 @@ import java.util.*;
 
 class RideSharingSystem {
 
-    private Queue<Integer> riders;
-    private Queue<Integer> drivers;
-    private Set<Integer> cancelled;
+    *rivate Queue<Integer> riders;
+    *rivate Queue<Integer> drivers;
+   *private Set<Integer> cancelled;
 
-    public RideSharingSystem() {
-        riders = new LinkedList<>();
-        drivers = new LinkedList<>();
-        cancelled = new HashSet<>();
+ *  public RideSharingSystem() {
+   *    riders = new LinkedList<>();
+ *      drivers = new LinkedList<>()*
+        cancelled = new HashSet<>*);
     }
 
-    public void addRider(int riderId) {
-        riders.offer(riderId);
+    public void addRider*int riderId) {
+        riders.offe*(riderId);
     }
 
-    public void addDriver(int driverId) {
-        drivers.offer(driverId);
+    public void *ddDriver(int driverId) {
+        d*ivers.offer(driverId);
     }
 
-    public int[] matchDriverWithRider() {
+    *ublic int[] matchDriverWithRider()*{
 
-        while (!riders.isEmpty()
-                && cancelled.contains(riders.peek())) {
-
-            cancelled.remove(riders.peek());
-            riders.poll();
+        while (!riders.isEmpty(* &&
+               cancelled.conta*ns(riders.peek())) {
+            r*ders.poll();
         }
 
-        if (riders.isEmpty() || drivers.isEmpty()) {
-            return new int[]{-1, -1};
+        if*(drivers.isEmpty() || riders.isEmp*y()) {
+            return new int[] { -1, -1 };
         }
 
-        int driver = drivers.poll();
-        int rider = riders.poll();
+        in* driverId = drivers.poll();
+      * int riderId = riders.poll();
 
-        return new int[]{driver, rider};
+   *    return new int[] { driverId, r*derId };
     }
 
-    public void cancelRider(int riderId) {
-        cancelled.add(riderId);
+    public void ca*celRider(int riderId) {
+        ca*celled.add(riderId);
     }
 }
 ```
+
+*--
+
+# Dry Run
+
+## Initial State
+
+`*`text
+Drivers Queue : []
+Riders Qu*ue  : []
+Cancelled     : {}
+```
+
+-*-
+
+## addRider(3)
+
+```text
+Riders *ueue : [3]
+```
+
+---
+
+## addDriver(*)
+
+```text
+Drivers Queue : [2]
+```*
+---
+
+## addRider(1)
+
+```text
+Ride*s Queue : [3, 1]
+```
+
+---
+
+## matc*DriverWithRider()
+
+Before Match:
+
+*``text
+Drivers : [2]
+Riders  : [3,*]
+```
+
+Match:
+
+```text
+Driver 2 ↔ *ider 3
+```
+
+After Match:
+
+```text
+*rivers : []
+Riders  : [1]
+```
+
+Ret*rn:
+
+```text
+[2,3]
+```
+
+---
+
+## ad*Driver(5)
+
+```text
+Drivers : [5]
+`*`
+
+---
+
+## matchDriverWithRider()
+*Before Match:
+
+```text
+Drivers : [*]
+Riders  : [1]
+```
+
+Match:
+
+```te*t
+Driver 5 ↔ Rider 1
+```
+
+After Ma*ch:
+
+```text
+Drivers : []
+Riders  * []
+```
+
+Return:
+
+```text
+[5,1]
+``*
 
 ---
 
 # Complexity Analysis
 
-## addRider()
+| Op*ration | Time Complexity | Space C*mplexity |
+|------------|---------*------|------------------|
+| addRi*er() | O(1) | O(1) |
+| addDriver()*| O(1) | O(1) |
+| cancelRider() | *(1) | O(1) |
+| matchDriverWithRide*() | O(1) Amortized | O(1) |
 
-```java
-Time Complexity: O(1)
-Space Complexity: O(1)
+---
+*# Why O(1) Amortized?
+
+Consider:
+
+*``java
+while (!riders.isEmpty() &&*       cancelled.contains(riders.p*ek())) {
+    riders.poll();
+}
+```
+*A cancelled rider is:
+
+```text
+Add*d once
+Removed once
+```
+
+Therefore*across all operations:
+
+```text
+To*al removals = O(n)
+```
+
+Hence:
+
+``*text
+Average cost per match operat*on = O(1) amortized
 ```
 
 ---
 
-## addDriver()
+# Pa*tern Used
 
-```java
-Time Complexity: O(1)
-Space Complexity: O(1)
+```text
+Queue + HashSet*+ Lazy Deletion
 ```
 
----
+### Queue
 
-## cancelRider()
-
-```java
-Time Complexity: O(1)
-Space Complexity: O(1)
+``*text
+Maintains FIFO matching order*
 ```
 
----
+### HashSet
 
-## matchDriverWithRider()
-
-```java
-Time Complexity: O(1) amortized
+```text
+Provide* O(1) cancellation lookup.
 ```
 
-Why?
+##* Lazy Deletion
 
-- Each rider enters queue once.
-- Each rider leaves queue once.
-- Cancelled riders are skipped only once.
-
----
-
-## Overall Space
-
-```java
-O(R + D + C)
+```text
+Cancelled riders remain in queue
+until they reach the front.
 ```
 
-where:
-
-- `R` = waiting riders
-- `D` = available drivers
-- `C` = cancelled riders
-
----
-
-# Why Lazy Deletion Is the Key Idea
-
-Without lazy deletion:
-
-```java
-cancelRider(id)
-```
-
-would require searching the queue:
-
-```java
-O(n)
-```
-
-With lazy deletion:
-
-```java
-cancelled.add(id)
-```
-
-becomes:
-
-```java
-O(1)
-```
-
-and invalid riders are cleaned up only when they reach the front.
-
----
-
-# Key Takeaways
-
-- Use **Queue** for riders and drivers because matching is FIFO.
-- Use a **HashSet** to track cancelled riders.
-- Apply **lazy deletion** to avoid expensive removals from the middle of the queue.
-- Skip cancelled riders before every match.
-- All operations are **O(1)** amortized.
-- Core concepts:
-  - Queue
-  - HashSet
-  - Lazy Deletion
-  - FIFO Matching
+This avoids expensive middle-element removals from the queue.

@@ -186,12 +186,12 @@ The resulting structural hierarchy looks like this:
 
 ```text
         (root)
-       /      \
+       /      
      'c'      'd'
 
       |        |
      'a'      'o'* (do)
-   /  |  \
+   /  |  
  't'*'r'*'p'* (cat, car, cap)
 ```
 
@@ -319,8 +319,8 @@ trie.startsWith("ca"); // Returns true
 ## Why Do We Use a Trie over a Hash Map?
 
 While a Hash Map provides O(1) average time complexity for lookup, it has downfalls for specific string operations:
-- **Prefix Matching:** A Hash Map cannot efficiently find all words starting with a specific prefix; it requires scanning all keys \(O(N \cdot L)\). A Trie resolves this in O(L) prefix length time.
-- **Hash Collisions:** A Hash Map can slow down to \(O(L \cdot N)\) under extreme hash collisions. A Trie guarantees worst-case runtime bounds.
+- **Prefix Matching:** A Hash Map cannot efficiently find all words starting with a specific prefix; it requires scanning all keys (O(N * L)). A Trie resolves this in O(L) prefix length time.
+- **Hash Collisions:** A Hash Map can slow down to (O(L * N)) under extreme hash collisions. A Trie guarantees worst-case runtime bounds.
 - **Space Efficiency:** Tries save memory when storing millions of words with overlapping prefixes (e.g., dictionaries), as common prefixes are stored exactly once.
 
 ---

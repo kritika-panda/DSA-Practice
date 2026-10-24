@@ -14,6 +14,150 @@ A standard Trie implementation should support the following core operations effi
 3. startsWith(String prefix)
 ```
 
+## Example
+
+```java
+Trie trie = new Trie();
+
+trie.insert("apple");
+
+System.out.println(trie.search("apple"));    // true
+System.out.println(trie.search("app"));      // false
+
+System.out.println(trie.startsWith("app"));  // true
+
+trie.insert("app");
+
+System.out.println(trie.search("app"));      // true
+```
+
+### Step-by-Step
+
+#### 1. Insert `"apple"`
+
+Trie Structure:
+
+```text
+(root)
+  └── a
+       └── p
+            └── p
+                 └── l
+                      └── e*
+```
+
+`*` = End of a valid word
+
+---
+
+#### 2. Search `"apple"`
+
+```java
+trie.search("apple");
+```
+
+Traversal:
+
+```text
+a → p → p → l → e*
+```
+
+Result:
+
+```text
+true
+```
+
+The complete word exists and ends at a word node.
+
+---
+
+#### 3. Search `"app"`
+
+```java
+trie.search("app");
+```
+
+Traversal:
+
+```text
+a → p → p
+```
+
+Result:
+
+```text
+false
+```
+
+Although the path exists, `"app"` was not inserted yet, so the last node is not marked as a complete word.
+
+---
+
+#### 4. Check Prefix `"app"`
+
+```java
+trie.startsWith("app");
+```
+
+Traversal:
+
+```text
+a → p → p
+```
+
+Result:
+
+```text
+true
+```
+
+The prefix exists, even if it is not yet a complete word.
+
+---
+
+#### 5. Insert `"app"`
+
+Trie Structure:
+
+```text
+(root)
+  └── a
+       └── p
+            └── p*
+                 └── l
+                      └── e*
+```
+
+Now both words exist:
+
+```text
+app
+apple
+```
+
+---
+
+#### 6. Search `"app"` Again
+
+```java
+trie.search("app");
+```
+
+Traversal:
+
+```text
+a → p → p*
+```
+
+Result:
+
+```text
+true
+```
+
+The node is now marked as a complete word.
+```
 ---
 
 ## Structure and Representation

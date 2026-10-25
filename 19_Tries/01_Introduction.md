@@ -316,12 +316,781 @@ trie.startsWith("ca"); // Returns true
 
 ---
 
-## Why Do We Use a Trie over a Hash Map?
+# Why Do We Use a Trie over a Hash Map?
 
-While a Hash Map provides O(1) average time complexity for lookup, it has downfalls for specific string operations:
-- **Prefix Matching:** A Hash Map cannot efficiently find all words starting with a specific prefix; it requires scanning all keys (O(N * L)). A Trie resolves this in O(L) prefix length time.
-- **Hash Collisions:** A Hash Map can slow down to (O(L * N)) under extreme hash collisions. A Trie guarantees worst-case runtime bounds.
-- **Space Efficiency:** Tries save memory when storing millions of words with overlapping prefixes (e.g., dictionaries), as common prefixes are stored exactly once.
+While a Hash Map provides **O(1)** average-time lookup, it has limitations for certain string-based operations. A Trie is specifically designed for efficient string processing and prefix-based queries.
+
+> A **HashMap is optimized for exact key lookup**, while a **Trie is optimized for character-by-character traversal of strings**.
+
+Because of this design difference, operations such as:
+
+- Prefix Search
+- Autocomplete
+- Dictionary Lookup
+- Spell Checking
+- Word Suggestions
+
+are significantly more efficient in a Trie.
+
+---
+
+# 1. Exact Lookup: HashMap vs Trie
+
+Suppose we store the following words:
+
+```text
+apple
+app
+application
+banana
+bat
+ball
+```
+
+---
+
+## HashMap
+
+```java
+Map<String, Boolean> map = new HashMap<>();
+
+map.put("apple", true);
+map.put("app", true);
+map.put("application", true);
+```
+
+Checking whether a word exists:
+
+```java
+map.containsKey("apple");
+```
+
+### Complexity
+
+```text
+O(L)
+```
+
+Where:
+
+- `L = length of the string`
+
+### Why not O(1)?
+
+Before looking up a key, Java computes its hash code:
+
+```java
+"apple".hashCode()
+```
+
+This requires reading all characters:
+
+```text
+a → p → p → l → e
+```
+
+Therefore:
+
+```text
+Hash Calculation = O(L)
+Bucket Lookup    = O(1)
+
+Total            = O(L)
+```
+
+---
+
+## Trie
+
+Trie Structure:
+
+```text
+root
+ |
+ a
+ |
+ p
+ |
+ p
+ |
+ l
+ |
+ e
+```
+
+Searching for `"apple"`:
+
+```text
+a → p → p → l → e
+```
+
+### Complexity
+
+```text
+O(L)
+```
+
+Where:
+
+- `L = length of the word`
+
+Thus, both HashMap and Trie provide similar performance for exact word lookup.
+
+---
+
+# Why Use Trie Then?
+
+Because many real-world problems involve more than exact lookup.
+
+Examples:
+
+```text
+Find all words starting with "app"
+Find all contacts starting with "jo"
+Autocomplete search
+Dictionary suggestions
+```
+
+This is where Trie provides a major advantage.
+
+---
+
+# 2. Prefix Matching Problem
+
+Suppose we have:
+
+```text
+apple
+app
+application
+apply
+banana
+bat
+ball
+```
+
+Query:
+
+```text
+Find all words starting with "app"
+```
+
+Expected Output:
+
+```text
+app
+apple
+application
+apply
+```
+
+---
+
+## HashMap Solution
+
+HashMap has no knowledge that certain words share a prefix.
+
+Internally it stores independent keys:
+
+```text
+hash("apple")
+hash("app")
+hash("application")
+hash("apply")
+hash("banana")
+...
+```
+
+To find matching words:
+
+```java
+for (String word : map.keySet()) {
+    if (word.startsWith("app")) {
+        result.add(word);
+    }
+}
+```
+
+Every key must be checked.
+
+---
+
+### Complexity
+
+Let:
+
+```text
+N = number of words
+P = prefix length
+L = average word length
+```
+
+Each check:
+
+```java
+word.startsWith("app")
+```
+
+takes:
+
+```text
+O(P)
+```
+
+and is executed for all words:
+
+```text
+N times
+```
+
+Total:
+
+```text
+O(N × P)
+```
+
+Often approximated as:
+
+```text
+O(N × L)
+```
+
+---
+
+## Example
+
+Dictionary contains:
+
+```text
+1,000,000 words
+```
+
+Searching:
+
+```text
+"app"
+```
+
+HashMap must inspect:
+
+```text
+1,000,000 words
+```
+
+even if only a few words match.
+
+---
+
+## Trie Solution
+
+Trie:
+
+```text
+root
+ |
+ a
+ |
+ p
+ |
+ p
+ /|\
+l l i
+```
+
+Searching for prefix `"app"`:
+
+```text
+a → p → p
+```
+
+### Complexity
+
+```text
+O(P)
+```
+
+Where:
+
+- `P = prefix length`
+
+For `"app"`:
+
+```text
+O(3)
+```
+
+The search time depends only on the prefix length, not on the number of stored words.
+
+Whether the dictionary contains:
+
+```text
+100 words
+1,000 words
+1,000,000 words
+100,000,000 words
+```
+
+the lookup still takes:
+
+```text
+O(P)
+```
+
+---
+
+## Visual Comparison
+
+### HashMap
+
+```text
+app?
+
+apple
+app
+application
+apply
+banana
+bat
+ball
+ ^
+ scan everything
+```
+
+---
+
+### Trie
+
+```text
+root
+ |
+ a
+ |
+ p
+ |
+ p
+```
+
+Directly reaches the prefix node.
+
+---
+
+# 3. Autocomplete Example
+
+Imagine a search engine.
+
+User types:
+
+```text
+jav
+```
+
+Expected suggestions:
+
+```text
+java
+javascript
+java tutorial
+java stream
+```
+
+---
+
+## HashMap
+
+To generate suggestions:
+
+```text
+Scan every stored query
+Check whether it starts with "jav"
+```
+
+This must be repeated for:
+
+```text
+j
+ja
+jav
+java
+```
+
+Very expensive at scale.
+
+---
+
+## Trie
+
+User input is processed incrementally:
+
+```text
+j → a → v
+```
+
+Once the `"jav"` node is reached:
+
+```text
+All suggestions are already stored under that subtree
+```
+
+### Complexity
+
+```text
+O(P + Results)
+```
+
+Where:
+
+- `P = prefix length`
+
+This is why Tries are commonly used in:
+
+- Search engines
+- Contact lookup
+- IDE code completion
+- Dictionary applications
+
+---
+
+# 4. Hash Collision Issue
+
+HashMap performance depends on the quality of the hash function.
+
+---
+
+## Normal Case
+
+```text
+apple  → bucket 10
+banana → bucket 35
+cat    → bucket 88
+dog    → bucket 51
+```
+
+Search complexity:
+
+```text
+O(1)
+```
+
+on average.
+
+---
+
+## Worst Case: Collisions
+
+Suppose all words hash to the same bucket:
+
+```text
+apple  → bucket 5
+banana → bucket 5
+cat    → bucket 5
+dog    → bucket 5
+```
+
+Bucket becomes:
+
+```text
+bucket 5
+
+apple
+banana
+cat
+dog
+...
+```
+
+Searching for:
+
+```java
+containsKey("dog")
+```
+
+may require checking multiple entries.
+
+Worst-case:
+
+```text
+O(N)
+```
+
+---
+
+## String Comparisons Matter
+
+To compare strings:
+
+```text
+dog
+```
+
+against:
+
+```text
+apple
+banana
+cat
+dog
+```
+
+multiple character comparisons may occur.
+
+Assuming:
+
+```text
+L = average string length
+```
+
+Worst-case:
+
+```text
+O(N × L)
+```
+
+---
+
+## Trie
+
+Trie never relies on hashing.
+
+Searching:
+
+```text
+d → o → g
+```
+
+always follows a fixed path.
+
+### Complexity
+
+```text
+O(L)
+```
+
+Guaranteed.
+
+---
+
+# 5. Space Efficiency Through Shared Prefixes
+
+This advantage is often misunderstood.
+
+A Trie node can consume more memory individually, but Tries can save memory when many words share prefixes.
+
+---
+
+## Example
+
+Words:
+
+```text
+interview
+internet
+internal
+interval
+into
+```
+
+Common prefix:
+
+```text
+int
+```
+
+---
+
+## HashMap Storage
+
+Each word stores the prefix separately:
+
+```text
+interview
+internet
+internal
+interval
+into
+```
+
+Repeated characters:
+
+```text
+i n t
+i n t
+i n t
+i n t
+i n t
+```
+
+stored multiple times.
+
+---
+
+## Trie Storage
+
+```text
+root
+ |
+ i
+ |
+ n
+ |
+ t
+ / \
+e   o
+```
+
+Prefix:
+
+```text
+i → n → t
+```
+
+stored only once.
+
+Branches occur only when words differ.
+
+---
+
+## Visual Comparison
+
+### HashMap
+
+```text
+interview
+internet
+internal
+interval
+into
+```
+
+Stores:
+
+```text
+i n t
+i n t
+i n t
+i n t
+i n t
+```
+
+five times.
+
+---
+
+### Trie
+
+```text
+i
+|
+n
+|
+t
+```
+
+stored once.
+
+---
+
+# When Trie Saves Significant Memory
+
+Words:
+
+```text
+precompute
+predict
+prediction
+prefix
+prevent
+preview
+```
+
+Shared prefix:
+
+```text
+pre
+```
+
+Trie stores:
+
+```text
+p → r → e
+```
+
+a single time.
+
+For dictionaries containing millions of related words, this can greatly reduce duplication.
+
+---
+
+# But There Is a Trade-off
+
+A basic Trie node often looks like:
+
+```java
+class TrieNode {
+    TrieNode[] children = new TrieNode[26];
+}
+```
+
+Even if a node contains only one actual child:
+
+```text
+a
+```
+
+space for:
+
+```text
+26 references
+```
+
+still exists.
+
+Therefore:
+
+### Small Datasets
+
+```text
+HashMap usually consumes less memory.
+```
+
+### Large Datasets With Heavy Prefix Sharing
+
+```text
+Trie may be more space efficient.
+```
+
+Many real systems use optimized versions:
+
+- Compressed Trie
+- Radix Tree
+- Patricia Trie
+- Ternary Search Tree
+
+to reduce memory overhead.
+
+---
+
+# Complexity Summary
+
+| Operation | HashMap | Trie |
+|------------|----------|-------|
+| Insert Word | O(L) | O(L) |
+| Search Word | O(L) Average | O(L) |
+| Prefix Search | O(N × P) | O(P) |
+| Autocomplete | O(N × L) | O(P + Results) |
+| Worst-Case Search | O(N × L) | O(L) |
+| Shared Prefix Storage | No | Yes |
+
+Where:
+
+- `N` = number of words
+- `L` = average word length
+- `P` = prefix length
+
+---
+
+# Interview One-Liner
+
+> We use a Trie when efficient prefix-based operations are required. While a HashMap is excellent for exact string lookup, prefix searches require scanning all keys. A Trie stores characters hierarchically, enabling prefix search, autocomplete, and dictionary operations in **O(prefix length)** time while also allowing common prefixes to be shared across words.
 
 ---
 

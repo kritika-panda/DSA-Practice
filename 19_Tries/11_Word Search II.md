@@ -203,7 +203,7 @@ import java.util.List;
 class Solution {
 
     private class TrieNode {
-        private TrieNode[] children = new TrieNode;
+        private TrieNode[] children = new TrieNode[26];
         private String word = null;
     }
 

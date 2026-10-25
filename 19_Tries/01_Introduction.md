@@ -1106,11 +1106,359 @@ Where:
 
 ---
 
-### Space Complexity
+# Space Complexity: O(N × L × Alphabet_Size)
+
+This space complexity is commonly used for a **Trie implementation that stores a fixed-size children array at every node**.
+
+Example:
+
+```java
+class TrieNode {
+    TrieNode[] children = new TrieNode[26];
+    boolean isEndOfWord;
+}
+```
+
+Where:
 
 ```text
-O(N * L * Alphabet_Size)
+Alphabet_Size = 26
 ```
+
+for lowercase English letters.
+
+---
+
+# Breaking It Down
+
+Let:
+
+- `N` = Number of words
+- `L` = Average length of each word
+- `Alphabet_Size` = Number of possible characters per node
+
+Example:
+
+```text
+N = 1000 words
+L = 10 characters
+Alphabet_Size = 26
+```
+
+---
+
+# Step 1: Number of Nodes
+
+In the worst case, none of the words share any prefix.
+
+Words:
+
+```text
+apple
+zebra
+qwert
+mouse
+...
+```
+
+Each character creates a new Trie node.
+
+Total nodes:
+
+```text
+N × L
+```
+
+For:
+
+```text
+1000 words
+10 characters each
+```
+
+Nodes:
+
+```text
+1000 × 10
+
+= 10,000 nodes
+```
+
+---
+
+# Step 2: Space Per Node
+
+Each node contains:
+
+```java
+TrieNode[] children = new TrieNode[26];
+```
+
+Every node reserves space for:
+
+```text
+26 child references
+```
+
+even if only one child exists.
+
+Example:
+
+```text
+Node('a')
+```
+
+still stores:
+
+```text
+children[0]
+children[1]
+children[2]
+...
+children[25]
+```
+
+Total:
+
+```text
+26 references
+```
+
+---
+
+# Step 3: Total Space
+
+Total nodes:
+
+```text
+N × L
+```
+
+Space per node:
+
+```text
+Alphabet_Size
+```
+
+Therefore:
+
+```text
+(N × L) × Alphabet_Size
+```
+
+Result:
+
+```text
+O(N × L × Alphabet_Size)
+```
+
+---
+
+# Numerical Example
+
+Suppose:
+
+```text
+1000 words
+10 characters each
+26 letters
+```
+
+Worst-case nodes:
+
+```text
+1000 × 10
+= 10,000 nodes
+```
+
+Each node:
+
+```text
+26 pointers
+```
+
+Total storage:
+
+```text
+10,000 × 26
+
+= 260,000 references
+```
+
+Thus:
+
+```text
+O(N × L × 26)
+```
+
+which is written as:
+
+```text
+O(N × L × Alphabet_Size)
+```
+
+---
+
+# Why We Often Simplify It to O(N × L)
+
+In Big-O analysis, the alphabet size is usually considered constant.
+
+For English lowercase letters:
+
+```text
+Alphabet_Size = 26
+```
+
+For ASCII:
+
+```text
+Alphabet_Size = 128
+```
+
+For Extended ASCII:
+
+```text
+Alphabet_Size = 256
+```
+
+Since these values do not grow with input size:
+
+```text
+O(N × L × 26)
+```
+
+becomes:
+
+```text
+O(N × L)
+```
+
+because constants are ignored.
+
+---
+
+# Interview Explanation
+
+### Precise Answer
+
+For an array-based Trie:
+
+```text
+Space Complexity = O(N × L × Alphabet_Size)
+```
+
+because:
+
+- There can be up to `N × L` nodes.
+- Each node maintains an array of size `Alphabet_Size`.
+
+---
+
+### Common Simplified Answer
+
+```text
+Space Complexity = O(N × L)
+```
+
+because the alphabet size is a constant (26, 128, 256, etc.) and is omitted in Big-O notation.
+
+---
+
+# Example of Worst Case
+
+Words:
+
+```text
+abc
+def
+ghi
+jkl
+```
+
+No shared prefixes.
+
+Trie:
+
+```text
+root
+ ├─ a → b → c
+ ├─ d → e → f
+ ├─ g → h → i
+ └─ j → k → l
+```
+
+Number of nodes:
+
+```text
+4 × 3 = 12
+```
+
+Each node stores:
+
+```text
+26 references
+```
+
+Total space:
+
+```text
+12 × 26
+```
+
+Hence:
+
+```text
+O(N × L × Alphabet_Size)
+```
+
+---
+
+# Example of Best Case
+
+Words:
+
+```text
+app
+apple
+application
+apply
+```
+
+Trie:
+
+```text
+root
+ |
+ a
+ |
+ p
+ |
+ p
+```
+
+Most characters are shared.
+
+Actual nodes are far fewer than:
+
+```text
+N × L
+```
+
+So the real memory usage is much smaller.
+
+This is why Trie space complexity is usually stated as:
+
+```text
+O(Total Characters Inserted)
+```
+
+or
+
+```text
+O(N × L)
+```
+
+with the understanding that shared prefixes reduce the actual number of nodes.
 
 In the absolute worst-case scenario (where no words share any common characters), each character of every word requires a separate node. However, in practice, memory scales efficiently due to heavy prefix sharing.
 

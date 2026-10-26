@@ -265,13 +265,16 @@ is received:
 
 ---
 
-# Java Solution
+# Problem Link: https://www.geeksforgeeks.org/problems/search-query-auto-complete/1
+
+## Java solution
 
 ```java
-class AutocompleteSystem {
+import java.util.*;
+
+class AutoCompleteSystem {
 
     class TrieNode {
-
         Map<Character, TrieNode> children;
         Map<String, Integer> countMap;
 
@@ -281,12 +284,10 @@ class AutocompleteSystem {
         }
     }
 
-    TrieNode root;
-    String currentInput;
+    private TrieNode root;
+    private String currentInput;
 
-    public AutocompleteSystem(String[] sentences,
-                              int[] times) {
-
+    public AutoCompleteSystem(String[] sentences, int[] times) {
         root = new TrieNode();
         currentInput = "";
 
@@ -296,22 +297,16 @@ class AutocompleteSystem {
     }
 
     private void insert(String sentence, int count) {
-
         TrieNode node = root;
 
         for (char ch : sentence.toCharArray()) {
-
-            node.children.putIfAbsent(
-                ch,
-                new TrieNode()
-            );
+            node.children.putIfAbsent(ch, new TrieNode());
 
             node = node.children.get(ch);
 
             node.countMap.put(
                 sentence,
-                node.countMap.getOrDefault(sentence, 0)
-                + count
+                node.countMap.getOrDefault(sentence, 0) + count
             );
         }
     }
@@ -319,11 +314,8 @@ class AutocompleteSystem {
     public List<String> input(char c) {
 
         if (c == '#') {
-
             insert(currentInput, 1);
-
             currentInput = "";
-
             return new ArrayList<>();
         }
 
@@ -332,65 +324,35 @@ class AutocompleteSystem {
         TrieNode node = root;
 
         for (char ch : currentInput.toCharArray()) {
-
             if (!node.children.containsKey(ch)) {
                 return new ArrayList<>();
             }
-
             node = node.children.get(ch);
         }
 
         List<String> candidates =
                 new ArrayList<>(node.countMap.keySet());
 
-        Collections.sort(
-            candidates,
-            (a, b) -> {
+        final TrieNode currNode = node;
 
-                int countA =
-                        node.countMap.get(a);
+        candidates.sort((a, b) -> {
 
-                int countB =
-                        node.countMap.get(b);
+            int countA = currNode.countMap.get(a);
+            int countB = currNode.countMap.get(b);
 
-                if (countA == countB) {
-                    return a.compareTo(b);
-                }
-
-                return countB - countA;
+            if (countA == countB) {
+                return a.compareTo(b);
             }
+
+            return countB - countA;
+        });
+
+        return candidates.subList(
+                0,
+                Math.min(3, candidates.size())
         );
-
-        if (candidates.size() > 3)
-            return candidates.subList(0, 3);
-
-        return candidates;
     }
 }
-```
-
----
-
-# Dry Run
-
-## Initialization
-
-```java
-sentences =
-[
-   "i love you",
-   "island",
-   "ironman",
-   "i love leetcode"
-]
-
-times =
-[
-   5,
-   3,
-   2,
-   2
-]
 ```
 
 Trie stores frequency information at every prefix node.

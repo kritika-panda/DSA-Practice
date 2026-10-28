@@ -139,6 +139,6 @@ class Solution {
 ### Complexity Analysis
 
 * **Time Complexity:** 
-  * **Average Case:** \(O(\log N)\). When elements are mostly distinct or duplicates do not align on the search boundaries, the search space halves at every step.
+  * **Average Case:** (O(log N)). When elements are mostly distinct or duplicates do not align on the search boundaries, the search space halves at every step.
   * **Worst Case:** O(N). If the array contains almost entirely identical elements (e.g., `[1, 1, 1, 1, 0, 1, 1]`), the algorithm is forced to continually execute the duplicate trimming step (`low++`, `high--`), reducing the performance profile to a linear scan.
 * **Space Complexity:** O(1) auxiliary space. All operations run strictly in-place using only basic pointer index adjustments.

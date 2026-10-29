@@ -49,7 +49,7 @@ If mid * mid > x  ---> mid is too large. Check left half for smaller integers.
 
 The values of integers from `1` to `x / 2` form a strictly increasing sorted sequence. The squares of these integers also increase monotonically. 
 
-This enables us to use **Binary Search** over the integer range to locate the square root value in \(O(\log x)\) time instead of checking integers sequentially.
+This enables us to use **Binary Search** over the integer range to locate the square root value in \(O(log x)\) time instead of checking integers sequentially.
 
 ---
 

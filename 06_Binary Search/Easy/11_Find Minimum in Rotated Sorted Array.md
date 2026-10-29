@@ -120,6 +120,41 @@ class Solution {
 }
 ```
 
+### Alternative logic
+```java
+class Solution {
+    public int findMin(int[] nums) {
+        int low = 0;
+        int high = nums.length - 1;
+        int ans = Integer.MAX_VALUE;
+
+        while (low <= high) {
+
+            // Entire range is already sorted
+            if (nums[low] <= nums[high]) {
+                ans = Math.min(ans, nums[low]);
+                break;
+            }
+
+            int mid = low + (high - low) / 2;
+
+            // Left half is sorted
+            if (nums[low] <= nums[mid]) {
+                ans = Math.min(ans, nums[low]);
+                low = mid + 1;
+            }
+            // Right half is sorted
+            else {
+                ans = Math.min(ans, nums[mid]);
+                high = mid - 1;
+            }
+        }
+
+        return ans;
+    }
+}
+```
+
 ### Complexity Analysis
 
 * **Time Complexity:** O(log N) where N is the total length of the `nums` array. The remaining search pool is cut exactly in half at every iteration step, ensuring a clean logarithmic execution profile.

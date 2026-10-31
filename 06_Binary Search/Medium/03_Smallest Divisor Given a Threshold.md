@@ -92,6 +92,68 @@ This inverse monotonic relationship lets us bypass checking every possible divis
 
 * **Minimum possible divisor (`low`)**: `1` (since the divisor must be a positive integer).
 * **Maximum possible divisor (`high`)**: `max(nums)` (dividing by anything larger than the largest number does not further reduce the ceiling-division sum).
+### Why Do We Use `max(nums)` as the Upper Bound?
+
+        We choose **`max(nums)` as the upper bound** because once the divisor becomes greater than or equal to the largest element in         the array, every element contributes exactly `1` to the sum (`ceil(num / divisor) = 1`). At that point, the sum reaches its           minimum possible value, which is `nums.length`, and increasing the divisor further cannot reduce the sum any more.                    Therefore, all divisors larger than `max(nums)` produce the same result as `max(nums)` and can never be the smallest valid            answer. This guarantees that the required divisor must lie within the range **`[1, max(nums)]`**, making `max(nums)` the              optimal upper bound for binary search.
+        
+        ### Example 1
+        
+        ```text
+        nums = [1, 2, 5, 9]
+        max(nums) = 9
+        
+        divisor = 9
+        ceil(1/9) + ceil(2/9) + ceil(5/9) + ceil(9/9)
+        = 1 + 1 + 1 + 1
+        = 4
+        
+        divisor = 10
+        = 1 + 1 + 1 + 1
+        = 4
+        
+        divisor = 100
+        = 1 + 1 + 1 + 1
+        = 4
+        ```
+        
+        Notice that once the divisor reaches `9`, increasing it further does not change the sum.
+        
+        ### Example 2
+        
+        ```text
+        nums = [8]
+        max(nums) = 8
+        
+        divisor = 8   -> ceil(8/8)   = 1
+        divisor = 9   -> ceil(8/9)   = 1
+        divisor = 100 -> ceil(8/100) = 1
+        ```
+        
+        Again, every divisor greater than `8` behaves exactly the same as `8`.
+        
+        ### Key Observation
+        
+        ```text
+        For any num:
+        
+        if divisor >= num
+        then ceil(num / divisor) = 1
+        ```
+        
+        Since every array element becomes `1` when the divisor is at least the maximum element, searching beyond `max(nums)` is unnecessary.
+        
+        ### Binary Search Range
+        
+        ```java
+        int low = 1;
+        int high = max(nums);
+        ```
+        
+        This ensures that:
+        
+        - The answer is guaranteed to be within the search space.
+        - No unnecessary divisors are considered.
+        - The binary search range remains as small and efficient as possible.
 
 ### Step 2: Binary Search Mechanics
 

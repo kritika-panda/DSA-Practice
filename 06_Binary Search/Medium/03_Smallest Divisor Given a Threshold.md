@@ -135,44 +135,498 @@ We look for the leftmost valid divisor using a binary search loop:
 
 ```java
 class Solution {
-    public int smallestDivisor(int[] nums, int threshold) {
-        int low = 1;
-        int high = 0;
-        
-        // Find the maximum value in nums to establish the upper bound
-        for (int num : nums) {
-            high = Math.max(high, num);
+    public int findAnswer(int mid,int[] nums)
+    {
+        int val=0;
+        for(int i=0;i<nums.length;i++)
+        {
+            //val+=(int)Math.ceil((double)nums[i]/mid);
+            val += (nums[i] + mid - 1) / mid;       //even better which avoids floating point operations.
         }
-        
-        int ans = high;
-        
-        // Binary search on the answer space
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            
-            // Check if the current divisor satisfies the threshold condition
-            if (calculateSum(nums, mid) <= threshold) {
-                ans = mid;         // Record the valid candidate
-                high = mid - 1;    // Look left for a smaller valid divisor
-            } else {
-                low = mid + 1;     // Look right for larger values
+        return val;
+    }
+    public int smallestDivisor(int[] nums, int threshold) {
+        int n=nums.length;
+        int low=1;
+        int high = nums[0];
+        for (int num : nums) 
+            high = Math.max(high, num);
+        int res=0;
+        int rangeStart=nums[0];
+        int rangeEnd=nums[n-1];
+        while(low<=high)
+        {
+            int mid=low+(high-low)/2;
+            int val=findAnswer(mid,nums);
+            if(val>threshold)
+                low=mid+1;
+            else
+            {
+                res=mid;
+                high=mid-1;
             }
         }
-        
-        return ans;
-    }
-    
-    // Helper method to compute the ceiling sum for a given divisor
-    private int calculateSum(int[] nums, int divisor) {
-        int sum = 0;
-        for (int num : nums) {
-            // Efficient way to compute ceiling division without floating-point math
-            sum += (num + divisor - 1) / divisor;
-        }
-        return sum;
+        return res;
     }
 }
 ```
+
+# Why Do We Add `b - 1` in the Formula?
+
+The key question is:
+
+> Why do we add exactly `b - 1` and not `b`, `b - 2`, or some other number?
+
+Let's discover it step by step.
+
+---
+
+## Goal
+
+We want:
+
+```text
+ceil(a / b)
+```
+
+using integer division.
+
+Suppose:
+
+```text
+a = 7
+b = 3
+```
+
+Normal integer division:
+
+```text
+7 / 3 = 2
+```
+
+But we want:
+
+```text
+ceil(7/3) = 3
+```
+
+So we need a way to force the answer to become `3`.
+
+---
+
+## What Is the Smallest Amount We Can Add?
+
+Current number:
+
+```text
+7
+```
+
+To make integer division return `3`, the numerator must become at least:
+
+```text
+3 × 3 = 9
+```
+
+So we need:
+
+```text
+7 + x = 9
+
+x = 2
+```
+
+Notice:
+
+```text
+2 = b - 1
+```
+
+because:
+
+```text
+3 - 1 = 2
+```
+
+---
+
+## Another Example
+
+```text
+a = 8
+b = 3
+```
+
+Current result:
+
+```text
+8 / 3 = 2
+```
+
+Need:
+
+```text
+3
+```
+
+To reach the next multiple of 3:
+
+```text
+8 + 1 = 9
+```
+
+Need to add:
+
+```text
+1
+```
+
+But we cannot know the remainder beforehand.
+
+If we always add:
+
+```text
+b - 1 = 2
+```
+
+then:
+
+```text
+8 + 2 = 10
+
+10 / 3 = 3
+```
+
+Still correct.
+
+---
+
+## Why Not Add `b`?
+
+Suppose:
+
+```text
+a = 9
+b = 3
+```
+
+Actual answer:
+
+```text
+ceil(9 / 3) = 3
+```
+
+If we add `b`:
+
+```text
+(9 + 3) / 3
+
+= 12 / 3
+
+= 4
+```
+
+❌ Wrong
+
+We overshot.
+
+So adding `b` is too much.
+
+---
+
+## Why Not Add `b - 2`?
+
+Take:
+
+```text
+a = 7
+b = 3
+```
+
+Add:
+
+```text
+b - 2 = 1
+```
+
+Then:
+
+```text
+(7 + 1) / 3
+
+= 8 / 3
+
+= 2
+```
+
+❌ Wrong
+
+We didn't reach the next bucket.
+
+So `b - 2` is not enough.
+
+---
+
+## Why `b - 1` Is Perfect
+
+Consider any remainder:
+
+```text
+a = q × b + r
+```
+
+where:
+
+```text
+1 ≤ r ≤ b - 1
+```
+
+The largest possible remainder is:
+
+```text
+b - 1
+```
+
+If we always add:
+
+```text
+b - 1
+```
+
+then every non-zero remainder gets pushed across the next multiple of `b`.
+
+Example with:
+
+```text
+b = 5
+```
+
+```text
+11 = 2 × 5 + 1
+12 = 2 × 5 + 2
+13 = 2 × 5 + 3
+14 = 2 × 5 + 4
+```
+
+Add:
+
+```text
+b - 1 = 4
+```
+
+```text
+11 + 4 = 15
+12 + 4 = 16
+13 + 4 = 17
+14 + 4 = 18
+```
+
+Integer divide by 5:
+
+```text
+15 / 5 = 3
+16 / 5 = 3
+17 / 5 = 3
+18 / 5 = 3
+```
+
+All correctly become:
+
+```text
+ceil(11 / 5)
+ceil(12 / 5)
+ceil(13 / 5)
+ceil(14 / 5)
+```
+
+---
+
+## Visual Intuition
+
+For:
+
+```text
+b = 4
+```
+
+Ceiling buckets:
+
+```text
+1  2  3  4  → 1
+5  6  7  8  → 2
+9 10 11 12  → 3
+```
+
+Adding:
+
+```text
+b - 1 = 3
+```
+
+shifts the numbers:
+
+```text
+1 → 4
+2 → 5
+3 → 6
+4 → 7
+
+5 → 8
+6 → 9
+7 → 10
+8 → 11
+```
+
+Now integer division by 4 naturally gives:
+
+```text
+4 / 4  = 1
+5 / 4  = 1
+6 / 4  = 1
+7 / 4  = 1
+
+8 / 4  = 2
+9 / 4  = 2
+10 / 4 = 2
+11 / 4 = 2
+```
+
+which matches the ceiling buckets perfectly.
+
+---
+
+## Mathematical Proof
+
+Let:
+
+```text
+a = q × b + r
+```
+
+where:
+
+```text
+0 ≤ r < b
+```
+
+### Case 1: Exact Division (`r = 0`)
+
+```text
+(a + b - 1) / b
+
+= (q × b + b - 1) / b
+
+= q
+```
+
+So:
+
+```text
+ceil(a / b) = q
+```
+
+✅ Correct
+
+---
+
+### Case 2: Division Has a Remainder (`r > 0`)
+
+```text
+(a + b - 1) / b
+
+= (q × b + r + b - 1) / b
+```
+
+Since:
+
+```text
+1 ≤ r ≤ b - 1
+```
+
+then:
+
+```text
+b ≤ r + b - 1 ≤ 2b - 2
+```
+
+Thus:
+
+```text
+(r + b - 1) / b = 1
+```
+
+using integer division.
+
+Therefore:
+
+```text
+(q × b + r + b - 1) / b
+
+= q + 1
+```
+
+which is exactly:
+
+```text
+ceil(a / b)
+```
+
+✅ Correct
+
+---
+
+## The One-Line Intuition
+
+```text
+b - 1 is the largest possible remainder.
+```
+
+Adding it guarantees that:
+
+- Exact multiples stay in the same bucket.
+- Every non-exact division gets pushed into the next bucket.
+
+That is exactly what `ceil()` does.
+
+Therefore:
+
+```text
+ceil(a / b)
+=
+(a + b - 1) / b
+```
+
+for all positive integers `a` and `b`.
+
+---
+
+## Interview Shortcut
+
+Whenever you see:
+
+```java
+Math.ceil((double)a / b)
+```
+
+for positive integers, replace it with:
+
+```java
+(a + b - 1) / b
+```
+
+For example:
+
+```java
+sum += (num + divisor - 1) / divisor;
+```
+
+is equivalent to:
+
+```java
+sum += Math.ceil((double) num / divisor);
+```
+
+but uses only integer arithmetic.
 
 ### Complexity Analysis
 

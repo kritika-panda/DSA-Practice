@@ -176,5 +176,5 @@ class Solution {
 
 ### Complexity Analysis
 
-* **Time Complexity:** (O(N log(max(nums)))) where (N) is the number of elements in `nums`. The binary search space takes (O(log(max(text{nums})))) iterations to collapse. In each iteration, we run a linear scan over all (N) elements inside the `calculateSum` helper function.
+* **Time Complexity:** (O(N log(max(nums)))) where (N) is the number of elements in `nums`. The binary search space takes (O(log(max(nums)))) iterations to collapse. In each iteration, we run a linear scan over all (N) elements inside the `calculateSum` helper function.
 * **Space Complexity:** (O(1)) auxiliary space. All operational logic checks execute entirely in-place without using extra linear collections.
